@@ -3,6 +3,10 @@
 
 ITU Scheduler is a Python script that parses ITU's SIS website and creates possible course schedules automatically according to the user's wishes.
 
+# Installation
+- Install Python 3
+- `pip3 install -r requirements.txt`
+
 # Contribution
 Everyone is welcome to join and make pull requests.
 
