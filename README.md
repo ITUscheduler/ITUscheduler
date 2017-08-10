@@ -6,12 +6,12 @@ ITU Scheduler is a Python script that parses ITU's SIS website and creates possi
 # Contribution
 Everyone is welcome to join and make pull requests.
 
-# TODO
+# Todo
 - [x] Parsing ITU SIS HTML
 - [x] Course and Schedule classes
 - [x] Check if a course is available
 - [x] Check hours for collision
-- [] Create possible schedules
+- [ ] Create possible schedules
 
 # License
 This software is published under the [GPL v3 License](LICENSE).
