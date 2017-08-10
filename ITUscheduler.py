@@ -1,7 +1,7 @@
 import requests, sys
 from bs4 import BeautifulSoup
 
-BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb=" 
+BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
 
 
 class Data:
@@ -16,41 +16,32 @@ class Course:
             return False
         else:
             return True
-        
-    def __init__(self, data, **kwargs):
+
+    def __init__(self, data, i=0):
         self.crn = data[0]
         self.code = data[1]
         self.title = data[2]
         self.instructor = data[3]
         self.count = len(data[4]) // 3
-        self.building = []
-        self.day = []
-        self.time = []
-        self.room = []
-        for i in range(self.count):
-            self.building.append(data[4][3*i:3*i+3:])
-            self.day.append(data[5].split()[i])
-            time = data[6][:-1:].split()[i].split("/")
-            if "" in time:
-                time = ["-1", "-1"]
-            for index, t in enumerate(time):
-                if t[0] == "0":
-                    time[index] = t[1::]
-            time = [int(time[0]), int(time[1])]
-            self.time.append(time)
-            self.room.append(data[7].split()[i])
+        self.building = data[4][3*i:3*i+3:]
+        self.day = data[5].split()[i]
+        time = data[6][:-1:].split()[i].split("/")
+        if "" in time:
+            time = ["-1", "-1"]
+        for index, t in enumerate(time):
+            if t[0] == "0":
+                time[index] = t[1::]
+        self.time = [int(time[0]), int(time[1])]
+        self.room = data[7].split()[i]
         self.capacity = int(data[8])
         self.enrolled = int(data[9])
         self.reservation = data[10]
         self.major_restriction = data[11]
         self.prerequisites = data[12]
         self.class_restriction = data[13]
-    
+
     def __str__(self):
-        string = ""
-        for i in range(self.count):
-            string += self.crn + " " + self.code + " " + self.title + " | " + self.instructor + " " + self.building[i] + ":" + self.room[i] + " " + self.day[i] + " " + str(self.time[i][0]) + "/" + str(self.time[i][1]) + " | " + str(self.enrolled) + "/" + str(self.capacity) + "\n"
-        return string
+        return self.crn + " " + self.code + " " + self.title + " | " + self.instructor + " " + self.building + ":" + self.room + " " + self.day + " " + str(self.time[0]) + "/" + str(self.time[1]) + " | " + str(self.enrolled) + "/" + str(self.capacity)
 
 
 class Schedule:
@@ -60,7 +51,7 @@ class Schedule:
         if course.is_full():
             return False
         for c in self.courses:
-            if course.day == c.day and c.time[0][0] <= course.time[0][0] <= c.time[0][1] or c.time[0][0] <= course.time[0][1] <= c.time[0][1]:
+            if course.day == c.day and c.time[0] <= course.time[0] <= c.time[1] or c.time[0] <= course.time[1] <= c.time[1]:
                 return False
             else:
                 continue
@@ -96,18 +87,20 @@ soup = BeautifulSoup(r.content, "html.parser")
 i = 5
 while True:
     try:
-        raw_course = soup.select_one("tr:nth-of-type({})".format(i)) 
+        raw_course = soup.select_one("tr:nth-of-type({})".format(i))
         try:
-            course = Course([row.get_text() for row in raw_course.find_all("td")])
-            Data.courses.append(course)
-            i += 1 
+            data = [row.get_text() for row in raw_course.find_all("td")]
+            count = len(data[4]) // 3
+            for index in range(count):
+                Data.courses.append(Course(data, index))
+            i += 1
         except AttributeError as error:
             i += 1
             pass
     except IndexError as error:
         break
 
-print("Courses")  
+print("Courses")
 print("-" * 80)
 for index, course in enumerate(Data.courses):
     print("#" + str(index), course)
