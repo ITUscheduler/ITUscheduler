@@ -65,6 +65,22 @@ for option in soup.find("select").find_all("option"):
         Data.options.append(option.get_text()[:-1:])
 
 print("-" * 80)
+bee_ascii = """
+              \     /
+          \    o ^ o    /
+            \ (     ) /
+ ____________(%%%%%%%)____________
+(     /   /  )%%%%%%%(  \   \     )
+(___/___/__/           \__\___\___)     ITU Scheduler
+   (     /  /(%%%%%%%)\  \     )        github @dorukgezici
+    (__/___/ (%%%%%%%) \___\__)
+            /(       )\\
+          /   (%%%%%)   \\
+               (%%%)
+                 !
+"""
+print(bee_ascii)
+print("-" * 80)
 print("Course Codes")
 print("-" * 80)
 
