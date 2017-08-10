@@ -7,6 +7,9 @@ ITU Scheduler is a Python script that parses ITU's SIS website and creates possi
 - Install Python 3
 - `pip3 install -r requirements.txt`
 
+# Usage
+- `python3 ITUscheduler.py`
+
 # Contribution
 Everyone is welcome to join and make pull requests.
 
