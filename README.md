@@ -5,7 +5,6 @@ ITU Scheduler is a Python Django Web Application that parses ITU's SIS website a
 
 # Installation
 - Install Python 3
-- `cd ITUscheduler`
 - `pip3 install -r requirements.txt`
 
 # Usage
