@@ -1,0 +1,6 @@
+Django==1.11.4
+beautifulsoup4==4.6.0
+requests==2.18.3
+Pillow
+django-bootstrap-form
+django-gravatar2

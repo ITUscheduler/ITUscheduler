@@ -1,0 +1,90 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    overflow-wrap: break-word;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 80px;
+    min-height: 100%;
+}
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.copyleft {
+    display: inline-block;
+    transform: rotate(180deg);
+}
+
+@media (max-width: 992px) {
+    body {
+        padding-bottom: 100px;
+    }
+}
+
+.no-hover:hover, .no-hover:focus {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 18px;
+    padding: 0;
+    font-size: 13px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px 10px 9px;
+    line-height: 18px;
+    text-align: left;
+}
+
+table th {
+    padding-top: 9px;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+table td {
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+.condensed-table th, .condensed-table td {
+    padding: 5px 5px 4px;
+}
+
+.bordered-table {
+    border: 1px solid #ddd;
+    border-collapse: separate;
+    *border-collapse: collapse;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.bordered-table th + th, .bordered-table td + td, .bordered-table th + td {
+    border-left: 1px solid #ddd;
+}
+
+.bordered-table tbody tr:last-child td:first-child {
+    -webkit-border-radius: 0 0 0 4px;
+    -moz-border-radius: 0 0 0 4px;
+    border-radius: 0 0 0 4px;
+}

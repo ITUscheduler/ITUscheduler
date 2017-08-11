@@ -121,7 +121,13 @@ print("-" * 80)
 for index, course in enumerate(Data.courses):
     print("#" + str(index), course)
 print("-" * 80)
-selected_ids = [int(splitted) for splitted in str(input("Enter selected courses with IDs(#), select multiple using commas: ")).split(",")]
+
+splitted = [splitted for splitted in str(input("Enter selected courses with IDs(#), select multiple using commas: ")).split(",")]
+selected_ids = []
+for i, txt in enumerate(splitted):
+    new = txt[txt.count(" ")::]
+    new = new[txt.count("#")::]
+    selected_ids.append(int(new))
 print("-" * 80)
 
 schedule = Schedule()
