@@ -1,3 +1,5 @@
+from django.test import TestCase
+
 import requests, sys
 from bs4 import BeautifulSoup
 
