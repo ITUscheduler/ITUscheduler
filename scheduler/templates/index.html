@@ -13,6 +13,9 @@
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item">
+                            {% if not request.user.is_authenticated %}
+                                <p>Please first <a href="{% url signup %}">Signup</a> or <a href="{% url login %}">Login</a>.</p>
+                            {% endif %}
                             {% for course in my_courses %}
                             <p>{{ course }}</p>
                             {% endfor %}
