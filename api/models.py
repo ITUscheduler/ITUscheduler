@@ -31,7 +31,7 @@ class Course(models.Model):
         get_latest_by = "crn"
 
     def __str__(self):
-        return self.crn + " " + self.course_code + " " + self.title
+        return str(self.crn) + " " + self.course_code.code + " " + self.title
 
     def is_full(self):
         if self.enrolled < self.capacity:
