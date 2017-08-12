@@ -46,7 +46,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_authenticated %}
-                        <li><a href="/{# url "profile" profile_slug=request.user.username #}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
+                        <li><a href="/">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
                         {% url "logout" as logout_url %}
                         <li  {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
                     {% else %}
@@ -66,7 +66,7 @@
                 <li><a class="no-hover"><span class="copyleft">&copy;</span> Copyleft 2017 | ITU Scheduler</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover"><h9><em>Coded by @dorukgezici</em></h9></a></li>
+                <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover"><em>Coded by @dorukgezici</em></a></li>
             </ul>
         </div>
     </footer>
