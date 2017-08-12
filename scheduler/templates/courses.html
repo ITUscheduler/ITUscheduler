@@ -1,0 +1,66 @@
+{% extends "theme.html" %}
+
+{% block title %}Courses | ITUscheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Courses</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <select class="form-control text-center" name="course_code" onchange="redirect(this.form.course_code)">
+                                {% for option in course_codes %}
+                                    <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>CRN</th>
+                                    <th>Course Code</th>
+                                    <th>Title</th>
+                                    <th>Instructor</th>
+                                    <th>Building</th>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Room</th>
+                                    <th>Capacity</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for course in courses %}
+                                        <tr>
+                                            <td>{{ course.crn }}</td>
+                                            <td>{{ course.code }}</td>
+                                            <td>{{ course.title }}</td>
+                                            <td>{{ course.instructor }}</td>
+                                            <td>{{ course.building }}</td>
+                                            <td>{{ course.day }}</td>
+                                            <td>{{ course.time_start }}/{{ course.time_finish }}</td>
+                                            <td>{{ course.room }}</td>
+                                            <td>{{ course.enrolled }}/{{ course.capacity }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function redirect(selected) {
+            location.href = "/courses/" + selected.options[selected.selectedIndex].value;
+        }
+    </script>
+{% endblock %}

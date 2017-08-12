@@ -4,13 +4,13 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-6 col-md-offset-3 card-bg text-center">
+            <div class="col-md-6 col-md-offset-3 card-bg">
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <input type="hidden" name="next" value="/">
-                    <button class="btn btn-default" type="submit">Successfully Log Out!</button>
+                    {{ form|bootstrap }}
+                    <button class="btn btn-default" type="submit">Sign Up!</button>
                 </form>
             </div>
         </div>
     </div>
-{% endblock%}
+{% endblock %}

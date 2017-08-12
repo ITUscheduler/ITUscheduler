@@ -5,20 +5,10 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <select size="1" name="bolum" onchange="yonlendir(this.form.bolum)">
-                    <option value="">Select</option>
-                    {% for option in course_codes %}
-                        <option value="{{ option }}">{{ option }} </option>
-                    {% endfor %}
-                </select>
-            </div>
+            <h1 class="text-center">My Schedule</h1>
         </div>
         <div class="row">
-            <br><br>
-        </div>
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 <table class="condensed-table bordered-table">
                     <thead>
                         <tr>

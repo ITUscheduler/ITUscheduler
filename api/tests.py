@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-import requests, sys
+import requests
+import sys
 from bs4 import BeautifulSoup
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
