@@ -3,28 +3,32 @@
 {% block title %}Courses | ITUscheduler{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
-                <div class="panel panel-primary">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading">
-                        <h2 class="panel-title">Courses</h2>
-                    </div>
-                    <div class="panel-body">
-                        <form>
-                            <select class="form-control text-center" name="course_code" onchange="redirect(this.form.course_code)">
-                                {% for option in course_codes %}
-                                    <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <table class="table table-hover">
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <h2 class="panel-title">Courses</h2>
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)">
+                            {% for option in course_codes %}
+                                <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
                                 <thead>
                                 <tr>
+                                    {% if request.user.is_authenticated %}
+                                        <th>My Schedule</th>
+                                    {% endif %}
                                     <th>CRN</th>
                                     <th>Course Code</th>
                                     <th>Title</th>
@@ -40,33 +44,62 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {% for course in courses %}
-                                        <tr>
-                                            <td>{{ course.crn }}</td>
-                                            <td>{{ course.code }}</td>
-                                            <td>{{ course.title }}</td>
-                                            <td>{{ course.instructor }}</td>
-                                            <td>{{ course.building }}</td>
-                                            <td>{{ course.day }}</td>
-                                            <td>{{ course.time_start }}/{{ course.time_finish }}</td>
-                                            <td>{{ course.room }}</td>
-                                            <td>{{ course.enrolled }}/{{ course.capacity }}</td>
-                                            <td>{{ course.major_restriction }}</td>
-                                            <td>{{ course.prerequisites }}</td>
-                                            <td>{{ course.class_restriction }}</td>
-                                        </tr>
-                                    {% endfor %}
+                                {% for course in courses %}
+                                    <tr>
+                                        {% if request.user.is_authenticated %}
+                                            <td>
+                                                <label class="checkbox-inline">
+                                                    <input {% if course.id in my_courses %}checked {% endif %}onchange="addCourse({{course.id}})" type="checkbox">
+                                                </label>
+                                            </td>
+                                        {% endif %}
+                                        <th scope="row">{{ course.crn }}</th>
+                                        <td>{{ course.code }}</td>
+                                        <td>{{ course.title }}</td>
+                                        <td>{{ course.instructor }}</td>
+                                        <td>{{ course.building }}</td>
+                                        <td>{{ course.day }}</td>
+                                        <td>{{ course.time_start }}/{{ course.time_finish }}</td>
+                                        <td>{{ course.room }}</td>
+                                        <td>{{ course.enrolled }}/{{ course.capacity }}</td>
+                                        <td>{{ course.major_restriction }}</td>
+                                        <td>{{ course.prerequisites }}</td>
+                                        <td>{{ course.class_restriction }}</td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-    <script>
-        function redirect(selected) {
-            location.href = "/courses/" + selected.options[selected.selectedIndex].value;
-        }
-    </script>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Latest Database Refresh: {{ created }}</p>
+        </div>
+    </div>
+</div>
+<script>
+    function redirect(selected) {
+        location.href = "/courses/" + selected.options[selected.selectedIndex].value;
+    }
+    function addCourse(courseId) {
+        $.post(
+            "{% url "add_course" %}",
+            {
+                "course_id": parseInt(courseId),
+                "csrfmiddlewaretoken": getCookie('csrftoken')
+            },
+            function(response) {
+                var isSuccessful = response["successful"]
+                if (!isSuccessful) {
+                    alert("Error: " + response["error"] + "\nMy Courses: " + response["courses"]);
+                }
+            },
+            "json"
+        )
+    }
+</script>
 {% endblock %}

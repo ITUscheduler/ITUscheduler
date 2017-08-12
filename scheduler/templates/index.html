@@ -5,136 +5,170 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h1 class="text-center">My Schedule</h1>
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <h2 class="panel-title">My Courses</h2>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            {% for course in my_courses %}
+                            <p>{{ course }}</p>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <table class="condensed-table bordered-table">
-                    <thead>
-                        <tr>
-                            <th>Gün/Saat</th>
-                            <th>Pazartesi</th>
-                            <th>Salı</th>
-                            <th>Çarşamba</th>
-                            <th>Perşembe</th>
-                            <th>Cuma</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">8:30-9:29</td>
-                            <td saat="8" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="8" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="8" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="8" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="8" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">9:30-10:29</td>
-                            <td saat="9" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="9" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="9" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="9" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="9" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">10:30-11:29</td>
-                            <td saat="10" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="10" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="10" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="10" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="10" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">11:30-12:29</td>
-                            <td saat="11" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="11" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="11" gun="Çarşamba" style="background-color: rgb(219, 255, 148); background-position: initial initial; background-repeat: initial initial;">Intr. to Computer Engineering</td>
-                            <td saat="11" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="11" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">12:30-13:29</td>
-                            <td saat="12" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="12" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="12" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="12" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="12" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">13:30-14:29</td>
-                            <td saat="13" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="13" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="13" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="13" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="13" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">14:30-15:29</td>
-                            <td saat="14" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="14" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="14" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="14" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="14" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">15:30-16:29</td>
-                            <td saat="15" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="15" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="15" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="15" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="15" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">16:30-17:29</td>
-                            <td saat="16" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="16" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="16" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="16" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="16" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">17:30-18:29</td>
-                            <td saat="17" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="17" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="17" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="17" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="17" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">18:30-19:29</td>
-                            <td saat="18" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="18" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="18" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="18" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="18" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">19:30-20:29</td>
-                            <td saat="19" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="19" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="19" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="19" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="19" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">20:30-21:29</td>
-                            <td saat="20" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="20" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="20" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="20" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="20" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                        <tr>
-                            <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">21:30-22:29</td>
-                            <td saat="21" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="21" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="21" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="21" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                            <td saat="21" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">My Schedule</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)">
+                                {% for option in course_codes %}
+                                    <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Gün/Saat</th>
+                                        <th>Pazartesi</th>
+                                        <th>Salı</th>
+                                        <th>Çarşamba</th>
+                                        <th>Perşembe</th>
+                                        <th>Cuma</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">8:30-9:29</td>
+                                        <td saat="8" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="8" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="8" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="8" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="8" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">9:30-10:29</td>
+                                        <td saat="9" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="9" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="9" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="9" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="9" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">10:30-11:29</td>
+                                        <td saat="10" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="10" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="10" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="10" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="10" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">11:30-12:29</td>
+                                        <td saat="11" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="11" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="11" gun="Çarşamba" style="background-color: rgb(219, 255, 148); background-position: initial initial; background-repeat: initial initial;">Intr. to Computer Engineering</td>
+                                        <td saat="11" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="11" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">12:30-13:29</td>
+                                        <td saat="12" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="12" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="12" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="12" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="12" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">13:30-14:29</td>
+                                        <td saat="13" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="13" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="13" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="13" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="13" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">14:30-15:29</td>
+                                        <td saat="14" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="14" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="14" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="14" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="14" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">15:30-16:29</td>
+                                        <td saat="15" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="15" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="15" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="15" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="15" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">16:30-17:29</td>
+                                        <td saat="16" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="16" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="16" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="16" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="16" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">17:30-18:29</td>
+                                        <td saat="17" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="17" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="17" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="17" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="17" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">18:30-19:29</td>
+                                        <td saat="18" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="18" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="18" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="18" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="18" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">19:30-20:29</td>
+                                        <td saat="19" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="19" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="19" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="19" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="19" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">20:30-21:29</td>
+                                        <td saat="20" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="20" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="20" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="20" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="20" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="saat" style="background-color: white; background-position: initial initial; background-repeat: initial initial;">21:30-22:29</td>
+                                        <td saat="21" gun="Pazartesi" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="21" gun="Salı" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="21" gun="Çarşamba" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="21" gun="Perşembe" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                        <td saat="21" gun="Cuma" style="background-color: white; background-position: initial initial; background-repeat: initial initial;"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

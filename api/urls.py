@@ -2,7 +2,8 @@ from django.conf.urls import url
 from api import views
 
 urlpatterns = [
-    url(r'^refresh/course_codes/$', views.refresh_course_codes, name="refresh_course_codes"),
-    url(r'^refresh/courses/$', views.refresh_courses, name="refresh_courses"),
-    url(r'^refresh/flush/$', views.refresh_flush, name="flush")
+    url(r'^db/refresh/$', views.db_refresh, name="db_refresh"),
+    url(r'^db/flush/$', views.db_flush, name="db_flush"),
+    url(r'^course_codes/$', views.get_course_codes, name="course_codes"),
+    url(r'^courses/$', views.get_courses, name="courses")
 ]
