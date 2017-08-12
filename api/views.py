@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import user_passes_test
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound, HttpResponse
 from django.core import serializers
 from api.models import CourseCode, Course
 
@@ -47,6 +47,8 @@ def refresh_courses(request):
                             time = ["2500", "2500"]
                         if time[index][0] == "0":
                             time[index] = time[index][1::]
+                        prerequisites = str(data[12])
+                        prerequisites.replace("veya", " veya")
                         Course.objects.create(
                             course_code=course_code,
                             crn=int(data[0]),
@@ -62,7 +64,7 @@ def refresh_courses(request):
                             enrolled=int(data[9]),
                             reservation=data[10],
                             major_restriction=data[11],
-                            prerequisites=data[12],
+                            prerequisites=prerequisites,
                             class_restriction=data[13]
                         )
                     i += 1
@@ -72,3 +74,11 @@ def refresh_courses(request):
                 break
 
     return JsonResponse({"courses": serializers.serialize("json", Course.objects.all())})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def refresh_flush(request):
+    CourseCode.objects.all().delete()
+    Course.objects.all().delete()
+
+    return HttpResponse("<h1>Course Codes and Courses flushed!</h1>")

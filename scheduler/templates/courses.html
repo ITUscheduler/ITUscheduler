@@ -34,6 +34,9 @@
                                     <th>Time</th>
                                     <th>Room</th>
                                     <th>Capacity</th>
+                                    <th>Major Restriction</th>
+                                    <th>Prerequisites</th>
+                                    <th>Class Restriction</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -48,6 +51,9 @@
                                             <td>{{ course.time_start }}/{{ course.time_finish }}</td>
                                             <td>{{ course.room }}</td>
                                             <td>{{ course.enrolled }}/{{ course.capacity }}</td>
+                                            <td>{{ course.major_restriction }}</td>
+                                            <td>{{ course.prerequisites }}</td>
+                                            <td>{{ course.class_restriction }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
