@@ -7,19 +7,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-primary">
-                    <!-- Default panel contents -->
                     <div class="panel-heading">
                         <h2 class="panel-title">My Courses</h2>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item">
-                            {% if not request.user.is_authenticated %}
-                                <p>Please first <a href="{% url signup %}">Signup</a> or <a href="{% url login %}">Login</a>.</p>
-                            {% endif %}
+                        {% if user.is_authenticated %}
                             {% for course in my_courses %}
-                            <p>{{ course }}</p>
+                                <li class="list-group-item">{{ course }}</li>
                             {% endfor %}
-                        </li>
+                        {% else %}
+                            <li class="list-group-item">Please first <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

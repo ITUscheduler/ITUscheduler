@@ -12,9 +12,6 @@ ITU Scheduler is a Python Django Web Application that parses ITU's SIS website a
 - `python3 manage.py createuser` to create a super-admin user.
 - Check 127.0.0.1:8000 on your browser.
 
-# CLI
-- CLI application is added only for proof of concept and parsing tests.
-
 # Contribution
 Everyone is welcome to join and make pull requests.
 
