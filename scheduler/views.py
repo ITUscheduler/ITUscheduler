@@ -4,19 +4,59 @@ from django.http import JsonResponse
 from django.views import generic
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
+from scheduler.forms import ScheduleForm
 
 
-class IndexView(generic.ListView):
-    model = Schedule
+class IndexView(generic.CreateView):
+    form_class = ScheduleForm
     template_name = "index.html"
+    success_url = "."
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        user = self.request.user
+        if user.is_authenticated:
+            kwargs["courses"] = user.courses
+            if self.request.method == "POST":
+                post_data = kwargs["data"].copy()
+                post_data["user"] = user.id
+                kwargs["data"] = post_data
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["hours"] = [
+            "8:30-9:29",
+            "9:30-10:29",
+            "10:30-11:29",
+            "11:30-12:29",
+            "12:30-13:29",
+            "13:30-14:29",
+            "14:30-15:29",
+            "15:30-16:29",
+            "16:30-17:29",
+            "17:30-18:29",
+            "18:30-19:29",
+            "19:30-20:29"
+        ]
         user = self.request.user
         if user.is_authenticated:
             context["my_schedule"] = user.my_schedule
-            context["schedules"] = user.schedules.all()
-            context["my_courses"] = user.courses.all()
+            context["courses"] = user.courses.all()
+            schedules = Schedule.objects.filter(user=user).all()
+            context["schedules"] = schedules
+            try:
+                selected_schedule = schedules[0]
+            except IndexError:
+                selected_schedule = 0
+            for schedule in schedules:
+                if str(schedule.id) in self.request.path:
+                    selected_schedule = schedule
+                    break
+                elif schedule == user.my_schedule:
+                    selected_schedule = schedule
+                    break
+            context["selected_schedule"] = selected_schedule
         return context
 
 
@@ -60,3 +100,15 @@ def add_course(request):
         return JsonResponse({"courses": [course.crn for course in request.user.courses.all()], "successful": True})
     except Exception as error:
         return JsonResponse({"courses": [course.crn for course in request.user.courses.all()], "successful": False, "error": error})
+
+
+@login_required
+def select_schedule(request):
+    try:
+        schedule_id = int(request.POST["schedule_id"])
+        schedule = Schedule.objects.get(id=schedule_id)
+        request.user.my_schedule = schedule
+        request.user.save()
+    except Exception as error:
+        return JsonResponse({"successful": False, "error": str(error)})
+    return JsonResponse({"successful": True, "scheduleId": schedule_id})
