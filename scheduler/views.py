@@ -12,11 +12,36 @@ class IndexView(generic.CreateView):
     template_name = "index.html"
     success_url = "."
 
+    @staticmethod
+    def is_available(courses, course):
+        if course.is_full():
+            return False
+        for c in courses:
+            if course.day == c.day and c.time[0] <= course.time[0] <= c.time[1] or c.time[0] <= course.time[1] <= c.time[1]:
+                return False
+            else:
+                continue
+        return True
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         user = self.request.user
         if user.is_authenticated:
             kwargs["courses"] = user.courses
+            _ = [
+                "8:30-9:29",
+                "9:30-10:29",
+                "10:30-11:29",
+                "11:30-12:29",
+                "12:30-13:29",
+                "13:30-14:29",
+                "14:30-15:29",
+                "15:30-16:29",
+                "16:30-17:29",
+                "17:30-18:29",
+                "18:30-19:29",
+                "19:30-20:29"
+            ]
             if self.request.method == "POST":
                 post_data = kwargs["data"].copy()
                 post_data["user"] = user.id

@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-body">
                     <form>
-                        <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)">
+                        <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)" title="course_code">
                             {% for option in course_codes %}
                                 <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
                             {% endfor %}
@@ -53,7 +53,7 @@
                                                 </label>
                                             </td>
                                         {% endif %}
-                                        <th scope="row">{{ course.crn }}</th>
+                                        <th>{{ course.crn }}</th>
                                         <td>{{ course.code }}</td>
                                         <td>{{ course.title }}</td>
                                         <td>{{ course.instructor }}</td>
@@ -93,7 +93,7 @@
                 "csrfmiddlewaretoken": getCookie('csrftoken')
             },
             function(response) {
-                var isSuccessful = response["successful"]
+                var isSuccessful = response["successful"];
                 if (!isSuccessful) {
                     alert("Error: " + response["error"] + "\nMy Courses: " + response["courses"]);
                 }

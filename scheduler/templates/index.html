@@ -41,13 +41,13 @@
                     {% if user.is_authenticated %}
                         <div class="panel-body">
                             <form style="display: inline-flex; width: 78%;">
-                                <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)">
+                                <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                     {% for schedule in schedules %}
                                         <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule #{{ schedule.id }}</option>
                                     {% endfor %}
                                 </select>
                             </form>
-                            <input style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            <input title="select-schedule" style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
                         </div>
                     {% endif %}
                     <ul class="list-group">
