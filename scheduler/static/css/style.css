@@ -15,6 +15,10 @@ body {
     min-height: 100%;
 }
 
+.navbar {
+    border-radius: 0;
+}
+
 .footer {
     position: absolute;
     right: 0;
