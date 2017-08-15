@@ -3,7 +3,7 @@ from django.db import models
 
 class CourseCode(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    code = models.CharField(max_length=3, unique=True)
+    code = models.CharField(max_length=3, unique=True, primary_key=True)
 
     def __str__(self):
         return self.code
@@ -11,7 +11,7 @@ class CourseCode(models.Model):
 
 class Course(models.Model):
     course_code = models.ForeignKey(CourseCode)
-    crn = models.PositiveIntegerField()
+    crn = models.PositiveIntegerField(unique=True, primary_key=True)
     code = models.CharField(max_length=3)
     title = models.CharField(max_length=100)
     instructor = models.CharField(max_length=200)
