@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
@@ -26,12 +27,13 @@ def db_refresh(request):
 
         for course_code in CourseCode.objects.all():
             r = requests.get(BASE_URL + course_code.code)
-            soup = BeautifulSoup(r.content, "html.parser")
+            soup = BeautifulSoup(r.content, "html5lib")
+            raw_table = soup.find("table", class_="dersprg")
 
-            i = 5
+            i = 3
             while True:
                 try:
-                    raw_course = soup.select_one("tr:nth-of-type({})".format(i))
+                    raw_course = raw_table.select_one("tr:nth-of-type({})".format(i))
                     try:
                         data = [row.get_text() for row in raw_course.find_all("td")]
                         n = len(data[4]) // 3
@@ -52,7 +54,7 @@ def db_refresh(request):
                         times_finish = times_finish[:-1:]
                         rooms = ",".join(data[7].split())
                         prerequisites = data[12]
-                        prerequisites.replace("veya", " veya")
+                        prerequisites = re.sub("veya", " veya", prerequisites)
                         Course.objects.create(
                             n_classes=n,
                             course_code=course_code,
