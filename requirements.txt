@@ -5,3 +5,4 @@ Pillow
 django-bootstrap-form
 django-gravatar2
 hopcroftkarp==1.2.4
+html5lib
