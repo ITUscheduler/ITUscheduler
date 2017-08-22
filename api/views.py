@@ -35,7 +35,8 @@ def db_refresh_course_codes(request):
     for option in soup.find("select").find_all("option"):
         if option.attrs["value"] != "":
             opt = option.get_text()[:-1:]
-            codes.remove(opt)
+            if opt in codes:
+                codes.remove(opt)
             query = CourseCode.objects.filter(code=opt)
             if not query.exists():
                 CourseCode.objects.create(code=opt)
@@ -47,8 +48,7 @@ def db_refresh_course_codes(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_courses(request):
-    codes = request.POST.get("course_codes", [])
-
+    codes = request.POST.getlist("course_codes[]")
     with transaction.atomic():
         for code in codes:
             course_code = get_object_or_404(CourseCode, code=code)
@@ -117,7 +117,7 @@ def db_refresh_courses(request):
 
             course_code.refreshed = timezone.now()
             course_code.save()
-    return HttpResponse("<a href='/'><h1>{}: Courses refreshed!</h1></a>".format(course_code.code))
+    return HttpResponse("<a href='/'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
 
 
 @user_passes_test(lambda u: u.is_superuser)
