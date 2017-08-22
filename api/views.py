@@ -2,41 +2,72 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import transaction
 from django.http import JsonResponse, HttpResponseNotFound, HttpResponse
 from django.core import serializers
+from django.shortcuts import get_object_or_404
+from django.views import generic
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
+from django.utils import timezone
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
 
 
+class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
+    model = CourseCode
+    template_name = "refresh_courses.html"
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        else:
+            return False
+
+
 @user_passes_test(lambda u: u.is_superuser)
-def db_refresh(request):
+def db_refresh_course_codes(request):
+    r = requests.get(BASE_URL)
+    soup = BeautifulSoup(r.content, "html.parser")
+    codes = [course_code.code for course_code in CourseCode.objects.all()]
+
+    for option in soup.find("select").find_all("option"):
+        if option.attrs["value"] != "":
+            opt = option.get_text()[:-1:]
+            codes.remove(opt)
+            query = CourseCode.objects.filter(code=opt)
+            if not query.exists():
+                CourseCode.objects.create(code=opt)
+    for code in codes:
+        course_code = CourseCode.objects.get(code=code)
+        course_code.delete()
+    return HttpResponse("<a href='/'><h1>Course Codes refreshed!</h1></a>")
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def db_refresh_courses(request):
+    codes = request.POST.get("course_codes", [])
+
     with transaction.atomic():
-        CourseCode.objects.all().delete()
-        Course.objects.all().delete()
-        Schedule.objects.all().delete()
+        for code in codes:
+            course_code = get_object_or_404(CourseCode, code=code)
+            crns = [course.crn for course in Course.objects.filter(course_code=code).all()]
 
-        r = requests.get(BASE_URL)
-        soup = BeautifulSoup(r.content, "html.parser")
-
-        for option in soup.find("select").find_all("option"):
-            if option.attrs["value"] != "":
-                CourseCode.objects.create(code=option.get_text()[:-1:])
-
-        for course_code in CourseCode.objects.all():
-            r = requests.get(BASE_URL + course_code.code)
+            r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
             raw_table = soup.find("table", class_="dersprg")
 
-            i = 3
+            nth_course = 3
             while True:
                 try:
-                    raw_course = raw_table.select_one("tr:nth-of-type({})".format(i))
+                    raw_course = raw_table.select_one("tr:nth-of-type({})".format(nth_course))
+                    if raw_course is None:
+                        break
                     try:
                         data = [row.get_text() for row in raw_course.find_all("td")]
                         n = len(data[4]) // 3
+                        crn = int(data[0])
                         buildings = ",".join([data[4][3*i:3*i+3:] for i in range(n)])
                         days = ",".join(data[5].split())
                         times_start = ""
@@ -55,32 +86,38 @@ def db_refresh(request):
                         rooms = ",".join(data[7].split())
                         prerequisites = data[12]
                         prerequisites = re.sub("veya", " veya", prerequisites)
-                        Course.objects.create(
-                            n_classes=n,
-                            course_code=course_code,
-                            crn=int(data[0]),
-                            code=data[1],
-                            title=data[2],
-                            instructor=data[3],
-                            building=buildings,
-                            day=days,
-                            time_start=times_start,
-                            time_finish=times_finish,
-                            room=rooms,
-                            capacity=int(data[8]),
-                            enrolled=int(data[9]),
-                            reservation=data[10],
-                            major_restriction=data[11],
-                            prerequisites=prerequisites,
-                            class_restriction=data[13]
-                        )
-                        i += 1
+                        if crn in crns:
+                            course = Course.objects.get(crn=crn)
+                            #course.
+                        else:
+                            Course.objects.create(
+                                n_classes=n,
+                                course_code=course_code,
+                                crn=crn,
+                                code=data[1],
+                                title=data[2],
+                                instructor=data[3],
+                                building=buildings,
+                                day=days,
+                                time_start=times_start,
+                                time_finish=times_finish,
+                                room=rooms,
+                                capacity=int(data[8]),
+                                enrolled=int(data[9]),
+                                reservation=data[10],
+                                major_restriction=data[11],
+                                prerequisites=prerequisites,
+                                class_restriction=data[13]
+                            )
+                        nth_course += 1
                     except AttributeError:
-                        i += 1
+                        nth_course += 1
                 except IndexError:
                     break
 
-    return HttpResponse("<a href='/'><h1>Course Codes and Courses refreshed!</h1></a>")
+            course_code.refreshed = timezone.now()
+            course_code.save()
+    return HttpResponse("<a href='/'><h1>{}: Courses refreshed!</h1></a>".format(course_code.code))
 
 
 @user_passes_test(lambda u: u.is_superuser)
