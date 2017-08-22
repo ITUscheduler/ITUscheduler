@@ -48,8 +48,8 @@
                                     <tr>
                                         {% if request.user.is_authenticated %}
                                             <td>
-                                                <label class="checkbox-inline">
-                                                    <input {% if course.crn in my_courses %}checked {% endif %}onchange="addCourse({{course.crn}})" type="checkbox">
+                                                <label>
+                                                    <input class="checkbox-inline" {% if course.crn in my_courses %}checked {% endif %}onchange="addCourse({{course.crn}})" type="checkbox">
                                                 </label>
                                             </td>
                                         {% endif %}
@@ -59,7 +59,7 @@
                                         <td>{{ course.instructor }}</td>
                                         <td>{{ course.building }}</td>
                                         <td>{{ course.day }}</td>
-                                        <td>{{ course.time_start }}/{{ course.time_finish }}</td>
+                                        <td>{% for times in course.times %}{{ times }}{% endfor %}</td>
                                         <td>{{ course.room }}</td>
                                         <td>{{ course.enrolled }}/{{ course.capacity }}</td>
                                         <td>{{ course.major_restriction }}</td>
@@ -77,7 +77,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <p>Latest Database Refresh: {{ created }}</p>
+            <p>Latest Database Refresh: {{ refreshed }}</p>
         </div>
     </div>
 </div>

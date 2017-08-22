@@ -95,17 +95,23 @@ class CoursesView(generic.DetailView):
         return "code"
     
     def dispatch(self, request, *args, **kwargs):
-        if not CourseCode.objects.all():
-            return render_to_response("courses.html", context={"request": request, "user": request.user})
+        if not CourseCode.objects.all() or not Course.objects.filter(course_code=kwargs["slug"]).all():
+            return render_to_response("courses.html", context={"request": request, "user": request.user, "course_codes": CourseCode.objects.all()})
         else:
-            super().dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["courses"] = context["object"].course_set.all()
+        context["course_codes"] = CourseCode.objects.all()
+        courses = context["object"].course_set.all()
+        for course in courses:
+            course.times = []
+            for i in range(course.n_classes):
+                course.times.append("{}/{} ".format(course.time_start.split(",")[i], course.time_finish.split(",")[i]))
+        context["courses"] = courses
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
-        context["created"] = context["object"].created
+        context["refreshed"] = context["object"].refreshed
         return context
 
 

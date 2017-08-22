@@ -1,9 +1,10 @@
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
+from django.utils import timezone
 
 
 class CourseCode(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    refreshed = models.DateTimeField(default=timezone.now)
     code = models.CharField(max_length=3, unique=True, primary_key=True)
 
     def __str__(self):
@@ -33,7 +34,13 @@ class Course(models.Model):
         get_latest_by = "crn"
 
     def __str__(self):
-        return "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + self.building + " " + self.day + " " + "{}/{}".format(self.time_start, self.time_finish) + " | " + "{}/{}".format(self.enrolled, self.capacity)
+        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + self.building + " " + self.day + " "
+        for i in range(self.n_classes):
+            string += "{}/{}".format(self.time_start.split(",")[i], self.time_finish.split(",")[i])
+            if i + 1 != self.n_classes:
+                string += ","
+        string += " | " + "{}/{}".format(self.enrolled, self.capacity)
+        return string
 
     def is_full(self):
         if self.enrolled < self.capacity:

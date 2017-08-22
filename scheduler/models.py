@@ -5,7 +5,7 @@ from api.models import Course
 
 class ExtendedUser(AbstractUser):
     courses = models.ManyToManyField(Course)
-    my_schedule = models.ForeignKey("Schedule", blank=True, null=True)
+    my_schedule = models.ForeignKey("Schedule", blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class Schedule(models.Model):
