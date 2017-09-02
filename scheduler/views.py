@@ -51,23 +51,37 @@ class IndexView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["hours"] = [
-            "8:30-9:29",
-            "9:30-10:29",
-            "10:30-11:29",
-            "11:30-12:29",
-            "12:30-13:29",
-            "13:30-14:29",
-            "14:30-15:29",
-            "15:30-16:29",
-            "16:30-17:29",
-            "17:30-18:29",
-            "18:30-19:29",
-            "19:30-20:29"
-        ]
         user = self.request.user
+        class Hour:
+            def __init__(self, time, time_start, time_finish, course=None):
+                self.time = time
+                self.time_start = time_start
+                self.time_finish = time_finish
+                self.course = course
         if user.is_authenticated:
+            hours = [
+                Hour("8:30-9:29", 830, 929),
+                Hour("9:30-10:29", 930, 1029),
+                Hour("10:30-11:29", 1030, 1129),
+                Hour("11:30-12:29", 1130, 1229),
+                Hour("12:30-13:29", 1230, 1329),
+                Hour("13:30-14:29", 1330, 1429),
+                Hour("14:30-15:29", 1430, 1529),
+                Hour("15:30-16:29", 1530, 1629),
+                Hour("16:30-17:29", 1630, 1729),
+                Hour("17:30-18:29", 1730, 1829),
+                Hour("18:30-19:29", 1830, 1929),
+                Hour("19:30-20:29", 1930, 2029),
+                Hour("20:30-21:29", 2030, 2129)
+            ]
+            for hour in hours:
+                for course in user.my_schedule.courses.all():
+                    r = range(int(course.time_start), int(course.time_finish))
+                    if hour.time_start in r and hour.time_finish in r:
+                        hour.course = course
+            context["hours"] = hours
             context["my_schedule"] = user.my_schedule
+            context["my_courses"] = user.my_schedule.courses.all()
             context["courses"] = user.courses.all()
             schedules = Schedule.objects.filter(user=user).all()
             context["schedules"] = schedules
@@ -93,7 +107,7 @@ class CoursesView(generic.DetailView):
 
     def get_slug_field(self):
         return "code"
-    
+
     def dispatch(self, request, *args, **kwargs):
         if not CourseCode.objects.all() or not Course.objects.filter(course_code=kwargs["slug"]).all():
             return render_to_response("courses.html", context={"request": request, "user": request.user, "course_codes": CourseCode.objects.all()})
