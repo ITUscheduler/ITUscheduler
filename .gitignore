@@ -9,3 +9,4 @@ venv/
 # Django
 static/
 media/
+db.sqlite3
