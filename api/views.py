@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponseNotFound, HttpResponse
 from django.core import serializers
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import CourseCode, Course
+from api.models import CourseCode, Course, Lecture
 from scheduler.models import Schedule
 from django.utils import timezone
 
@@ -88,20 +88,23 @@ def db_refresh_courses(request):
                         prerequisites = re.sub("veya", " veya", prerequisites)
                         if crn in crns:
                             course = Course.objects.get(crn=crn)
-                            #course.
                         else:
-                            Course.objects.create(
+                            buildings = [data[4][3*i:3*i+3:] for i in range(n)]
+                            lecture_count = len(buildings)
+                            days = data[5].split()
+
+                            course = Course.objects.create(
                                 n_classes=n,
                                 course_code=course_code,
                                 crn=crn,
                                 code=data[1],
                                 title=data[2],
                                 instructor=data[3],
-                                building=buildings,
-                                day=days,
-                                time_start=times_start,
-                                time_finish=times_finish,
-                                room=rooms,
+                                # building=buildings,
+                                # day=days,
+                                # time_start=times_start,
+                                # time_finish=times_finish,
+                                # room=rooms,
                                 capacity=int(data[8]),
                                 enrolled=int(data[9]),
                                 reservation=data[10],
@@ -109,6 +112,17 @@ def db_refresh_courses(request):
                                 prerequisites=prerequisites,
                                 class_restriction=data[13]
                             )
+
+                            for i in range(lecture_count):
+                                Lecture.objects.create(
+                                    building=buildings[i],
+                                    day=days[i],
+                                    time_start=times_start.split(",")[i],
+                                    time_finish=times_finish.split(",")[i],
+                                    room=rooms.split(",")[i],
+                                    course=course
+                                )
+
                         nth_course += 1
                     except AttributeError:
                         nth_course += 1

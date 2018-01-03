@@ -52,45 +52,59 @@ class IndexView(generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        try:
-            if not user.my_schedule:
-                raise AttributeError
-        except AttributeError:
-            return context
 
         class Hour:
             def __init__(self, time, time_start, time_finish, course=None):
                 self.time = time
                 self.time_start = time_start
                 self.time_finish = time_finish
-                self.course = course
+                try:
+                    day = course.day
+                    self.day = {day: course}
+                except AttributeError:
+                    self.day = {}
+
+        hours = [
+            Hour("8:30-9:29", 830, 929),
+            Hour("9:30-10:29", 930, 1029),
+            Hour("10:30-11:29", 1030, 1129),
+            Hour("11:30-12:29", 1130, 1229),
+            Hour("12:30-13:29", 1230, 1329),
+            Hour("13:30-14:29", 1330, 1429),
+            Hour("14:30-15:29", 1430, 1529),
+            Hour("15:30-16:29", 1530, 1629),
+            Hour("16:30-17:29", 1630, 1729),
+            Hour("17:30-18:29", 1730, 1829),
+            Hour("18:30-19:29", 1830, 1929),
+            Hour("19:30-20:29", 1930, 2029),
+            Hour("20:30-21:29", 2030, 2129)
+        ]
+        context["hours"] = hours
+        context["courses"] = user.courses.all()
+        schedules = Schedule.objects.filter(user=user).all()
+        context["schedules"] = schedules
+        try:
+            if not user.my_schedule:
+                raise AttributeError
+        except AttributeError:
+            return context
+
         if user.is_authenticated:
-            hours = [
-                Hour("8:30-9:29", 830, 929),
-                Hour("9:30-10:29", 930, 1029),
-                Hour("10:30-11:29", 1030, 1129),
-                Hour("11:30-12:29", 1130, 1229),
-                Hour("12:30-13:29", 1230, 1329),
-                Hour("13:30-14:29", 1330, 1429),
-                Hour("14:30-15:29", 1430, 1529),
-                Hour("15:30-16:29", 1530, 1629),
-                Hour("16:30-17:29", 1630, 1729),
-                Hour("17:30-18:29", 1730, 1829),
-                Hour("18:30-19:29", 1830, 1929),
-                Hour("19:30-20:29", 1930, 2029),
-                Hour("20:30-21:29", 2030, 2129)
-            ]
+            course_range = {}
+            for course in user.my_schedule.courses.all():
+                time_range = []
+                for i, lecture_start in enumerate(course.time_start.split(',')):
+                    lecture_finish = course.time_finish.split(',')[i]
+                    time_range.append(range(int(lecture_start), int(lecture_finish)))
+                course_range[course.crn] = time_range
             for hour in hours:
                 for course in user.my_schedule.courses.all():
-                    r = range(int(course.time_start), int(course.time_finish))
-                    if hour.time_start in r and hour.time_finish in r:
-                        hour.course = course
+                    hour.day[course.day] = course
+                    # if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[course.crn]:
+                    #     hour.day[course.day] = course
             context["hours"] = hours
             context["my_schedule"] = user.my_schedule
             context["my_courses"] = user.my_schedule.courses.all()
-            context["courses"] = user.courses.all()
-            schedules = Schedule.objects.filter(user=user).all()
-            context["schedules"] = schedules
             try:
                 selected_schedule = schedules[0]
             except IndexError:
