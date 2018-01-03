@@ -9,7 +9,7 @@ class ExtendedUser(AbstractUser):
 
 
 class Schedule(models.Model):
-    user = models.ForeignKey(ExtendedUser, null=True)
+    user = models.ForeignKey(ExtendedUser, null=True, on_delete=models.CASCADE)
     courses = models.ManyToManyField(Course)
 
     def __str__(self):
