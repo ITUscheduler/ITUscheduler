@@ -13,7 +13,7 @@ class CourseCode(models.Model):
 
 class Course(models.Model):
     n_classes = models.PositiveSmallIntegerField(default=1)
-    course_code = models.ForeignKey(CourseCode)
+    course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
     code = models.CharField(max_length=3)
     title = models.CharField(max_length=100)
