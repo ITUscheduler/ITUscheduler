@@ -1,4 +1,11 @@
+# MacOS
 .DS_Store
 .idea/
+
+# Python
 __pycache__/
 venv/
+
+# Django
+static/
+media/
