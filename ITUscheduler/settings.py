@@ -25,7 +25,7 @@ SECRET_KEY = 'on+@th%h49ncw2+v%i*8cgz8)6_@koy1j1rd7cq@s@=8y6(6%9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.dorukgezici.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com', '.dorukgezici.com']
 
 
 # Application definition
@@ -83,6 +83,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ITUscheduler',
+        'USER': 'dorukgezici',
+        'PASSWORD': 'q1w2e3',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
