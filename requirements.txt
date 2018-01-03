@@ -1,8 +1,8 @@
-Django==1.11.4
-beautifulsoup4==4.6.0
-requests==2.18.3
+Django
+beautifulsoup4
+requests
 Pillow
 django-bootstrap-form
 django-gravatar2
-hopcroftkarp==1.2.4
+hopcroftkarp
 html5lib
