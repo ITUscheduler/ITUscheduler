@@ -6,3 +6,4 @@ django-bootstrap-form
 django-gravatar2
 hopcroftkarp
 html5lib
+django_rest_framework
