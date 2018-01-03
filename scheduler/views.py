@@ -52,6 +52,8 @@ class IndexView(generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+        if not user.my_schedule:
+            return context
         class Hour:
             def __init__(self, time, time_start, time_finish, course=None):
                 self.time = time
