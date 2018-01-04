@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import CourseCode, Course, Lecture
+from api.models import CourseCode, Course, Lecture, Prerequisite
 from scheduler.models import Schedule
 from django.utils import timezone
 
@@ -82,12 +82,20 @@ def db_refresh_courses(request):
                         times_finish = times_finish[:-1:]
                         prerequisites = data[12]
                         prerequisites = re.sub("veya", " veya", prerequisites)
+                        print(prerequisites)
                         if crn in crns:
                             _ = Course.objects.get(crn=crn)
                             # Edit course object (Not implemented)
                         else:
                             buildings = [data[4][3*i:3*i+3:] for i in range(lecture_count)]
                             days = data[5].split()
+                            prerequisites_objects = []
+                            if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites:
+                                prerequisites += ' veya '
+                                for _data in prerequisites.split(' veya '):
+                                    prerequisites_objects.append(Prerequisite.objects.create(code=_data[:9], min_grade=_data[-2:]))
+                            else:
+                                prerequisites_objects.append(Prerequisite.objects.create(none=True))
 
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
@@ -100,9 +108,12 @@ def db_refresh_courses(request):
                                 enrolled=int(data[9]),
                                 reservation=data[10],
                                 major_restriction=data[11],
-                                prerequisites=prerequisites,
                                 class_restriction=data[13]
                             )
+
+                            for prerequisite in prerequisites_objects:
+                                course.prerequisites.add(prerequisite)
+
 
                             for i in range(lecture_count):
                                 Lecture.objects.create(
