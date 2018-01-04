@@ -59,10 +59,10 @@
                                         <td>{{ course.instructor }}</td>
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.building }}<br>{% endfor %}</td>
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.day }}<br>{% endfor %}</td>
-                                        <td>{% for times in course.times %}{{ times }}{% endfor %}</td>
+                                        <td>{{ course.times|join:"<br>" }}</td>
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.room }}<br>{% endfor %}</td>
                                         <td>{{ course.enrolled }}/{{ course.capacity }}</td>
-                                        <td>{{ course.major_restriction }}</td>
+                                        <td>{{ course.major_restriction.all|join:"<br>" }}</td>
                                         <td>{{ course.prerequisites }}</td>
                                         <td>{{ course.class_restriction }}</td>
                                     </tr>

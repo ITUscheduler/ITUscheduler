@@ -10,6 +10,7 @@ class CourseCode(models.Model):
         return self.code
 
 
+<<<<<<< HEAD
 class Prerequisite(models.Model):
     code = models.CharField(max_length=10)
     none = models.BooleanField(default=False)
@@ -20,6 +21,13 @@ class Prerequisite(models.Model):
             return str(self.code)
 
         return str(self.none)
+=======
+class MajorRestriction(models.Model):
+    major = models.CharField(max_length=5, unique=True, primary_key=True)
+
+    def __str__(self):
+        return str(self.major)
+>>>>>>> 27cfefb08d754db6abf3f6406519b860170cdc6f
 
 
 class Course(models.Model):
@@ -32,8 +40,13 @@ class Course(models.Model):
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
     reservation = models.CharField(max_length=50)
+<<<<<<< HEAD
     major_restriction = models.TextField()
     prerequisites = models.ManyToManyField(Prerequisite)
+=======
+    major_restriction = models.ManyToManyField(MajorRestriction)
+    prerequisites = models.TextField()
+>>>>>>> 27cfefb08d754db6abf3f6406519b860170cdc6f
     class_restriction = models.CharField(max_length=20)
 
     class Meta:
