@@ -80,25 +80,28 @@ class IndexView(generic.CreateView):
             Hour("20:30-21:29", 2030, 2129)
         ]
         context["hours"] = hours
+        context["courses"] = user.courses.all()
+
         try:
             if not user.my_schedule:
                 raise AttributeError
         except AttributeError:
+            schedules = Schedule.objects.filter(user=user).all()
+            context["schedules"] = schedules
             return context
 
         if user.is_authenticated:
             course_range = {}
             for course in user.my_schedule.courses.all():
                 time_range = []
-                for i, lecture_start in enumerate(course.time_start.split(',')):
-                    lecture_finish = course.time_finish.split(',')[i]
-                    time_range.append(range(int(lecture_start), int(lecture_finish)))
+                for lecture in course.lecture_set.all():
+                    time_range.extend([*(range(int(lecture.time_start), int(lecture.time_finish)))])
                 course_range[course.crn] = time_range
             for hour in hours:
                 for course in user.my_schedule.courses.all():
-                    hour.day[course.day] = course
-                    # if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[course.crn]:
-                    #     hour.day[course.day] = course
+                    for lecture in course.lecture_set.all():
+                        if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[course.crn]:
+                            hour.day[lecture.day] = course
             context["hours"] = hours
             context["my_schedule"] = user.my_schedule
             context["my_courses"] = user.my_schedule.courses.all()
