@@ -20,6 +20,7 @@ class CourseListAPIView(ListAPIView):
             queryset = queryset.filter(code=code)
 
         serializer = self.get_serializer(queryset, many=True)
+        print(serializer.data)
         return Response(serializer.data)
 
 
