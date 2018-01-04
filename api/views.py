@@ -80,9 +80,7 @@ def db_refresh_courses(request):
                             times_finish += time[1] + ","
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
-                        prerequisites = data[12]
-                        d = re.sub("veya", " veya", prerequisites)
-                        print(prerequisites)
+                        prerequisites = re.sub("veya", " veya", data[12])
                         if crn in crns:
                             _ = Course.objects.get(crn=crn)
                             # Edit course object (Not implemented)
@@ -92,7 +90,6 @@ def db_refresh_courses(request):
                             majors = data[11].split(", ")
                             prerequisites_objects = []
                             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites:
-                                prerequisites += ' veya '
                                 for _data in prerequisites.split(' veya '):
                                     prerequisites_objects.append(Prerequisite.objects.create(code=_data[:9], min_grade=_data[-2:]))
                             else:
