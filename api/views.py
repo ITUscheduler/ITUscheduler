@@ -90,10 +90,10 @@ def db_refresh_courses(request):
                             majors = data[11].split(", ")
                             prerequisites_objects = []
                             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites:
-                                for _data in prerequisites.split(' veya '):
-                                    prerequisites_objects.append(Prerequisite.objects.create(code=_data[:9], min_grade=_data[-2:]))
+                                for prerequisite in prerequisites.split(' veya '):
+                                    prerequisites_objects.append(Prerequisite.objects.create(code=prerequisite[:9], min_grade=prerequisite[-2:]))
                             else:
-                                prerequisites_objects.append(Prerequisite.objects.create(none=True))
+                                prerequisites_objects.append(Prerequisite.objects.get_or_create(code="Yok/None")[0])
 
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
@@ -107,9 +107,6 @@ def db_refresh_courses(request):
                                 reservation=data[10],
                                 class_restriction=data[13]
                             )
-
-                            for prerequisite in prerequisites_objects:
-                                course.prerequisites.add(prerequisite)
 
                             for i in range(lecture_count):
                                 Lecture.objects.create(
@@ -125,6 +122,9 @@ def db_refresh_courses(request):
                                 print(major)
                                 major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
                                 course.major_restriction.add(major_restriction)
+
+                            for prerequisite in prerequisites_objects:
+                                course.prerequisites.add(prerequisite)
 
                         nth_course += 1
                     except AttributeError:
