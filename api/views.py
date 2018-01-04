@@ -4,8 +4,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import transaction
-from django.http import JsonResponse, HttpResponseNotFound, HttpResponse
-from django.core import serializers
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from api.models import CourseCode, Course, Lecture
