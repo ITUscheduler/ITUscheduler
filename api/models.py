@@ -7,19 +7,15 @@ class CourseCode(models.Model):
     code = models.CharField(max_length=3, unique=True, primary_key=True)
 
     def __str__(self):
-        return self.code
+        return str(self.code)
 
 
 class Prerequisite(models.Model):
     code = models.CharField(max_length=10)
-    none = models.BooleanField(default=False)
     min_grade = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        if not self.none:
-            return str(self.code)
-
-        return str(self.none)
+        return str(self.code)
 
 
 class MajorRestriction(models.Model):
