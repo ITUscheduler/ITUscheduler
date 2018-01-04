@@ -10,7 +10,6 @@ class CourseCode(models.Model):
         return self.code
 
 
-
 class Prerequisite(models.Model):
     code = models.CharField(max_length=10)
     none = models.BooleanField(default=False)
@@ -40,12 +39,8 @@ class Course(models.Model):
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
     reservation = models.CharField(max_length=50)
-    major_restriction = models.TextField()
-    prerequisites = models.ManyToManyField(Prerequisite)
-
     major_restriction = models.ManyToManyField(MajorRestriction)
-    prerequisites = models.TextField()
-
+    prerequisites = models.ManyToManyField(Prerequisite)
     class_restriction = models.CharField(max_length=20)
 
     class Meta:
