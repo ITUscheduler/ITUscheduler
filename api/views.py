@@ -107,13 +107,11 @@ def db_refresh_courses(request):
                                 capacity=int(data[8]),
                                 enrolled=int(data[9]),
                                 reservation=data[10],
-                                major_restriction=data[11],
                                 class_restriction=data[13]
                             )
 
                             for prerequisite in prerequisites_objects:
                                 course.prerequisites.add(prerequisite)
-
 
                             for i in range(lecture_count):
                                 Lecture.objects.create(
