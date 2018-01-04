@@ -11,13 +11,14 @@ class CourseCodeSerializer(serializers.ModelSerializer):
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = ('__all__')
+        exclude = ('id', )
 
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ('__all__')
+
 
 
 
