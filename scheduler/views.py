@@ -59,8 +59,8 @@ class IndexView(generic.CreateView):
                 self.time_start = time_start
                 self.time_finish = time_finish
                 try:
-                    day = course.day
-                    self.day = {day: course}
+                    day = str(course.day).lower()
+                    self.day = {day: "#{} {}".format(course.crn, course.code)}
                 except AttributeError:
                     self.day = {}
 
@@ -101,7 +101,7 @@ class IndexView(generic.CreateView):
                 for course in user.my_schedule.courses.all():
                     for lecture in course.lecture_set.all():
                         if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[course.crn]:
-                            hour.day[lecture.day] = course
+                            hour.day[str(lecture.day).lower()] = "#{} {}".format(course.crn, course.code)
             context["hours"] = hours
             context["my_schedule"] = user.my_schedule
             context["my_courses"] = user.my_schedule.courses.all()
