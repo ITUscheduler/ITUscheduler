@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Course, CourseCode, Lecture
+from api.models import Course, CourseCode, Lecture, Prerequisite
 
 
 class CourseCodeSerializer(serializers.ModelSerializer):
@@ -14,7 +14,14 @@ class LectureSerializer(serializers.ModelSerializer):
         exclude = ('id', )
 
 
+class PrerequisiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prerequisite
+        fields = ('__all__')
+
+
 class CourseSerializer(serializers.ModelSerializer):
+    prerequisites = PrerequisiteSerializer
     class Meta:
         model = Course
         fields = ('__all__')
