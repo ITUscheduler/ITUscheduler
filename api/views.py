@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import CourseCode, Course, Lecture, Prerequisite
+from api.models import CourseCode, Course, Lecture, Prerequisite, MajorRestriction
 from scheduler.models import Schedule
 from django.utils import timezone
 
@@ -123,6 +123,11 @@ def db_refresh_courses(request):
                                     room=data[7].split()[i],
                                     course=course
                                 )
+
+                            for major in majors:
+                                print(major)
+                                major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
+                                course.major_restriction.add(major_restriction)
 
                         nth_course += 1
                     except AttributeError:
