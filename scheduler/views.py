@@ -140,7 +140,7 @@ class CoursesView(generic.DetailView):
         courses = context["object"].course_set.all()
         for course in courses:
             course.times = []
-            for i in range(course.n_classes):
+            for i in range(course.lecture_count):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
