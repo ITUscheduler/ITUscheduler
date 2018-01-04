@@ -29,9 +29,10 @@ class Course(models.Model):
         get_latest_by = "crn"
 
     def __str__(self):
-        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + " ".join([lecture.building for lecture in self.lecture_set.all()]) + " " + " ".join([lecture.day for lecture in self.lecture_set.all()]) + " "
+        lecture_attrs = self.get_lecture_attrs()
+        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + lecture_attrs["buildings"] + " " + lecture_attrs["days"] + " "
         for i in range(self.lecture_count):
-            string += "{}/{}".format(self.lecture_set.all()[i].time_start, self.lecture_set.all()[i].time_finish)
+            string += "{}/{}".format(lecture_attrs["times_start"][i], lecture_attrs["times_finish"][i])
             if i + 1 != self.lecture_count:
                 string += ","
         string += " | " + "{}/{}".format(self.enrolled, self.capacity)
@@ -44,28 +45,27 @@ class Course(models.Model):
             return True
 
     def get_lecture_attrs(self):
-        data = {
-            'buildings': [],
-            'days': [],
-            'rooms': [],
-            'times_start': [],
-            'times_finish': [],
+        attrs = {
+            'buildings': '',
+            'days': '',
+            'rooms': '',
+            'times_start': '',
+            'times_finish': '',
         }
-
+        buildings, days, rooms = [], [], []
+        times_start, times_finish = [], []
         for lecture in self.lecture_set.all():
-            data['buildings'].append(lecture.building)
-            data['days'].append(lecture.days)
-            data['rooms'].append(lecture.rooms)
-            data['times_start'].append(lecture.times_start)
-            data['times_finish'].append(lecture.time_finish)
-
-        data['buildings'] = ' '.join(data['buildings'])
-        data['days'] = ' '.join(data['daysrooms'])
-        data['rooms'] = ' '.join(data['rooms'])
-        data['times_start'] = ' '.join(data['times_start'])
-        data['times_finish'] = ' '.join(data['times_finish'])
-
-        return data
+            buildings.append(str(lecture.building))
+            days.append(str(lecture.day))
+            rooms.append(str(lecture.room))
+            times_start.append(str(lecture.time_start))
+            times_finish.append(str(lecture.time_finish))
+        attrs['buildings'] = ' '.join(buildings)
+        attrs['days'] = ' '.join(days)
+        attrs['rooms'] = ' '.join(rooms)
+        attrs['times_start'] = ' '.join(times_start)
+        attrs['times_finish'] = ' '.join(times_finish)
+        return attrs
 
 
 class Lecture(models.Model):
