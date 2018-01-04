@@ -1,28 +1,28 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.views import generic
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
 from scheduler.forms import ScheduleForm, CustomUserCreationForm
 
 
+def is_available(courses, course):
+    if course.is_full():
+        return False
+    for c in courses:
+        if course.day == c.day and c.time[0] <= course.time[0] <= c.time[1] or c.time[0] <= course.time[1] <= c.time[1]:
+            return False
+        else:
+            continue
+    return True
+
+
 class IndexView(generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
     success_url = "."
-
-    @staticmethod
-    def is_available(courses, course):
-        if course.is_full():
-            return False
-        for c in courses:
-            if course.day == c.day and c.time[0] <= course.time[0] <= c.time[1] or c.time[0] <= course.time[1] <= c.time[1]:
-                return False
-            else:
-                continue
-        return True
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -160,6 +160,41 @@ class RegistrationView(generic.FormView):
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
         login(self.request, user)
         return super().form_valid(form)
+
+
+@login_required
+def remove_course(request):
+    try:
+        course = get_object_or_404(Course, crn=request.POST['crn'])
+        schedule = get_object_or_404(Schedule, id=request.POST['schedule_id'])
+
+        if course in schedule.courses:
+            schedule.courses.remove(course)
+            return JsonResponse({'successful': 'Successfully removed {}'.format(schedule)})
+
+        else:
+            raise Exception('Unaccepted attempt.')
+
+    except Exception as error:
+        return JsonResponse({'error': 'there has been an error :{}'.format(error)})
+
+
+@login_required
+def replace_course(request):
+    try:
+        old_course = get_object_or_404(Course, crn=request.POST['crn'])
+        new_course = get_object_or_404(Course, crn=request.POST['crn'])
+        schedule = get_object_or_404(Schedule, id=request.POST['schedule_id'])
+
+        if old_course in schedule.courses and new_course not in schedule.courses:
+            schedule.courses.remove(old_course)
+            schedule.courses.add(new_course)
+            return JsonResponse({'success': 'error'})
+        else:
+            raise Exception('Unaccepted attempt.')
+
+    except Exception as error:
+        return JsonResponse({'error': error})
 
 
 @login_required

@@ -12,9 +12,12 @@ class CourseListAPIView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         code = kwargs['course_code']
-        print(code)
         course_code = get_object_or_404(CourseCode, code=code)
         queryset = queryset.filter(course_code=course_code)
+
+        if request.GET.get('code'):
+            code = request.GET['code']
+            queryset = queryset.filter(code=code)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
