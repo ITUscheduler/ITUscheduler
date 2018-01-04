@@ -89,6 +89,7 @@ def db_refresh_courses(request):
                         else:
                             buildings = [data[4][3*i:3*i+3:] for i in range(lecture_count)]
                             days = data[5].split()
+                            majors = data[11].split(", ")
                             prerequisites_objects = []
                             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites:
                                 prerequisites += ' veya '
