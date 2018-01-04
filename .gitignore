@@ -9,4 +9,5 @@ venv/
 # Django
 static/
 media/
+migrations/
 db.sqlite3
