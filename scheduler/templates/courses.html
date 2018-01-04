@@ -63,7 +63,7 @@
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.room }}<br>{% endfor %}</td>
                                         <td>{{ course.enrolled }}/{{ course.capacity }}</td>
                                         <td>{{ course.major_restriction.all|join:"<br>" }}</td>
-                                        <td>{{ course.prerequisites }}</td>
+                                        <td>{{ course.prerequisites.all|join:"<br>" }}</td>
                                         <td>{{ course.class_restriction }}</td>
                                     </tr>
                                 {% endfor %}
