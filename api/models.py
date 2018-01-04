@@ -10,6 +10,13 @@ class CourseCode(models.Model):
         return self.code
 
 
+class MajorRestriction(models.Model):
+    major = models.CharField(max_length=5, unique=True, primary_key=True)
+
+    def __str__(self):
+        return str(self.major)
+
+
 class Course(models.Model):
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
@@ -20,7 +27,7 @@ class Course(models.Model):
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
     reservation = models.CharField(max_length=50)
-    major_restriction = models.TextField()
+    major_restriction = models.ManyToManyField(MajorRestriction)
     prerequisites = models.TextField()
     class_restriction = models.CharField(max_length=20)
 

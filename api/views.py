@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import CourseCode, Course, Lecture
+from api.models import CourseCode, Course, Lecture, MajorRestriction
 from scheduler.models import Schedule
 from django.utils import timezone
 
@@ -88,6 +88,7 @@ def db_refresh_courses(request):
                         else:
                             buildings = [data[4][3*i:3*i+3:] for i in range(lecture_count)]
                             days = data[5].split()
+                            majors = data[11].split(", ")
 
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
@@ -99,7 +100,6 @@ def db_refresh_courses(request):
                                 capacity=int(data[8]),
                                 enrolled=int(data[9]),
                                 reservation=data[10],
-                                major_restriction=data[11],
                                 prerequisites=prerequisites,
                                 class_restriction=data[13]
                             )
@@ -113,6 +113,12 @@ def db_refresh_courses(request):
                                     room=data[7].split()[i],
                                     course=course
                                 )
+
+                            for major in majors:
+                                print(major)
+                                major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
+                                print(major_restriction)
+                                course.major_restriction.add(major_restriction)
 
                         nth_course += 1
                     except AttributeError:
