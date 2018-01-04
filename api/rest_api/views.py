@@ -1,4 +1,4 @@
-from .serializers import CourseSerializer, CourseCodeSerializer
+from .serializers import CourseSerializer, CourseCodeSerializer, LectureSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -19,9 +19,15 @@ class CourseListAPIView(ListAPIView):
             code = request.GET['code']
             queryset = queryset.filter(code=code)
 
-        serializer = self.get_serializer(queryset, many=True)
-        print(serializer.data)
-        return Response(serializer.data)
+        data = [(self.get_serializer(query).data, query) for query in queryset]
+
+        response_data = []
+
+        for serializer, query in data:
+            serializer['lectures'] = LectureSerializer(query.lecture_set.all(), many=True).data
+            response_data.append(serializer)
+
+        return Response(response_data)
 
 
 class CourseDetailAPIView(RetrieveAPIView):
