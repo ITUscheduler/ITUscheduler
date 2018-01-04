@@ -48,6 +48,31 @@ class Course(models.Model):
         else:
             return True
 
+    def get_lecture_attrs(self):
+        data = {
+            'buildings': [],
+            'days': [],
+            'rooms': [],
+            'times_start': [],
+            'times_finish': [],
+        }
+
+        for lecture in self.lecture_set.all():
+            data['buildings'].append(lecture.building)
+            data['days'].append(lecture.days)
+            data['rooms'].append(lecture.rooms)
+            data['times_start'].append(lecture.times_start)
+            data['times_finish'].append(lecture.time_finish)
+
+        data['buildings'] = ' '.join(data['buildings'])
+        data['days'] = ' '.join(data['daysrooms'])
+        data['rooms'] = ' '.join(data['rooms'])
+        data['times_start'] = ' '.join(data['times_start'])
+        data['times_finish'] = ' '.join(data['times_finish'])
+
+        return data
+
+
 
 class Lecture(models.Model):
     building = models.CharField(max_length=20)
@@ -56,3 +81,6 @@ class Lecture(models.Model):
     time_finish = models.IntegerField()
     room = models.CharField(max_length=50)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.course)
