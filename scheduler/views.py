@@ -80,9 +80,6 @@ class IndexView(generic.CreateView):
             Hour("20:30-21:29", 2030, 2129)
         ]
         context["hours"] = hours
-        context["courses"] = user.courses.all()
-        schedules = Schedule.objects.filter(user=user).all()
-        context["schedules"] = schedules
         try:
             if not user.my_schedule:
                 raise AttributeError
@@ -105,6 +102,9 @@ class IndexView(generic.CreateView):
             context["hours"] = hours
             context["my_schedule"] = user.my_schedule
             context["my_courses"] = user.my_schedule.courses.all()
+            context["courses"] = user.courses.all()
+            schedules = Schedule.objects.filter(user=user).all()
+            context["schedules"] = schedules
             try:
                 selected_schedule = schedules[0]
             except IndexError:
@@ -141,7 +141,8 @@ class CoursesView(generic.DetailView):
         for course in courses:
             course.times = []
             for i in range(course.n_classes):
-                course.times.append("{}/{} ".format(course.time_start.split(",")[i], course.time_finish.split(",")[i]))
+                lectures = course.lecture_set.all()
+                course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]

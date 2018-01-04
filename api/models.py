@@ -12,7 +12,7 @@ class CourseCode(models.Model):
 
 
 class Course(models.Model):
-    n_classes = models.PositiveSmallIntegerField(default=1)
+    n_lectures = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
     code = models.CharField(max_length=3)
@@ -34,10 +34,10 @@ class Course(models.Model):
         get_latest_by = "crn"
 
     def __str__(self):
-        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + self.building + " " + self.day + " "
-        for i in range(self.n_classes):
-            string += "{}/{}".format(self.time_start.split(",")[i], self.time_finish.split(",")[i])
-            if i + 1 != self.n_classes:
+        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + " ".join([lecture.building for lecture in self.lecture_set.all()]) + " " + " ".join([lecture.day for lecture in self.lecture_set.all()]) + " "
+        for i in range(self.n_lectures):
+            string += "{}/{}".format(self.lecture_set.all()[i].time_start, self.lecture_set.all()[i].time_finish)
+            if i + 1 != self.n_lectures:
                 string += ","
         string += " | " + "{}/{}".format(self.enrolled, self.capacity)
         return string
