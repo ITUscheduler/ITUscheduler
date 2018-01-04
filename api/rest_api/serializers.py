@@ -17,7 +17,7 @@ class LectureSerializer(serializers.ModelSerializer):
 class PrerequisiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prerequisite
-        fields = ('__all__')
+        exclude = ('id', )
 
 
 class CourseSerializer(serializers.ModelSerializer):
