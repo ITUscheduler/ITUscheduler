@@ -68,11 +68,11 @@
                                         {% for hour in hours %}
                                             <tr id="{{ hour.time|slugify }}">
                                                 <th>{{ hour.time }}</th>
-                                                <td>{{ hour.day }}</td>
-                                                <td>{{ hour.day }}</td>
-                                                <td>{{ hour.day }}</td>
-                                                <td>{{ hour.day }}</td>
-                                                <td>{{ hour.day }}</td>
+                                                <td>{{ hour.day.Pazartesi }}</td>
+                                                <td>{{ hour.day.Salı }}</td>
+                                                <td>{{ hour.day.Carşamba }}</td>
+                                                <td>{{ hour.day.Perşembe }}</td>
+                                                <td>{{ hour.day.Cuma }}</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
