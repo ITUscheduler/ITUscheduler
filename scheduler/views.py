@@ -80,7 +80,6 @@ class IndexView(generic.CreateView):
             Hour("20:30-21:29", 2030, 2129)
         ]
         context["hours"] = hours
-        context["courses"] = user.courses.all()
 
         try:
             if not user.my_schedule:
@@ -103,6 +102,7 @@ class IndexView(generic.CreateView):
                         if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[course.crn]:
                             hour.day[str(lecture.day).lower()] = "#{} {}".format(course.crn, course.code)
             context["hours"] = hours
+            context["courses"] = user.courses.all()
             context["my_schedule"] = user.my_schedule
             context["my_courses"] = user.my_schedule.courses.all()
             context["courses"] = user.courses.all()
