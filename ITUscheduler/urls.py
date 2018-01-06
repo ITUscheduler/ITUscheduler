@@ -9,5 +9,5 @@ urlpatterns = [
     path('', include('scheduler.urls')),
     path('api/', include('api.urls')),
     path('rest-api/', include('api.rest_api.urls', namespace='rest_api')),
-    path('schedules-rest-api/', include('scheduler.rest_api.urls', namespace='rest_api_schedule')),
+    path('schedules-rest-api/', include('scheduler.rest_api.urls', namespace='rest_api_scheduler')),
 ]
