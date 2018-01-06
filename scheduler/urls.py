@@ -8,6 +8,6 @@ urlpatterns = [
     path('courses/<slug:slug>', views.CoursesView.as_view(), name="courses"),
     path('schedule/addCourse', views.add_course, name="add_course"),
     path('schedule/select', views.select_schedule, name="select_schedule"),
-    path('schedule/removeCourse', views.remove_course, name='remove_course'),
-    path('schedule/replaceCourse', views.replace_course, name='replace_course'),
+    #path('schedule/removeCourse/<int:pk>/<int:pk>', views.remove_course, name='remove_course'),
+    #path('schedule/replaceCourse', views.replace_course, name='replace_course'),
 ]

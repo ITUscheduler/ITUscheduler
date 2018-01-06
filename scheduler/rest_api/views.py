@@ -1,6 +1,9 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 
@@ -55,3 +58,47 @@ class ScheduleDetailAPIView(RetrieveAPIView):
             return Response(serializer)
 
         return Response({'Unauthorized attempt'}, status=HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((SessionAuthentication, ))
+def course_remove(request):
+    crn = int(request.data['crn'])
+    schedule_id = int(request.data['schedule_id'])
+    user = request.user
+
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    course = get_object_or_404(Course, crn=crn)
+    if schedule.user != user and course not in schedule:
+        return Response({'error': 'unauthorized attempt.'}, status=HTTP_401_UNAUTHORIZED)
+
+    schedule.courses.remove(course)
+
+    if len(schedule.courses.all()) == 0:
+        schedule.delete()
+
+    return Response({'success': 'Successfuly removed course {}'.format(course.crn)})
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((SessionAuthentication, ))
+def course_replace(request):
+    old_crn = int(request.data['old_crn'])
+    new_crn = int(request.data['new_crn'])
+    schedule_id = int(request.data['schedule_id'])
+    user = request.user
+
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    old_course = get_object_or_404(Course, crn=old_crn)
+    new_course = get_object_or_404(Course, crn=new_crn)
+
+    if schedule.user != user and old_course not in schedule and new_course in schedule:
+        return Response({'error': 'Unauthorized attempt.'}, status=HTTP_401_UNAUTHORIZED)
+
+    schedule.courses.remove(old_course)
+    schedule.courses.add(new_course)
+
+    return Response({'success': 'Replaced {} with {}'.format(old_crn, new_crn)})
+
+
+
