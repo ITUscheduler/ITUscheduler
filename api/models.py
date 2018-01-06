@@ -11,7 +11,7 @@ class CourseCode(models.Model):
 
 
 class Prerequisite(models.Model):
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10, null=True, blank=True)
     min_grade = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):

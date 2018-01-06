@@ -110,7 +110,7 @@
         function writeLectures(){
 
             $.ajax({
-           url: "http://127.0.0.1:8080/schedules-rest-api/detail/" + {{ selected_schedule.id }},
+           url: "http://127.0.0.1:8000/schedules-rest-api/detail/" + {{ selected_schedule.id }},
            success: function(result){
 
                //console.log(result.courses[0].lectures[0].time_start);
