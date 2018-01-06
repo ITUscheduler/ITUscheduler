@@ -96,19 +96,19 @@ class IndexView(generic.CreateView):
             try:
                 if not user.my_schedule:
                     raise AttributeError
-                course_range = {}
-                for course in user.my_schedule.courses.all():
-                    time_range = []
-                    for lecture in course.lecture_set.all():
-                        time_range.extend([*(range(int(lecture.time_start), int(lecture.time_finish)))])
-                    course_range[course.crn] = time_range
-                for hour in hours:
-                    for course in user.my_schedule.courses.all():
-                        for lecture in course.lecture_set.all():
-                            if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[
-                                course.crn]:
-                                hour.day[str(lecture.day).lower()] = "#{} {}".format(course.crn, course.code)
-                context["hours"] = hours
+                # course_range = {}
+                # for course in user.my_schedule.courses.all():
+                #     time_range = []
+                #     for lecture in course.lecture_set.all():
+                #         time_range.extend([*(range(int(lecture.time_start), int(lecture.time_finish)))])
+                #     course_range[course.crn] = time_range
+                # for hour in hours:
+                #     for course in user.my_schedule.courses.all():
+                #         for lecture in course.lecture_set.all():
+                #             if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[
+                #                 course.crn]:
+                #                 hour.day[str(lecture.day).lower()] = "#{} {}".format(course.crn, course.code)
+                # context["hours"] = hours
                 context["my_schedule"] = user.my_schedule
                 context["my_courses"] = user.my_schedule.courses.all()
                 context["selected_schedule"] = user.my_schedule
@@ -165,7 +165,7 @@ class RegistrationView(generic.FormView):
         return super().form_valid(form)
 
 
-@login_required
+'''@login_required
 def remove_course(request):
     try:
         course = get_object_or_404(Course, crn=request.POST['crn'])
@@ -185,9 +185,9 @@ def remove_course(request):
 @login_required
 def replace_course(request):
     try:
-        old_course = get_object_or_404(Course, crn=request.POST['crn'])
-        new_course = get_object_or_404(Course, crn=request.POST['crn'])
-        schedule = get_object_or_404(Schedule, id=request.POST['schedule_id'])
+        old_course = get_object_or_404(Course, crn=int(request.GET['crn']))
+        new_course = get_object_or_404(Course, crn=request.GET['crn'])
+        schedule = get_object_or_404(Schedule, id=int(request.GET['schedule_id']))
 
         if old_course in schedule.courses and new_course not in schedule.courses:
             schedule.courses.remove(old_course)
@@ -197,7 +197,7 @@ def replace_course(request):
             raise Exception('Unaccepted attempt.')
 
     except Exception as error:
-        return JsonResponse({'error': error})
+        return JsonResponse({'error': error})'''
 
 
 @login_required
