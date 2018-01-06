@@ -93,7 +93,7 @@ def db_refresh_courses(request):
                                 for prerequisite in prerequisites.split(' veya '):
                                     prerequisites_objects.append(Prerequisite.objects.create(code=prerequisite[:9], min_grade=prerequisite[-2:]))
                             else:
-                                prerequisites_objects.append(Prerequisite.objects.get_or_create(code="Yok/None")[0])
+                                prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
 
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
