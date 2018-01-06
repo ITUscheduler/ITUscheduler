@@ -89,7 +89,9 @@ class IndexView(generic.CreateView):
             try:
                 context["selected_schedule"] = schedules[0]
             except IndexError:
-                context["selected_schedule"] = 0
+                empty_schedule = Schedule()
+                empty_schedule.id = 0
+                context["selected_schedule"] = empty_schedule
 
             try:
                 if not user.my_schedule:
