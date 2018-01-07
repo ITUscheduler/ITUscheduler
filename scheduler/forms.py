@@ -13,7 +13,7 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_email(self):
         data = self.cleaned_data['email']
         if '@itu.edu.tr' != data[-11:]:
-            raise forms.ValidationError('This is not a valid email address')
+            raise forms.ValidationError('This is not a valid ITU email address')
 
         return data
 
