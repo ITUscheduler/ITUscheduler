@@ -42,44 +42,18 @@ class Course(models.Model):
     class Meta:
         get_latest_by = "crn"
 
-    def __str__(self):
-        lecture_attrs = self.get_lecture_attrs()
-        string = "#" + str(self.crn) + " " + self.code + " " + self.title + " / " + self.instructor + " | " + lecture_attrs["buildings"] + " " + lecture_attrs["days"] + " "
-        for i in range(self.lecture_count):
-            string += "{}/{}".format(lecture_attrs["times_start"][i], lecture_attrs["times_finish"][i])
-            if i + 1 != self.lecture_count:
-                string += ","
-        string += " | " + "{}/{}".format(self.enrolled, self.capacity)
-        return string
-
     def is_full(self):
         if self.enrolled < self.capacity:
             return False
         else:
             return True
 
-    def get_lecture_attrs(self):
-        attrs = {
-            'buildings': '',
-            'days': '',
-            'rooms': '',
-            'times_start': '',
-            'times_finish': '',
-        }
-        buildings, days, rooms = [], [], []
-        times_start, times_finish = [], []
+    def __str__(self):
+        lectures = '#' + str(self.crn) + " " + str(self.title) + " | "
         for lecture in self.lecture_set.all():
-            buildings.append(str(lecture.building))
-            days.append(str(lecture.day))
-            rooms.append(str(lecture.room))
-            times_start.append(str(lecture.time_start))
-            times_finish.append(str(lecture.time_finish))
-        attrs['buildings'] = ' '.join(buildings)
-        attrs['days'] = ' '.join(days)
-        attrs['rooms'] = ' '.join(rooms)
-        attrs['times_start'] = ' '.join(times_start)
-        attrs['times_finish'] = ' '.join(times_finish)
-        return attrs
+            lectures += "{} {} {}/{} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
+        lectures += str(self.enrolled) + " enrolled/" + str(self.capacity) + " capacity"
+        return lectures
 
 
 class Lecture(models.Model):
@@ -92,5 +66,11 @@ class Lecture(models.Model):
 
     def __str__(self):
         return str(self.course)
+
+    def time_str_tuple(self):
+        time_start = str(self.time_start)[:-2] + ":" + str(self.time_start)[-2:]
+        time_finish = str(self.time_finish)[:-2] + ":" + str(self.time_finish)[-2:]
+
+        return (time_start, time_finish)
 
 
