@@ -12,13 +12,33 @@
                     <h2 class="panel-title">Courses</h2>
                 </div>
                 <div class="panel-body">
-                    <form>
-                        <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)" title="course_code">
-                            {% for option in course_codes %}
-                                <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
-                            {% endfor %}
-                        </select>
-                    </form>
+
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <form>
+                            <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)" title="course_code">
+                                {% for option in course_codes %}
+                                    <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                                {% endfor %}
+                            </select>
+                            </form>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <form>
+                                <select class="form-control" name="code" onchange="redirectGet(this.form.code)">
+                                    {% if query %}
+                                    <option value="{{ query }}">{{ query }}</option>
+                                        {% else %}
+                                        <option value="">Please select a code below.</option>
+                                    {% endif %}
+                                    {% for code in codes %}
+                                        <option value="{{ code }}">{{ code }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
@@ -86,6 +106,12 @@
     function redirect(selected) {
         location.href = "/courses/" + selected.options[selected.selectedIndex].value;
     }
+
+    function redirectGet(selected){
+        location.href = "/courses/{{ object }}" + "?query=" + selected.options[selected.selectedIndex].value;
+
+    }
+
     function addCourse(courseCrn) {
         $.post(
             "{% url "add_course" %}",

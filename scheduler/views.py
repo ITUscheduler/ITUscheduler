@@ -127,7 +127,20 @@ class CoursesView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["course_codes"] = CourseCode.objects.all()
+
+        context["codes"] = []
+        for course in context["object"].course_set.all():
+            if course.code not in context["codes"]:
+                context["codes"].append(course.code)
+
         courses = context["object"].course_set.all()
+
+        if self.request.GET.get("query"):
+            code = self.request.GET["query"]
+            courses = context["object"].course_set.filter(code=code)
+            context["query"] = code
+
+
         for course in courses:
             course.times = []
             for i in range(course.lecture_count):
@@ -152,41 +165,6 @@ class RegistrationView(generic.FormView):
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
         login(self.request, user)
         return super().form_valid(form)
-
-
-'''@login_required
-def remove_course(request):
-    try:
-        course = get_object_or_404(Course, crn=request.POST['crn'])
-        schedule = get_object_or_404(Schedule, id=request.POST['schedule_id'])
-
-        if course in schedule.courses:
-            schedule.courses.remove(course)
-            return JsonResponse({'successful': 'Successfully removed {}'.format(schedule)})
-
-        else:
-            raise Exception('Unaccepted attempt.')
-
-    except Exception as error:
-        return JsonResponse({'error': 'there has been an error :{}'.format(error)})
-
-
-@login_required
-def replace_course(request):
-    try:
-        old_course = get_object_or_404(Course, crn=int(request.GET['crn']))
-        new_course = get_object_or_404(Course, crn=request.GET['crn'])
-        schedule = get_object_or_404(Schedule, id=int(request.GET['schedule_id']))
-
-        if old_course in schedule.courses and new_course not in schedule.courses:
-            schedule.courses.remove(old_course)
-            schedule.courses.add(new_course)
-            return JsonResponse({'success': 'error'})
-        else:
-            raise Exception('Unaccepted attempt.')
-
-    except Exception as error:
-        return JsonResponse({'error': error})'''
 
 
 @login_required

@@ -92,12 +92,15 @@ def db_refresh_courses(request):
                             prerequisites_objects = []
                             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" :
                                 for prerequisite in prerequisites.split(' veya '):
+                                    prerequisite = prerequisite.split(' ')
+                                    course = " ".join(prerequisite[:2])
+                                    grade = str(prerequisite[-1])
+
                                     try:
-                                        prerequisites_objects.append(Prerequisite.objects.get(code=prerequisite[:9],
-                                                                                              min_grade=prerequisite[
-                                                                                                        -2:]))
+                                        prerequisites_objects.append(Prerequisite.objects.get(code=course,
+                                                                                              min_grade=grade))
                                     except Prerequisite.DoesNotExist:
-                                        prerequisites_objects.append(Prerequisite.objects.create(code=prerequisite[:9], min_grade=prerequisite[-2:]))
+                                        prerequisites_objects.append(Prerequisite.objects.create(code=course, min_grade=grade))
                             else:
                                 prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
 

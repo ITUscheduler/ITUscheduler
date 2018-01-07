@@ -49,10 +49,10 @@ class Course(models.Model):
             return True
 
     def __str__(self):
-        lectures = '#' + str(self.crn) + " " + str(self.title) + " | "
+        lectures = '#' + str(self.crn) + " " + str(self.title) + "\t| "
         for lecture in self.lecture_set.all():
-            lectures += "{} {} {}/{} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
-        lectures += str(self.enrolled) + " enrolled/" + str(self.capacity) + " capacity"
+            lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
+        lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"
         return lectures
 
 
