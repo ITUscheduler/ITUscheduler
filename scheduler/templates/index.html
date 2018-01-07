@@ -16,7 +16,15 @@
                             <form action="." method="POST">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
-                                <button class="btn btn-primary">Generate Schedules</button>
+                                <button class="btn btn-primary">Generate Schedules</button> <br>
+
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-danger">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </form>
                         <br>
 
@@ -32,11 +40,7 @@
                             </ul>
                             </div>
 
-
-
-
                         </div>
-
 
 
                     {% else %}

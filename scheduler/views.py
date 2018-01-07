@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views import generic
+from django.contrib import messages
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
 from scheduler.forms import ScheduleForm, CustomUserCreationForm
@@ -10,13 +11,16 @@ from scheduler.forms import ScheduleForm, CustomUserCreationForm
 
 def is_available(courses, course):
     if course.is_full():
-        return False
+        return False, ""
     for c in courses:
-        if course.day == c.day and c.time[0] <= course.time[0] <= c.time[1] or c.time[0] <= course.time[1] <= c.time[1]:
-            return False
-        else:
-            continue
-    return True
+        if c != course:
+            for l in c.lecture_set.all():
+                for lecture in course.lecture_set.all():
+                    if l.day == lecture.day and lecture.time_start <= l.time_start <= lecture.time_finish or lecture.time_finish <= l.time_finish <= lecture.time_finish:
+                        return False, c
+                    else:
+                        continue
+    return True, ""
 
 
 class IndexView(generic.CreateView):
@@ -48,6 +52,18 @@ class IndexView(generic.CreateView):
                 post_data["user"] = user.id
                 kwargs["data"] = post_data
         return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        courses = form.instance.courses
+        for _course in courses.all():
+            available, course = is_available(courses.all(), _course)
+            if not available:
+                messages.warning(self.request, "Course {} overlaps {}. Please choose another one.".format(course.crn, _course.crn))
+                return self.form_invalid(form)
+
+        return super(IndexView, self).form_valid(form)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
