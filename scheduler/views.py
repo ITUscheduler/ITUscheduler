@@ -96,19 +96,6 @@ class IndexView(generic.CreateView):
             try:
                 if not user.my_schedule:
                     raise AttributeError
-                # course_range = {}
-                # for course in user.my_schedule.courses.all():
-                #     time_range = []
-                #     for lecture in course.lecture_set.all():
-                #         time_range.extend([*(range(int(lecture.time_start), int(lecture.time_finish)))])
-                #     course_range[course.crn] = time_range
-                # for hour in hours:
-                #     for course in user.my_schedule.courses.all():
-                #         for lecture in course.lecture_set.all():
-                #             if hour.time_start in course_range[course.crn] and hour.time_finish in course_range[
-                #                 course.crn]:
-                #                 hour.day[str(lecture.day).lower()] = "#{} {}".format(course.crn, course.code)
-                # context["hours"] = hours
                 context["my_schedule"] = user.my_schedule
                 context["my_courses"] = user.my_schedule.courses.all()
                 context["selected_schedule"] = user.my_schedule
@@ -147,6 +134,8 @@ class CoursesView(generic.DetailView):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
+
+
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
         context["refreshed"] = context["object"].refreshed
