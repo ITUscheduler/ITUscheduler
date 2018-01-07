@@ -16,10 +16,11 @@ def is_available(courses, course):
         if c != course:
             for l in c.lecture_set.all():
                 for lecture in course.lecture_set.all():
-                    if l.day == lecture.day and lecture.time_start <= l.time_start <= lecture.time_finish or lecture.time_finish <= l.time_finish <= lecture.time_finish:
-                        return False, c
-                    else:
-                        continue
+                    if l.day == lecture.day:
+                        if lecture.time_start <= l.time_start <= lecture.time_finish or lecture.time_finish <= l.time_finish <= lecture.time_finish:
+                            return False, c
+                        else:
+                            continue
     return True, ""
 
 
@@ -56,11 +57,18 @@ class IndexView(generic.CreateView):
     def form_valid(self, form):
         form.save()
         courses = form.instance.courses
+        return_back = False
+        overlaping_courses = []
+
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
-            if not available:
-                messages.warning(self.request, "Course {} overlaps {}. Please choose another one.".format(course.crn, _course.crn))
-                return self.form_invalid(form)
+            if not available and (course, _course) not in overlaping_courses and (_course, course) not in overlaping_courses:
+                messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn))
+                overlaping_courses.append((course, _course))
+                return_back = True
+
+        if return_back:
+            return self.form_invalid(form)
 
         return super(IndexView, self).form_valid(form)
 
