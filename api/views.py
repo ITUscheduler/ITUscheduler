@@ -80,6 +80,7 @@ def db_refresh_courses(request):
                             times_finish += time[1] + ","
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
+
                         prerequisites = re.sub("veya", " veya", data[12])
                         if crn in crns:
                             _ = Course.objects.get(crn=crn)
@@ -91,7 +92,12 @@ def db_refresh_courses(request):
                             prerequisites_objects = []
                             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" :
                                 for prerequisite in prerequisites.split(' veya '):
-                                    prerequisites_objects.append(Prerequisite.objects.get_or_create(code=prerequisite[:9], min_grade=prerequisite[-2:]))
+                                    try:
+                                        prerequisites_objects.append(Prerequisite.objects.get(code=prerequisite[:9],
+                                                                                              min_grade=prerequisite[
+                                                                                                        -2:]))
+                                    except Prerequisite.DoesNotExist:
+                                        prerequisites_objects.append(Prerequisite.objects.create(code=prerequisite[:9], min_grade=prerequisite[-2:]))
                             else:
                                 prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
 
@@ -109,17 +115,21 @@ def db_refresh_courses(request):
                             )
 
                             for i in range(lecture_count):
+                                time_start = times_start.split(",")[i]
+                                time_finish = times_finish.split(",")[i]
+
+
                                 Lecture.objects.create(
                                     building=buildings[i],
                                     day=days[i],
-                                    time_start=times_start.split(",")[i],
-                                    time_finish=times_finish.split(",")[i],
+                                    time_start=time_start,
+                                    time_finish=time_finish,
                                     room=data[7].split()[i],
                                     course=course
                                 )
 
                             for major in majors:
-                                print(major)
+
                                 major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
                                 course.major_restriction.add(major_restriction)
 
