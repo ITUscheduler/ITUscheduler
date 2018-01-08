@@ -30,7 +30,7 @@
 
 
                             <div class="col-md-12">
-                                <label class="control-label" for="selected-courses">Courses of the selected schedule</label>
+                                <label class="control-label" for="selected-courses">Courses of the selected schedule, {{ selected_schedule }}</label>
 
 
                                 <ul class="list-group" id="selected-courses">
@@ -233,6 +233,7 @@
                             alert("Error: " + response["error"]);
                         } else {
                             alert("Your selected schedule: Schedule #" + response["scheduleId"]);
+
                         }
                     },
                     "json"
