@@ -107,8 +107,6 @@ class IndexView(generic.CreateView):
             context["courses"] = user.courses.all()
             schedules = Schedule.objects.filter(user=user).all()
             context["schedules"] = schedules
-            context["my_schedule"] = user.my_schedule
-            context["my_courses"] = user.my_schedule.courses.all()
 
             try:
                 context["selected_schedule"] = schedules[0]
@@ -121,6 +119,8 @@ class IndexView(generic.CreateView):
                 if not user.my_schedule:
                     raise AttributeError
                 context["selected_schedule"] = user.my_schedule
+                context["my_schedule"] = user.my_schedule
+                context["my_courses"] = user.my_schedule.courses.all()
             except AttributeError:
                 pass
 
