@@ -70,7 +70,4 @@ class Lecture(models.Model):
     def time_str_tuple(self):
         time_start = str(self.time_start)[:-2] + ":" + str(self.time_start)[-2:]
         time_finish = str(self.time_finish)[:-2] + ":" + str(self.time_finish)[-2:]
-
-        return (time_start, time_finish)
-
-
+        return time_start, time_finish

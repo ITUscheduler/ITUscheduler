@@ -6,6 +6,7 @@ from scheduler.models import Schedule
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label='Your ITU email address')
+
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
         fields = ('username', 'email')
@@ -14,7 +15,6 @@ class CustomUserCreationForm(UserCreationForm):
         data = self.cleaned_data['email']
         if '@itu.edu.tr' != data[-11:]:
             raise forms.ValidationError('This is not a valid ITU email address')
-
         return data
 
 

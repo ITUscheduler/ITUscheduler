@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.views import generic
 from django.contrib import messages
 from api.models import CourseCode, Course
@@ -58,20 +58,19 @@ class IndexView(generic.CreateView):
         form.save()
         courses = form.instance.courses
         return_back = False
-        overlaping_courses = []
+        overlapping_courses = []
 
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
-            if not available and (course, _course) not in overlaping_courses and (_course, course) not in overlaping_courses:
+            if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
                 messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn))
-                overlaping_courses.append((course, _course))
+                overlapping_courses.append((course, _course))
                 return_back = True
 
         if return_back:
             return self.form_invalid(form)
 
         return super(IndexView, self).form_valid(form)
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -87,7 +86,6 @@ class IndexView(generic.CreateView):
                     self.day = {day: "#{} {}".format(course.crn, course.code)}
                 except AttributeError:
                     self.day = {}
-
         hours = [
             Hour("8:30-9:29", 830, 929),
             Hour("9:30-10:29", 930, 1029),
@@ -164,14 +162,12 @@ class CoursesView(generic.DetailView):
             courses = context["object"].course_set.filter(code=code)
             context["query"] = code
 
-
         for course in courses:
             course.times = []
             for i in range(course.lecture_count):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
-
 
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]

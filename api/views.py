@@ -90,7 +90,7 @@ def db_refresh_courses(request):
                             days = data[5].split()
                             majors = data[11].split(", ")
                             prerequisites_objects = []
-                            if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" :
+                            if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel":
                                 for prerequisite in prerequisites.split(' veya '):
                                     prerequisite = prerequisite.split(' ')
                                     course = " ".join(prerequisite[:2])
