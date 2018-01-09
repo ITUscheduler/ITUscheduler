@@ -25,18 +25,15 @@
                                     {% endfor %}
                                 {% endif %}
                             </form>
-                            {% if my_courses %}
-                                <br>
-                                <div class="col-md-12">
-                                    <label class="control-label" for="selected-courses">Courses of the selected schedule</label>
-                                    <ul class="list-group" id="selected-courses">
-                                        {% for course in my_courses %}
-                                            <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            {% endif %}
-
+                        <br>
+                            <div class="col-md-12">
+                                <label class="control-label" for="selected-courses">Courses of the selected schedule, {{ selected_schedule }}</label>
+                                <ul class="list-group" id="selected-courses">
+                                {% for course in my_courses %}
+                                    <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                {% endfor %}
+                            </ul>
+                            </div>
                         </div>
                     {% else %}
                         <ul class="list-group">
@@ -230,6 +227,7 @@
                             alert("Error: " + response["error"]);
                         } else {
                             alert("Your selected schedule: Schedule #" + response["scheduleId"]);
+
                         }
                     },
                     "json"

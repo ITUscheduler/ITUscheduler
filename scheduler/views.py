@@ -62,9 +62,9 @@ class IndexView(generic.CreateView):
 
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
-            if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
-                messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn))
-                overlapping_courses.append((course, _course))
+            if not available and (course, _course) not in overlaping_courses and (_course, course) not in overlaping_courses:
+                messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
+                overlaping_courses.append((course, _course))
                 return_back = True
 
         if return_back:
@@ -107,6 +107,8 @@ class IndexView(generic.CreateView):
             context["courses"] = user.courses.all()
             schedules = Schedule.objects.filter(user=user).all()
             context["schedules"] = schedules
+            context["my_schedule"] = user.my_schedule
+            context["my_courses"] = user.my_schedule.courses.all()
 
             try:
                 context["selected_schedule"] = schedules[0]
@@ -118,8 +120,6 @@ class IndexView(generic.CreateView):
             try:
                 if not user.my_schedule:
                     raise AttributeError
-                context["my_schedule"] = user.my_schedule
-                context["my_courses"] = user.my_schedule.courses.all()
                 context["selected_schedule"] = user.my_schedule
             except AttributeError:
                 pass
