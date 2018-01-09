@@ -25,15 +25,17 @@
                                     {% endfor %}
                                 {% endif %}
                             </form>
-                        <br>
-                            <div class="col-md-12">
-                                <label class="control-label" for="selected-courses">Courses of the selected schedule, {{ selected_schedule }}</label>
-                                <ul class="list-group" id="selected-courses">
-                                {% for course in my_courses %}
-                                    <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
-                                {% endfor %}
-                            </ul>
-                            </div>
+                            <br>
+                            {% if user.my_schedule %}
+                                <div class="col-md-12">
+                                    <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule #{{ selected_schedule.id }}]</label>
+                                    <ul class="list-group" id="selected-courses">
+                                        {% for course in my_courses %}
+                                            <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
                         </div>
                     {% else %}
                         <ul class="list-group">
@@ -51,14 +53,15 @@
                     </div>
                     {% if user.is_authenticated %}
                         <div class="panel-body">
-                            <form style="display: inline-flex; width: 78%;">
+                            <form style="display: inline-flex; width: 55%;">
                                 <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                     {% for schedule in schedules %}
                                         <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule #{{ schedule.id }}</option>
                                     {% endfor %}
                                 </select>
                             </form>
-                            <input title="select-schedule" style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            <input title="select-schedule" style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Delete" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                            <input title="select-schedule" style="display: inline-flex; float: right; margin-right: 20px; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
                         </div>
                     {% endif %}
                     <ul class="list-group">
@@ -228,6 +231,29 @@
                         } else {
                             alert("Your selected schedule: Schedule #" + response["scheduleId"]);
 
+                        }
+                    },
+                    "json"
+                )
+            }
+        }
+
+        function deleteSchedule(scheduleId) {
+            if (scheduleId == null) {
+                alert("Create and select a schedule first.");
+            } else {
+                $.post(
+                    "{% url "delete_schedule" %}",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function(response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            location.href = "/";
                         }
                     },
                     "json"

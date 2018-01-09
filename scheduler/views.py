@@ -62,12 +62,13 @@ class IndexView(generic.CreateView):
 
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
-            if not available and (course, _course) not in overlaping_courses and (_course, course) not in overlaping_courses:
+            if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
                 messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
-                overlaping_courses.append((course, _course))
+                overlapping_courses.append((course, _course))
                 return_back = True
 
         if return_back:
+            form.instance.delete()
             return self.form_invalid(form)
 
         return super(IndexView, self).form_valid(form)
@@ -209,6 +210,17 @@ def select_schedule(request):
         schedule = Schedule.objects.get(id=schedule_id)
         request.user.my_schedule = schedule
         request.user.save()
+    except Exception as error:
+        return JsonResponse({"successful": False, "error": str(error)})
+    return JsonResponse({"successful": True, "scheduleId": schedule_id})
+
+
+@login_required
+def delete_schedule(request):
+    try:
+        schedule_id = int(request.POST["schedule_id"])
+        schedule = Schedule.objects.get(id=schedule_id)
+        schedule.delete()
     except Exception as error:
         return JsonResponse({"successful": False, "error": str(error)})
     return JsonResponse({"successful": True, "scheduleId": schedule_id})
