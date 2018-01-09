@@ -28,6 +28,13 @@
                     <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a></li>
                     {% url "courses" slug="BLG" as courses_url %}
                     <li {% if "courses" in request.path %}class="active"{% endif %}><a href="{{ courses_url }}">Courses </a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url "course_api:course_code_list_api"%}">Course Codes</a></li>
+                            <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
+                        </ul>
+                    </li>
                     {% if request.user.is_superuser %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
@@ -35,13 +42,6 @@
                                 <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
                                 <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
                                 <li><a href="{% url "db_flush" %}">Flush</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url "course_api:course_code_list_api"%}">Course Codes</a></li>
-                                <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -65,10 +65,10 @@
     <footer class="navbar navbar-default footer">
         <div class="container">
             <ul class="nav navbar-nav">
-                <li><a class="no-hover"><span class="copyleft">&copy;</span> Copyleft 2017 | ITU Scheduler</a></li>
+                <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover"><span class="copyleft">&copy;</span> Copyleft 2017 | ITU Scheduler</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover"><em>Open-Source @dorukgezici</em></a></li>
+                <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover">EESTEC LC Istanbul IT Team | <em>Doruk Gezici & Mehmet Altuner</em></a></li>
             </ul>
         </div>
     </footer>
