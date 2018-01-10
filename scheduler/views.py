@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views import generic
 from django.contrib import messages
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
-from scheduler.forms import ScheduleForm, CustomUserCreationForm
+from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 
 
 def is_available(courses, course):
@@ -145,7 +146,7 @@ class CoursesView(generic.DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         if not CourseCode.objects.all() or not Course.objects.filter(course_code=kwargs["slug"]).all():
-            return render_to_response("courses.html", context={"request": request, "user": request.user, "course_codes": CourseCode.objects.all()})
+            return render(request, "courses.html", context={"course_codes": CourseCode.objects.all()})
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -188,6 +189,27 @@ class RegistrationView(generic.FormView):
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
         login(self.request, user)
         return super().form_valid(form)
+
+
+def contact(request):
+    form_class = ContactForm
+    if request.method == "POST":
+        form = form_class(data=request.POST)
+        if form.is_valid():
+            subject = "[ITUscheduler] | " + form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            reply_to = [form.cleaned_data['email']]
+            sender = "info@ituscheduler.com"
+            recipients = ['info@ituscheduler.com', 'doruk@gezici.me']
+            cc_myself = True  # form.cleaned_data['cc_myself']
+            if cc_myself:
+                recipients.extend(reply_to)
+            msg = EmailMessage(subject, message, sender, recipients, reply_to=reply_to)
+            msg.send()
+        return HttpResponseRedirect('/')
+    return render(request, 'contact.html', {
+        'form': form_class,
+    })
 
 
 @login_required

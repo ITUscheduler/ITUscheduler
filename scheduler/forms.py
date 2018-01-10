@@ -4,6 +4,15 @@ from django.contrib.auth.forms import UserCreationForm
 from scheduler.models import Schedule
 
 
+class ContactForm(forms.Form):
+    name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    message = forms.CharField(
+        required=True,
+        widget=forms.Textarea
+    )
+
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label='Your ITU email address')
 

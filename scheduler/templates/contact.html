@@ -1,0 +1,20 @@
+{% extends "theme.html" %}
+{% load bootstrap %}
+
+{% block title %}Contact | ITUscheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Contact</h1>
+                <form role="form" action="" method="post">
+                    {% csrf_token %}
+                    {{ form|bootstrap }}
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <br>
+    </div>
+{% endblock %}
