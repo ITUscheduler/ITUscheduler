@@ -115,15 +115,17 @@
 
         function idGenerator(start, finish, Ids){
             ids = Ids;
+            //console.log(start, finish);
             if((start - 1) === finish){
                 return ids
             }
-            else{
-                id = "#" + start + "-" + (start + 99);
-                ids.push(id);
 
-                return idGenerator(start + 100, finish, ids)
-            }
+            id = "#" + start + "-" + (start + 99);
+            ids.push(id);
+
+
+            return idGenerator(start + 100, finish, ids)
+
         }
 
 
@@ -147,16 +149,25 @@
                        c_lecture = result.courses[course].lectures[lecture];
                        c_course = result.courses[course];
 
+                       if(c_lecture.time_start.toString().substring(2,) === "00"){
+                           console.log("works");
+                           c_lecture.time_start = (c_lecture.time_start - 70);
+                           c_lecture.time_finish = (c_lecture.time_finish + 70);
+                       }
+
                        ids = [];
                        blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
                        if(blocks === 1){
+
                            id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
                            ids.push(id);
+
+
                        }
                        else{
                            //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
                            ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
-                           console.log("idsss", ids);
+                           console.log("ids", ids);
                        }
 
                        for(Id in ids){

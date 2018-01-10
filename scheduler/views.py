@@ -23,6 +23,43 @@ def is_available(courses, course):
                             continue
     return True, ""
 
+# def fit(courses, problematic):
+#     unremovable_courses = []
+#     will_be_replaced = []
+#
+#     possible_replacements = [(course, Course.objects.filter(course_code=course.course_code)) for course, _ in problematic]
+#
+#     while len(possible_replacements) > 0:
+#
+#         #if not possible_replacements:
+#         #    possible_replacements = [(course, Course.objects.filter(course_code=course.course_code)) for course in courses]
+#
+#         for replaceble, replacements in possible_replacements:
+#             if len(replacements) <= 1:
+#                 possible_replacements.remove((replaceble, replacements))
+#
+#
+#         for replaceble, replacements in possible_replacements:
+#             quit = True
+#             for replacement in replacements:
+#                 copy = courses
+#                 list(copy).remove(replaceble)
+#                 available, _ = is_available(copy, replacement)
+#
+#                 if available:
+#                     list(copy).append(replacement)
+#                     courses = copy
+#                     possible_replacements.remove((replaceble, replacements))
+#                     quit = False
+#
+#             if quit:
+#                 possible_replacements.remove((replaceble, replacements))
+#                 unremovable_courses.append(replaceble)
+#
+#
+#     return courses
+#
+
 
 class IndexView(generic.CreateView):
     form_class = ScheduleForm
@@ -57,6 +94,9 @@ class IndexView(generic.CreateView):
     def form_valid(self, form):
         form.save()
         courses = form.instance.courses
+        #problematic = [(course, is_available(courses.all(), course)[1]) for course in courses.all() if
+        #               not is_available(courses.all(), course)[0]]
+        #fitted_courses = fit(courses.all(), problematic)
         return_back = False
         overlaping_courses = []
 
@@ -66,6 +106,7 @@ class IndexView(generic.CreateView):
                 messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
                 overlaping_courses.append((course, _course))
                 return_back = True
+
 
         if return_back:
             return self.form_invalid(form)
