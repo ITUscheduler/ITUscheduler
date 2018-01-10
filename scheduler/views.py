@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.core.mail import EmailMessage
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.views import generic
 from django.contrib import messages
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
-from scheduler.forms import ScheduleForm, CustomUserCreationForm
+from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 
 
 def is_available(courses, course):
@@ -89,6 +90,8 @@ class IndexView(generic.CreateView):
                 post_data = kwargs["data"].copy()
                 post_data["user"] = user.id
                 kwargs["data"] = post_data
+                if not kwargs["data"]:
+                    return HttpResponseRedirect("/")
         return kwargs
 
     def form_valid(self, form):
@@ -98,21 +101,21 @@ class IndexView(generic.CreateView):
         #               not is_available(courses.all(), course)[0]]
         #fitted_courses = fit(courses.all(), problematic)
         return_back = False
-        overlaping_courses = []
+        overlapping_courses = []
 
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
-            if not available and (course, _course) not in overlaping_courses and (_course, course) not in overlaping_courses:
+            if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
                 messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
-                overlaping_courses.append((course, _course))
+                overlapping_courses.append((course, _course))
                 return_back = True
 
 
         if return_back:
+            form.instance.delete()
             return self.form_invalid(form)
 
         return super(IndexView, self).form_valid(form)
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -128,7 +131,6 @@ class IndexView(generic.CreateView):
                     self.day = {day: "#{} {}".format(course.crn, course.code)}
                 except AttributeError:
                     self.day = {}
-
         hours = [
             Hour("8:30-9:29", 830, 929),
             Hour("9:30-10:29", 930, 1029),
@@ -150,8 +152,6 @@ class IndexView(generic.CreateView):
             context["courses"] = user.courses.all()
             schedules = Schedule.objects.filter(user=user).all()
             context["schedules"] = schedules
-            context["my_schedule"] = user.my_schedule
-            context["my_courses"] = user.my_schedule.courses.all()
 
             try:
                 context["selected_schedule"] = schedules[0]
@@ -164,6 +164,8 @@ class IndexView(generic.CreateView):
                 if not user.my_schedule:
                     raise AttributeError
                 context["selected_schedule"] = user.my_schedule
+                context["my_schedule"] = user.my_schedule
+                context["my_courses"] = user.my_schedule.courses.all()
             except AttributeError:
                 pass
 
@@ -185,7 +187,7 @@ class CoursesView(generic.DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         if not CourseCode.objects.all() or not Course.objects.filter(course_code=kwargs["slug"]).all():
-            return render_to_response("courses.html", context={"request": request, "user": request.user, "course_codes": CourseCode.objects.all()})
+            return render(request, "courses.html", context={"course_codes": CourseCode.objects.all()})
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -205,14 +207,12 @@ class CoursesView(generic.DetailView):
             courses = context["object"].course_set.filter(code=code)
             context["query"] = code
 
-
         for course in courses:
             course.times = []
             for i in range(course.lecture_count):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
-
 
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
@@ -230,6 +230,27 @@ class RegistrationView(generic.FormView):
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
         login(self.request, user)
         return super().form_valid(form)
+
+
+def contact(request):
+    form_class = ContactForm
+    if request.method == "POST":
+        form = form_class(data=request.POST)
+        if form.is_valid():
+            subject = "[ITUscheduler] | " + form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            reply_to = [form.cleaned_data['email']]
+            sender = "info@ituscheduler.com"
+            recipients = ['info@ituscheduler.com', 'doruk@gezici.me']
+            cc_myself = True  # form.cleaned_data['cc_myself']
+            if cc_myself:
+                recipients.extend(reply_to)
+            msg = EmailMessage(subject, message, sender, recipients, reply_to=reply_to)
+            msg.send()
+        return HttpResponseRedirect('/')
+    return render(request, 'contact.html', {
+        'form': form_class,
+    })
 
 
 @login_required
@@ -254,6 +275,17 @@ def select_schedule(request):
         schedule = Schedule.objects.get(id=schedule_id)
         request.user.my_schedule = schedule
         request.user.save()
+    except Exception as error:
+        return JsonResponse({"successful": False, "error": str(error)})
+    return JsonResponse({"successful": True, "scheduleId": schedule_id})
+
+
+@login_required
+def delete_schedule(request):
+    try:
+        schedule_id = int(request.POST["schedule_id"])
+        schedule = Schedule.objects.get(id=schedule_id)
+        schedule.delete()
     except Exception as error:
         return JsonResponse({"successful": False, "error": str(error)})
     return JsonResponse({"successful": True, "scheduleId": schedule_id})

@@ -16,33 +16,35 @@
                             <form action="." method="POST">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
-                                <button class="btn btn-primary">Generate Schedules</button> <br>
-
-                                {% if messages %}
-                                    {% for message in messages %}
-                                        <div class="alert alert-danger">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary">Save Schedule</button>
+                                </div>
+                                <div class="col-md-10">
+                                    <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
+                                </div>
+								<div class="col-md-12">
+									{% if messages %}
+                                   		{% for message in messages %}
+                                       		<div class="alert alert-danger" style="margin-top: 20px;">
+                                           		{{ message }}
+                                       		</div>
+                                		{% endfor %}
+                               		{% endif %}
+								</div>
                             </form>
-                        <br>
-
-
-                            <div class="col-md-12">
-                                <label class="control-label" for="selected-courses">Courses of the selected schedule, {{ selected_schedule }}</label>
-
-
-                                <ul class="list-group" id="selected-courses">
-                                {% for course in my_courses %}
-                                    <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
-                                {% endfor %}
-                            </ul>
-                            </div>
-
+                            {% if user.my_schedule %}
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule #{{ selected_schedule.id }}]</label>
+                                        <ul class="list-group" id="selected-courses">
+                                            {% for course in my_courses %}
+                                                <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
-
-
                     {% else %}
                         <ul class="list-group">
                             <li class="list-group-item">Please <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a></li>
@@ -59,14 +61,19 @@
                     </div>
                     {% if user.is_authenticated %}
                         <div class="panel-body">
-                            <form style="display: inline-flex; width: 78%;">
+                            <div class="col-md-6">
+                                <form>
                                 <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                     {% for schedule in schedules %}
                                         <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule #{{ schedule.id }}</option>
                                     {% endfor %}
                                 </select>
                             </form>
-                            <input title="select-schedule" style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            </div>
+                            <div class="col-md-6">
+                                <input style="float: right;" title="select-schedule" class="col-md-5 btn btn-primary" value="Delete" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                <input title="select-schedule" class="col-md-5 btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            </div>
                         </div>
                     {% endif %}
                     <ul class="list-group">
@@ -104,34 +111,29 @@
         </div>
     </div>
     <script>
-
-        $(document).ready( function(){
+        $(document).ready(function() {
                 if("{{ selected_schedule }}") {
                     console.log("Getting the schedule!");
                     writeLectures();
                 }
+                var select = document.getElementById('id_courses');
+                select.size = select.length;
         });
 
-
         function idGenerator(start, finish, Ids){
-            ids = Ids;
-            //console.log(start, finish);
-            if((start - 1) === finish){
+
+            var ids = Ids;
+            if ((start - 1) === finish) {
                 return ids
+            } else {
+                var id = "#" + start + "-" + (start + 99);
+                ids.push(id);
+                return idGenerator(start + 100, finish, ids)
             }
-
-            id = "#" + start + "-" + (start + 99);
-            ids.push(id);
-
-
-            return idGenerator(start + 100, finish, ids)
 
         }
 
-
-
-        function writeLectures(){
-
+        function writeLectures() {
             $.ajax({
                 {% if not selected_schedule.id  %}
                     {% with selected_id="0" %}
@@ -140,6 +142,7 @@
                     {% else %}
                     url: "{% url 'rest_api_scheduler:api_schedule_detail' pk=selected_schedule.id %}",
                 {% endif %}
+
 
            success: function(result){
 
@@ -196,38 +199,58 @@
                        }
                    }
                }
-           },
+           }
 
         });
 
+
+
+
         }
 
-
-        function removeCourse(Crn){
+        function removeCourse(Crn) {
             $.ajax({
-               url: "{% url 'rest_api_scheduler:course_remove' %}",
-               type: "POST",
+                url: "{% url 'rest_api_scheduler:course_remove' %}",
+                type: "POST",
                 dataType:'json',
-               data: {
-                   "crn": Crn,
-                   "csrfmiddlewaretoken": getCookie('csrftoken'),
-                   "schedule_id": "{{ selected_schedule.id }}",
-
-               },
-               success: function(result){
-                   location.reload();
-                   console.log(result);
-               },
-                error: function(result){
-                   console.log(result);
+                data: {
+                    "crn": Crn,
+                    "csrfmiddlewaretoken": getCookie('csrftoken'),
+                    "schedule_id": "{{ selected_schedule.id }}"
+                },
+                success: function(result) {
+                    location.reload();
+                    console.log(result);
+                },
+                error: function(result) {
+                    console.log(result);
                 }
             });
         }
 
 
         function redirect(selected) {
-            location.href = "/schedule/" + selected.options[selected.selectedIndex].value;
+            var scheduleId = selected.options[selected.selectedIndex].value;
+            if (scheduleId) {
+                $.post(
+                    "{% url "select_schedule" %}",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function(response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            location.href = "/schedule/" + scheduleId;
+                        }
+                    },
+                    "json"
+                )
+            }
         }
+
         function selectSchedule(scheduleId) {
             if (scheduleId == null) {
                 alert("Create and select a schedule first.");
@@ -245,6 +268,29 @@
                         } else {
                             alert("Your selected schedule: Schedule #" + response["scheduleId"]);
 
+                        }
+                    },
+                    "json"
+                )
+            }
+        }
+
+        function deleteSchedule(scheduleId) {
+            if (scheduleId == null) {
+                alert("Create and select a schedule first.");
+            } else {
+                $.post(
+                    "{% url "delete_schedule" %}",
+                    {
+                        "schedule_id": parseInt(scheduleId),
+                        "csrfmiddlewaretoken": getCookie('csrftoken')
+                    },
+                    function(response) {
+                        var isSuccessful = response["successful"];
+                        if (!isSuccessful) {
+                            alert("Error: " + response["error"]);
+                        } else {
+                            location.href = "/";
                         }
                     },
                     "json"
