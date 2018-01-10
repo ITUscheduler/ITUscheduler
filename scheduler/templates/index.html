@@ -22,13 +22,15 @@
                                 <div class="col-md-10">
                                     <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
                                 </div>
-                                {% if messages %}
-                                    {% for message in messages %}
-                                        <div class="alert alert-danger" style="margin-top: 20px;">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
+								<div class="col-md-12">
+									{% if messages %}
+                                   		{% for message in messages %}
+                                       		<div class="alert alert-danger" style="margin-top: 20px;">
+                                           		{{ message }}
+                                       		</div>
+                                		{% endfor %}
+                               		{% endif %}
+								</div>
                             </form>
                             <br>
                             {% if user.my_schedule %}
