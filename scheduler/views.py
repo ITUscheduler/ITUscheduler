@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views import generic
 from django.contrib import messages
@@ -52,6 +52,8 @@ class IndexView(generic.CreateView):
                 post_data = kwargs["data"].copy()
                 post_data["user"] = user.id
                 kwargs["data"] = post_data
+                if not kwargs["data"]:
+                    return HttpResponseRedirect("/")
         return kwargs
 
     def form_valid(self, form):
