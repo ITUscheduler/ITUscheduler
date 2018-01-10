@@ -16,7 +16,12 @@
                             <form action="." method="POST">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
-                                <button class="btn btn-primary">Save Schedule</button><small style="margin-left: 20px;">Hold CTRL or SHIFT (or drag with the mouse) to select multiple courses</small><br>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary">Save Schedule</button>
+                                </div>
+                                <div class="col-md-10">
+                                    <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
+                                </div>
                                 {% if messages %}
                                     {% for message in messages %}
                                         <div class="alert alert-danger" style="margin-top: 20px;">
@@ -53,15 +58,19 @@
                     </div>
                     {% if user.is_authenticated %}
                         <div class="panel-body">
-                            <form style="display: inline-flex; width: 55%;">
+                            <div class="col-md-6">
+                                <form>
                                 <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                     {% for schedule in schedules %}
                                         <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule #{{ schedule.id }}</option>
                                     {% endfor %}
                                 </select>
                             </form>
-                            <input title="select-schedule" style="display: inline-flex; float: right; width: 20%;" class="btn btn-primary" value="Delete" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
-                            <input title="select-schedule" style="display: inline-flex; float: right; margin-right: 20px; width: 20%;" class="btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            </div>
+                            <div class="col-md-6">
+                                <input style="float: right;" title="select-schedule" class="col-md-5 btn btn-primary" value="Delete" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                <input title="select-schedule" class="col-md-5 btn btn-primary" value="Select" onclick="selectSchedule($('#schedule').find('option:selected').val())">
+                            </div>
                         </div>
                     {% endif %}
                     <ul class="list-group">
