@@ -32,15 +32,16 @@
                                		{% endif %}
 								</div>
                             </form>
-                            <br>
                             {% if user.my_schedule %}
-                                <div class="col-md-12">
-                                    <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule #{{ selected_schedule.id }}]</label>
-                                    <ul class="list-group" id="selected-courses">
-                                        {% for course in my_courses %}
-                                            <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
-                                        {% endfor %}
-                                    </ul>
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule #{{ selected_schedule.id }}]</label>
+                                        <ul class="list-group" id="selected-courses">
+                                            {% for course in my_courses %}
+                                                <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                 </div>
                             {% endif %}
                         </div>
