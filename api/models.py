@@ -29,7 +29,7 @@ class Course(models.Model):
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
-    code = models.CharField(max_length=3)
+    code = models.CharField(max_length=10)
     title = models.CharField(max_length=100)
     instructor = models.CharField(max_length=200)
     capacity = models.PositiveSmallIntegerField()
