@@ -46,7 +46,7 @@ class Course(models.Model):
     class_restriction = models.CharField(max_length=110)
 
     class Meta:
-        get_latest_by = "crn"
+        get_latest_by = "-crn"
 
     def is_full(self):
         if self.enrolled < self.capacity:
