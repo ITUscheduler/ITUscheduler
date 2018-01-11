@@ -7,6 +7,7 @@ class CourseCode(models.Model):
     code = models.CharField(max_length=10, unique=True, primary_key=True)
 
     class Meta:
+        ordering = ['code']
         get_latest_by = "code"
 
     def __str__(self):
@@ -46,7 +47,8 @@ class Course(models.Model):
     class_restriction = models.CharField(max_length=110)
 
     class Meta:
-        get_latest_by = "-crn"
+        ordering = ['crn']
+        get_latest_by = "crn"
 
     def is_full(self):
         if self.enrolled < self.capacity:
@@ -71,6 +73,7 @@ class Lecture(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     class Meta:
+        ordering = ['course']
         get_latest_by = "course"
 
     def __str__(self):
