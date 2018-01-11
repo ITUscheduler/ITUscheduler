@@ -11,15 +11,15 @@ class CourseCode(models.Model):
 
 
 class Prerequisite(models.Model):
-    code = models.CharField(max_length=10, null=True, blank=True)
-    min_grade = models.CharField(max_length=10, blank=True, null=True)
+    code = models.CharField(max_length=20, null=True, blank=True)
+    min_grade = models.CharField(max_length=40, blank=True, null=True)
 
     def __str__(self):
         return str(self.code)
 
 
 class MajorRestriction(models.Model):
-    major = models.CharField(max_length=5, unique=True, primary_key=True)
+    major = models.CharField(max_length=25, unique=True, primary_key=True)
 
     def __str__(self):
         return str(self.major)
@@ -29,7 +29,7 @@ class Course(models.Model):
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=20)
     title = models.CharField(max_length=100)
     instructor = models.CharField(max_length=200)
     capacity = models.PositiveSmallIntegerField()
@@ -57,7 +57,7 @@ class Course(models.Model):
 
 
 class Lecture(models.Model):
-    building = models.CharField(max_length=20)
+    building = models.CharField(max_length=25)
     day = models.CharField(max_length=50)
     time_start = models.IntegerField()
     time_finish = models.IntegerField()
