@@ -13,7 +13,7 @@ DATABASES = {
         'NAME': POSTGRES_NAME,
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': POSTGRES_HOST,
+        'HOST': 'ituscheduler.com',
         'PORT': '',
     }
 }
