@@ -37,7 +37,7 @@ class Course(models.Model):
     reservation = models.CharField(max_length=50)
     major_restriction = models.ManyToManyField(MajorRestriction)
     prerequisites = models.ManyToManyField(Prerequisite)
-    class_restriction = models.CharField(max_length=20)
+    class_restriction = models.CharField(max_length=100)
 
     class Meta:
         get_latest_by = "crn"
