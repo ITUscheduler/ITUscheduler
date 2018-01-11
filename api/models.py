@@ -31,7 +31,7 @@ class Course(models.Model):
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
     code = models.CharField(max_length=40)
     title = models.CharField(max_length=250)
-    instructor = models.CharField(max_length=200)
+    instructor = models.CharField(max_length=500)
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
     reservation = models.CharField(max_length=60)
