@@ -4,15 +4,15 @@ from django.utils import timezone
 
 class CourseCode(models.Model):
     refreshed = models.DateTimeField(default=timezone.now)
-    code = models.CharField(max_length=3, unique=True, primary_key=True)
+    code = models.CharField(max_length=10, unique=True, primary_key=True)
 
     def __str__(self):
         return str(self.code)
 
 
 class Prerequisite(models.Model):
-    code = models.CharField(max_length=20, null=True, blank=True)
-    min_grade = models.CharField(max_length=40, blank=True, null=True)
+    code = models.CharField(max_length=30, null=True, blank=True)
+    min_grade = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return str(self.code)
@@ -29,15 +29,15 @@ class Course(models.Model):
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
-    code = models.CharField(max_length=20)
-    title = models.CharField(max_length=100)
+    code = models.CharField(max_length=40)
+    title = models.CharField(max_length=250)
     instructor = models.CharField(max_length=200)
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
-    reservation = models.CharField(max_length=50)
+    reservation = models.CharField(max_length=60)
     major_restriction = models.ManyToManyField(MajorRestriction)
     prerequisites = models.ManyToManyField(Prerequisite)
-    class_restriction = models.CharField(max_length=100)
+    class_restriction = models.CharField(max_length=110)
 
     class Meta:
         get_latest_by = "crn"
@@ -57,11 +57,11 @@ class Course(models.Model):
 
 
 class Lecture(models.Model):
-    building = models.CharField(max_length=25)
-    day = models.CharField(max_length=50)
+    building = models.CharField(max_length=65)
+    day = models.CharField(max_length=60)
     time_start = models.IntegerField()
     time_finish = models.IntegerField()
-    room = models.CharField(max_length=50)
+    room = models.CharField(max_length=55)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
