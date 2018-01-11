@@ -6,6 +6,9 @@ class CourseCode(models.Model):
     refreshed = models.DateTimeField(default=timezone.now)
     code = models.CharField(max_length=10, unique=True, primary_key=True)
 
+    class Meta:
+        get_latest_by = "code"
+
     def __str__(self):
         return str(self.code)
 
@@ -13,6 +16,9 @@ class CourseCode(models.Model):
 class Prerequisite(models.Model):
     code = models.CharField(max_length=30, null=True, blank=True)
     min_grade = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        get_latest_by = "code"
 
     def __str__(self):
         return str(self.code)
@@ -63,6 +69,9 @@ class Lecture(models.Model):
     time_finish = models.IntegerField()
     room = models.CharField(max_length=55)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    class Meta:
+        get_latest_by = "course"
 
     def __str__(self):
         return str(self.course)
