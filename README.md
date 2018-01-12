@@ -24,8 +24,8 @@ Everyone is welcome to join and make pull requests. [Contact](http://ituschedule
 - [x] Check if a course is available
 - [x] Check hours for collision
 - [x] Create & save schedules
-- [] Check major restrictions & prerequisites
-- [] Generate & recommend possible schedules automatically
+- [ ] Check major restrictions & prerequisites
+- [ ] Generate & recommend possible schedules automatically
 
 # Author
 - EESTEC LC Istanbul IT Team [@eestecist](https://github.com/EESTECist)
