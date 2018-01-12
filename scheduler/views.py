@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib import messages
 from api.models import CourseCode, Course
@@ -23,43 +23,6 @@ def is_available(courses, course):
                         else:
                             continue
     return True, ""
-
-# def fit(courses, problematic):
-#     unremovable_courses = []
-#     will_be_replaced = []
-#
-#     possible_replacements = [(course, Course.objects.filter(course_code=course.course_code)) for course, _ in problematic]
-#
-#     while len(possible_replacements) > 0:
-#
-#         #if not possible_replacements:
-#         #    possible_replacements = [(course, Course.objects.filter(course_code=course.course_code)) for course in courses]
-#
-#         for replaceble, replacements in possible_replacements:
-#             if len(replacements) <= 1:
-#                 possible_replacements.remove((replaceble, replacements))
-#
-#
-#         for replaceble, replacements in possible_replacements:
-#             quit = True
-#             for replacement in replacements:
-#                 copy = courses
-#                 list(copy).remove(replaceble)
-#                 available, _ = is_available(copy, replacement)
-#
-#                 if available:
-#                     list(copy).append(replacement)
-#                     courses = copy
-#                     possible_replacements.remove((replaceble, replacements))
-#                     quit = False
-#
-#             if quit:
-#                 possible_replacements.remove((replaceble, replacements))
-#                 unremovable_courses.append(replaceble)
-#
-#
-#     return courses
-#
 
 
 class IndexView(generic.CreateView):
@@ -97,9 +60,6 @@ class IndexView(generic.CreateView):
     def form_valid(self, form):
         form.save()
         courses = form.instance.courses
-        #problematic = [(course, is_available(courses.all(), course)[1]) for course in courses.all() if
-        #               not is_available(courses.all(), course)[0]]
-        #fitted_courses = fit(courses.all(), problematic)
         return_back = False
         overlapping_courses = []
 
@@ -194,17 +154,50 @@ class CoursesView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["course_codes"] = CourseCode.objects.all()
+        first_object = context["object"]
 
+        courses = context["object"].course_set.all()
+        first_courses_copy = courses # for later use
         context["codes"] = []
-        for course in context["object"].course_set.all():
+        for course in courses:
             if course.code not in context["codes"]:
                 context["codes"].append(course.code)
 
-        courses = context["object"].course_set.all()
+        if self.request.GET.get("search_course") and self.request.GET.get("search_code") and self.request.GET.get("search_day"):
+            if self.request.GET["search_course"] != "all":
+                context["object"] = get_object_or_404(CourseCode, code=self.request.GET["search_course"])
+                courses = context["object"].course_set.all()
+            else:
+                courses = Course.objects.all()
+
+            course = self.request.GET["search_course"]
+            code = self.request.GET["search_code"]
+            day = self.request.GET["search_day"]
+
+            context["searched_course"] = course
+            context["searched_code"] = code
+            context["searched_day"] = day
+
+            if course == "all" and code == "all" and day == "all":
+                courses = first_courses_copy
+                context["unaccepted"] = True
+
+            else:
+
+                if course != "all":
+                    courses = courses.filter(course_code=course)
+
+                if code != "all":
+                    courses = courses.filter(code=code)
+
+                if day != "all":
+                    courses = [course for course in courses for lecture in course.lecture_set.all() if lecture.day == day]
+
+
 
         if self.request.GET.get("query"):
             code = self.request.GET["query"]
-            courses = context["object"].course_set.filter(code=code)
+            courses = courses.filter(code=code)
             context["query"] = code
 
         for course in courses:
@@ -216,7 +209,10 @@ class CoursesView(generic.DetailView):
 
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
+
+        context["object"] = first_object
         context["refreshed"] = context["object"].refreshed
+
         return context
 
 

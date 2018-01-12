@@ -5,20 +5,69 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+    <div class="col-md-2"> <!-- Detailed search section -->
+                            <h3>Find  the exact course you want</h3><br>
+                            <form action="{{ request.path }}" method="GET">
+
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <select class="form-control" name="search_course" onchange="getCodesForSearch(this.form.search_course)">
+                                        <option value="all">All</option>
+                                        {% for course in course_codes %}
+                                            <option value="{{ course }}">{{ course }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-12" id="select_search_codes">
+                                    <select class="form-control" name="search_code">
+                                        <option value="all">All</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-12 col-xs-12" id="select_search_days">
+                                    <select class="form-control" name="search_day">
+                                        <option value="all">All</option>
+                                        <option value="Pazartesi">Monday</option>
+                                        <option value="Salı">Tuesday</option>
+                                        <option value="Çarşamba">Wednesday</option>
+                                        <option value="Perşembe">Thursday</option>
+                                        <option value="Cuma">Friday</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-12 col-xs-12">
+                                    <input type="submit" value="Get me these" class="btn btn-success">
+                                </div>
+                            </div>
+                            </form>
+                            <br>
+                            {% if unaccepted %}
+                                <div class="alert alert-danger">Cannot get all the courses at once.</div>
+                                {% else %}
+
+                                {% if searched_course or searched_code or searched_day %}
+                                    <div class="alert alert-info">For <strong>{{ searched_course }}</strong> courses, you are looking for courses with code <strong>{{ searched_code }}</strong> on day <strong>{{ searched_day }}</strong></div>
+                                {% endif %}
+
+                            {% endif %}
+                        </div>
+        <div class="col-md-10">
             <div class="panel panel-primary">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
                     <h2 class="panel-title">Courses</h2>
                 </div>
                 <div class="panel-body">
-
                     <div class="row">
-                        <div class="col-md-6 col-xs-12">
+
+                            <div class="col-md-6 col-xs-12">
                             <form>
                             <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)" title="course_code">
                                 {% for option in course_codes %}
-                                    <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                                    {% if not searched_course or searched_course == "all" %}
+                                        <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
+                                    {% endif %}
+                                    {% if searched_course %}
+                                        <option {% if option.code == searched_course %}selected{% endif %} value="{{ option }}}">{{ option }} </option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                             </form>
@@ -38,6 +87,10 @@
                             </form>
 
                         </div>
+
+
+
+
                     </div>
                 </div>
                 <ul class="list-group">
@@ -95,6 +148,7 @@
                 </ul>
             </div>
         </div>
+
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -128,5 +182,43 @@
             "json"
         )
     }
+
+    function getCodesForSearch(selected){
+        var Course_code = selected.options[selected.selectedIndex].value;
+        console.log(Course_code)
+
+        var codes = [];
+
+        $.ajax({
+
+            url: "/rest-api/courses/" + Course_code,
+            type: "GET",
+
+            success: function(data){
+                $.each(data, function(index, value){
+                    if($.inArray(value.code, codes) === -1){
+                        codes.push(value.code);
+                    }
+                });
+
+                var html = "<select class='form-control' name='search_code'>\n<option value='all'>All</option>";
+
+                $.each(codes, function(index, value){
+                   html += "<option value='" + value + "'>" + value + "</option>";
+                });
+
+                html += "</select>";
+
+                    $("#select_search_codes").html(html);
+
+            },
+            error: function(error){
+                console.log(error);
+            }
+
+        });
+    }
+
+
 </script>
 {% endblock %}

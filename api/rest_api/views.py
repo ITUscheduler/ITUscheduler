@@ -31,6 +31,15 @@ class CourseListAPIView(ListAPIView):
         return Response(response_data)
 
 
+class CourseSearchAPIView(ListAPIView):
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+
+
 class CourseDetailAPIView(RetrieveAPIView):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
