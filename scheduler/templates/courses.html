@@ -66,7 +66,7 @@
                                         <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
                                     {% endif %}
                                     {% if searched_course %}
-                                        <option {% if option.code == searched_course %}selected{% endif %} value="{{ option }}}">{{ option }} </option>
+                                        <option {% if option.code == searched_course %}selected{% endif %} value="{{ option }}">{{ option }} </option>
                                     {% endif %}
                                 {% endfor %}
                             </select>
