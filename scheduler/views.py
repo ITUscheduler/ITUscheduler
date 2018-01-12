@@ -157,16 +157,21 @@ class CoursesView(generic.DetailView):
         first_object = context["object"]
 
         courses = context["object"].course_set.all()
-        first_courses_copy = courses # for later use
+        first_courses_copy = courses  # for later use
         context["codes"] = []
         for course in courses:
             if course.code not in context["codes"]:
                 context["codes"].append(course.code)
 
+
         if self.request.GET.get("search_course") and self.request.GET.get("search_code") and self.request.GET.get("search_day"):
             if self.request.GET["search_course"] != "all":
                 context["object"] = get_object_or_404(CourseCode, code=self.request.GET["search_course"])
                 courses = context["object"].course_set.all()
+                context["codes"] = []
+                for course in courses:
+                    if course.code not in context["codes"]:
+                        context["codes"].append(course.code)
             else:
                 courses = Course.objects.all()
 
