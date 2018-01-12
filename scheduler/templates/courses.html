@@ -83,7 +83,7 @@
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.time_str_tuple|join:"/" }}<br>{% endfor %}</td>
                                         <td>{% for lecture in course.lecture_set.all %}{{ lecture.room }}<br>{% endfor %}</td>
                                         <td>{{ course.enrolled }}/{{ course.capacity }}</td>
-                                        <td>{{ course.major_restriction.all|join:"<br>"|truncatechars:40 }}</td>
+                                        <td><a href="javascript:alert('{% for major in course.major_restriction.all %}{{ major }}, {% endfor %}'    )">{{ course.major_restriction.all|join:"<br>"|truncatechars:40 }}</a></td>
                                         <td>{{ course.prerequisites.all|join:"<br>" }}</td>
                                         <td>{{ course.class_restriction }}</td>
                                     </tr>
