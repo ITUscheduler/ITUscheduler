@@ -52,21 +52,20 @@
                             <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
                         </ul>
                     </li>
-                    {% if request.user.is_superuser %}
-                        <li><a href="/admin">Admin</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
-                                <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
-                                <li><a href="{% url "db_flush" %}">Flush</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_authenticated %}
-                        <li><a href="/">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
+                        {% if request.user.is_superuser %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
+                                    <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
+                                    <li><a href="{% url "db_flush" %}">Flush</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li><a href="/{% if request.user.is_superuser %}admin{% endif %}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
                         {% url "logout" as logout_url %}
                         <li  {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
                     {% else %}
