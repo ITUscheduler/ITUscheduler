@@ -10,8 +10,12 @@
                 <form action="{{ request.path }}" method="GET">
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <select class="form-control" name="search_course" onchange="getCodesForSearch(this.form.search_course)">
-                                <option value="all">Major Codes</option>
+                            <select class="form-control" name="search_course" onchange="getCodesForSearch(this.form.search_course, '', true)">
+                                {% if searched_course or searched_course == "all" %}
+                                    <option value="{{ searched_course }}">{{ searched_course }}</option>
+                                    {% else %}
+                                    <option value="all">Major Codes</option>
+                                {% endif %}
                                 {% for course in course_codes %}
                                     <option value="{{ course }}">{{ course }}</option>
                                 {% endfor %}
@@ -24,7 +28,11 @@
                         </div>
                         <div class="form-group col-md-12 col-xs-12" id="select_search_days">
                             <select class="form-control" name="search_day">
-                                <option value="all">Days</option>
+                                {% if searched_day or searched_day == "all" %}
+                                    <option value="{{ searched_day }}">{{ searched_day }}</option>
+                                    {% else %}
+                                        <option value="all">Days</option>
+                                {% endif %}
                                 <option value="Pazartesi">Monday</option>
                                 <option value="Salı">Tuesday</option>
                                 <option value="Çarşamba">Wednesday</option>
@@ -173,9 +181,16 @@
             )
         }
 
-        function getCodesForSearch(selected){
-            var Course_code = selected.options[selected.selectedIndex].value;
-            console.log(Course_code)
+        function getCodesForSearch(selected, rememberedQuery, onchange){
+            if(rememberedQuery === ''){
+                var Course_code = selected.options[selected.selectedIndex].value;
+            }
+            else{
+                var Course_code = rememberedQuery;
+            }
+
+
+            console.log(Course_code);
 
             var codes = [];
 
@@ -191,7 +206,20 @@
                         }
                     });
 
-                    var html = "<select class='form-control' name='search_code'>\n<option value='all'>All</option>";
+                    var html = "";
+
+                    {% if searched_code %}
+                        if(onchange===false){
+                            html += "<select class='form-control' name='search_code'>\n<option value='{{ searched_code }}'>{{ searched_code }}</option>\n<option value='all'>Course Codes</option>";
+                        }else{
+                            html += "<select class='form-control' name='search_code'>\n<option value='all'>Course Codes</option>";
+                        }
+
+                        {% else %}
+                            html += "<select class='form-control' name='search_code'>\n<option value='all'>Course Codes</option>";
+                    {% endif %}
+
+
 
                     $.each(codes, function(index, value){
                         html += "<option value='" + value + "'>" + value + "</option>";
@@ -208,5 +236,11 @@
 
             });
         }
+
+        {% if searched_course %}
+
+            getCodesForSearch('', '{{ searched_course }}', false);
+
+        {% endif %}
     </script>
 {% endblock %}
