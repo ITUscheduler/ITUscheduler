@@ -13,7 +13,7 @@
                     </div>
                     {% if user.is_authenticated %}
                         <div class="panel-body">
-                            <form action="." method="POST">
+                            <form action="" method="POST">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
                                 <div class="col-md-2">

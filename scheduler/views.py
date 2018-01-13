@@ -28,7 +28,7 @@ def is_available(courses, course):
 class IndexView(generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
-    success_url = "."
+    #success_url = "."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -69,7 +69,6 @@ class IndexView(generic.CreateView):
                 messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
                 overlapping_courses.append((course, _course))
                 return_back = True
-
 
         if return_back:
             form.instance.delete()
