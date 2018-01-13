@@ -111,6 +111,10 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                         <div class="col-md-6 col-xs-6 col-md-offset-3 col-xs-offset-3">
+                                            <a href="javascript:fillCrn()" class="btn btn-block btn-primary">Fill Crn's</a>
+                                        </div>
+
                             </div>
                         </li>
                     </ul>
@@ -127,6 +131,21 @@
                 var select = document.getElementById('id_courses');
                 select.size = select.length;
         });
+
+        function fillCrn(){
+            var crn = "{% for course in my_courses %}{{ course.crn }}, {% endfor %}";
+            crn = crn.split(", ");
+
+            for(var i=0;i<crn.length - 1;i++){
+
+                var object_will_be_placed=document.getElementById("crn_id"+(i+1));
+                object_will_be_placed.value=parseInt(crn[i]);
+
+            }
+
+            void(0);
+
+        }
 
         function idGenerator(start, finish, Ids) {
             var ids = Ids;
