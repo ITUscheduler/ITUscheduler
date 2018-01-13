@@ -16,7 +16,7 @@ ITU Scheduler is a Python Django Web Application that parses ITU's SIS website a
 - Refresh database from Menu -> Database -> Refresh Course Codes & Refresh Courses
 
 # Contribution
-Everyone is welcome to join and make pull requests. [Contact](http://ituscheduler.com/contact) us!
+Everyone is welcome to join and contribute. [Contact](http://ituscheduler.com/contact) us!
 
 # Todo
 - [x] Parsing ITU SIS HTML
