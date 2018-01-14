@@ -58,21 +58,16 @@ class IndexView(generic.CreateView):
         return kwargs
 
     def form_valid(self, form):
+
         form.save()
         courses = form.instance.courses
-        return_back = False
         overlapping_courses = []
 
         for _course in courses.all():
             available, course = is_available(courses.all(), _course)
             if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
-                messages.warning(self.request, "Course #{} overlaps #{}. Please choose another one.".format(course.crn, _course.crn, course.crn))
+                messages.warning(self.request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
                 overlapping_courses.append((course, _course))
-                return_back = True
-
-        if return_back:
-            form.instance.delete()
-            return self.form_invalid(form)
 
         return super(IndexView, self).form_valid(form)
 

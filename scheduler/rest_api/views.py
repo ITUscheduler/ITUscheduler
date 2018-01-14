@@ -6,8 +6,10 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 from .serializers import ScheduleSerializer
+from scheduler.views import is_available
 from api.rest_api.serializers import CourseSerializer, LectureSerializer, PrerequisiteSerializer
 from api.models import Course
 from scheduler.models import Schedule
@@ -52,6 +54,14 @@ class ScheduleDetailAPIView(RetrieveAPIView):
             serializer['courses'] = CourseSerializer(instance.courses.all(), many=True).data
             for data in serializer['courses']:
                 query = Course.objects.get(crn=data['crn'])
+
+                available, _ = is_available(instance.courses.all(), query)
+
+                if not available:
+                    data['overlaps'] = True
+                else:
+                    data['overlaps'] = False
+
                 data['lectures'] = LectureSerializer(query.lecture_set.all(), many=True).data
                 data['prerequisites'] = PrerequisiteSerializer(query.prerequisites.all(), many=True).data
 
@@ -99,6 +109,33 @@ def course_replace(request):
     schedule.courses.add(new_course)
 
     return Response({'success': 'Replaced {} with {}'.format(old_crn, new_crn)})
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((SessionAuthentication, ))
+def add_to_schedule(request, id):
+    try:
+        schedule = Schedule.objects.get(id=id)
+        if schedule.user == request.user:
+            data = [int(crn) for crn in dict(request.data)['courses']]
+            courses = [Course.objects.get(crn=crn) for crn in data]
+
+            for course in courses:
+                if course not in schedule.courses.all():
+                    schedule.courses.add(course)
+                    available, _course = is_available(schedule.courses.all(), course)
+
+                    if not available:
+                        print('ASDASDASDASDSD')
+                        messages.warning(request._request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
+
+            return Response({'success': 'attempt is accomplished'})
+        else:
+            raise Exception("Unauthorized attempt")
+    except Exception as error:
+        return Response({'error': error})
+
+
 
 
 

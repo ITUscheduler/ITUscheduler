@@ -13,13 +13,16 @@
                     </div>
                     {% if user.is_authenticated %}
                         <div class="panel-body">
-                            <form action="" method="POST">
+                            <form action="" method="POST" id="courses_form">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary">Save Schedule</button>
+                                    <button class="btn btn-primary" name="save">Save Schedule</button>
                                 </div>
-                                <div class="col-md-10">
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
+                                </div>
+                                <div class="col-md-8">
                                     <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
                                 </div>
 								<div class="col-md-12">
@@ -82,7 +85,7 @@
                                         <div class="col-md-6 col-xs-12">
                                             <div class="row">
                                                 <div class="col-md-7 col-xs-9 col-md-offset-0 col-xs-offset-1">
-                                                    <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
+                                                    <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
                                                 </div>
                                                 <div class="col-md-4 col-xs-2">
                                                     <a href="javascript:alert('Drag and Drop Fill CRNs button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
@@ -136,12 +139,31 @@
                 }
                 var select = document.getElementById('id_courses');
                 select.size = select.length;
+
+
+                $("#addToSchedule").click( function(e){
+                   e.preventDefault();
+                   _data = $("#courses_form").serializeArray();
+                   _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
+
+                   $.ajax({
+                       url: _url,
+                       type: "POST",
+                       data: _data,
+                       success: function(data){
+                           location.reload();
+                       },
+                       error: function(data){
+                           console.log(data);
+                       }
+
+                   });
+
+                });
+
         });
 
-        function fillCrn(){
 
-
-        }
 
         function idGenerator(start, finish, Ids) {
             var ids = Ids;
@@ -213,8 +235,12 @@
                                 console.log(id);
                                 console.log(c_course.title);
 
+                                if(c_course.overlaps){
+                                    $(id).css({'background-color': '#d9534f', 'color': 'white'});
+                                }
 
                                 $(id).html(c_course.title);
+
                             }
                         }
                     }
@@ -312,5 +338,7 @@
                 )
             }
         }
+
+
     </script>
 {% endblock %}
