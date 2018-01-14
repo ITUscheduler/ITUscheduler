@@ -17,10 +17,10 @@
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary" name="save">Save Schedule</button>
+                                    <button class="btn btn-primary" name="save">New Schedule</button>
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
+                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}</button>
                                 </div>
                                 <div class="col-md-8">
                                     <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
