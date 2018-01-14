@@ -67,19 +67,28 @@ def db_refresh_courses(request):
                         data = [row.get_text() for row in raw_course.find_all("td")]
                         lecture_count = len(data[4]) // 3
                         crn = int(data[0])
+                        print(crn)
+                        print(type(lecture_count))
                         times_start = ""
                         times_finish = ""
                         for index in range(lecture_count):
+
                             time = data[6][:-1:].split()[index].split("/")
-                            if "" in time:
+
+                            if "" in time or "----" in time:
                                 time = ["2500", "2500"]
                             for i in range(2):
                                 if time[i][0] == "0":
                                     time[i] = time[i][1::]
+                            print(time, crn, "asdasd")
                             times_start += time[0] + ","
                             times_finish += time[1] + ","
+
+
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
+
+                        print(times_start, times_finish)
 
                         prerequisites = re.sub("veya", " veya", data[12])
                         if crn in crns:
