@@ -140,6 +140,7 @@
                 select.size = select.length;
 
 
+                {% if request.user.is_authenticated %}
                 $("#addToSchedule").click( function(e){
                    e.preventDefault();
                    _data = $("#courses_form").serializeArray();
@@ -159,6 +160,7 @@
                    });
 
                 });
+                {% endif %}
 
         });
 
