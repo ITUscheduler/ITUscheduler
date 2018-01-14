@@ -126,7 +126,6 @@ def add_to_schedule(request, id):
                     available, _course = is_available(schedule.courses.all(), course)
 
                     if not available:
-                        print('ASDASDASDASDSD')
                         messages.warning(request._request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
 
             return Response({'success': 'attempt is accomplished'})
