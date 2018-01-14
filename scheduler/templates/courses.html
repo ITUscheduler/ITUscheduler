@@ -160,7 +160,16 @@
         }
 
         function redirectGet(selected){
-            location.href = "/courses/{{ object }}" + "?query=" + selected.options[selected.selectedIndex].value;
+
+            {% if searched_course %}
+                var course = selected.options[selected.selectedIndex].value.substring(0, 3);
+                location.href = "/courses/" + course + "?query=" + selected.options[selected.selectedIndex].value;
+
+                {% else %}
+                    var url = "/courses/{{ object }}" + "?query=" + selected.options[selected.selectedIndex].value;
+                    location.href = url;
+            {% endif %}
+
 
         }
 
@@ -188,9 +197,6 @@
             else{
                 var Course_code = rememberedQuery;
             }
-
-
-            console.log(Course_code);
 
             var codes = [];
 

@@ -134,7 +134,6 @@
     <script>
         $(document).ready(function() {
                 if("{{ selected_schedule }}") {
-                    console.log("Getting the schedule!");
                     writeLectures();
                 }
                 var select = document.getElementById('id_courses');
@@ -187,14 +186,12 @@
                 {% endif %}
 
                 success: function(result) {
-                    //console.log(result.courses[0].lectures[0].time_start);
                     for(course in result.courses) {
                         for(lecture in result.courses[course].lectures){
                             c_lecture = result.courses[course].lectures[lecture];
                             c_course = result.courses[course];
 
                             if(c_lecture.time_start.toString().substring(2,) === "00"){
-                                console.log("works");
                                 c_lecture.time_start = (c_lecture.time_start - 70);
                                 c_lecture.time_finish = (c_lecture.time_finish + 70);
                             }
@@ -211,7 +208,6 @@
                             else{
                                 //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
                                 ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
-                                console.log("ids", ids);
                             }
 
                             for(Id in ids){
@@ -231,9 +227,6 @@
                                 else if(c_lecture.day === "Cuma"){
                                     id += "-" + "5"
                                 }
-
-                                console.log(id);
-                                console.log(c_course.title);
 
                                 if(c_course.overlaps){
                                     $(id).css({'background-color': '#d9534f', 'color': 'white'});
@@ -261,7 +254,6 @@
                 },
                 success: function(result) {
                     location.reload();
-                    console.log(result);
                 },
                 error: function(result) {
                     console.log(result);
