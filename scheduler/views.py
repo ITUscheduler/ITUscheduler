@@ -247,9 +247,12 @@ def contact(request):
                 recipients.extend(reply_to)
             msg = EmailMessage(subject, message, sender, recipients, reply_to=reply_to)
             msg.send()
-        return HttpResponseRedirect('/')
+        return render(request, 'contact.html', {
+            'form': form,
+            'successful': True
+        })
     return render(request, 'contact.html', {
-        'form': form_class,
+        'form': form_class
     })
 
 

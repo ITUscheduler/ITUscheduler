@@ -17,4 +17,11 @@
         </div>
         <br>
     </div>
+    <script>
+        $(document).ready(function() {
+            {% if successful %}
+                alert("Your message is sent!");
+            {% endif %}
+        });
+    </script>
 {% endblock %}
