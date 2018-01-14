@@ -59,7 +59,10 @@ class IndexView(generic.CreateView):
 
     def form_valid(self, form):
 
-        form.save()
+        object = form.save()
+        #select the new created schedule
+        self.request.user.my_schedule = object
+        self.request.user.save()
         courses = form.instance.courses
         overlapping_courses = []
 

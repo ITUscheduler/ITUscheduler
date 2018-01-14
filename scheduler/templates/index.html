@@ -143,10 +143,16 @@
                 {% if request.user.is_authenticated %}
                 $("#addToSchedule").click( function(e){
                    e.preventDefault();
-                   _data = $("#courses_form").serializeArray();
-                   _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
+                   var _data = $("#courses_form").serializeArray();
+                   var _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
+                   var empty = false;
 
-                   $.ajax({
+                   if(_data[2]){
+                       empty = true
+                   }
+
+                   if(empty){
+                       $.ajax({
                        url: _url,
                        type: "POST",
                        data: _data,
@@ -157,7 +163,11 @@
                            console.log(data);
                        }
 
-                   });
+                       });
+                   }else{
+                       alert('You must choose a course');
+                   }
+
 
                 });
                 {% endif %}
