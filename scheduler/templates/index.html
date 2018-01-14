@@ -16,14 +16,16 @@
                             <form action="" method="POST" id="courses_form">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary" name="save">New Schedule</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary" id="addToSchedule">Add To Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}</button>
-                                </div>
-                                <div class="col-md-8">
-                                    <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-6 col-xs-6">
+                                        <button class="btn btn-primary" name="save">New Schedule</button>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6 col-xs-6">
+                                        <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
+                                    </div>
+                                    <div class="col-md-8 col-sm-12">
+                                        <small>1) Add all relevant courses from the <a href="{% url "courses" slug="BLG" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
+                                    </div>
                                 </div>
 								<div class="col-md-12">
 									{% if messages %}
@@ -65,7 +67,7 @@
                     {% if user.is_authenticated %}
                         <div class="panel-body">
                             <div class="row">
-                                <div style="margin-bottom: 10px;" class="col-md-3 col-xs-12">
+                                <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
                                     <form>
                                     <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                         {% for schedule in schedules %}
@@ -74,7 +76,7 @@
                                     </select>
                                 </form>
                                 </div>
-                                <div class="col-md-9 col-xs-12">
+                                <div class="col-md-9 col-sm-12 col-xs-12">
                                     <div class="row">
                                         <div class="col-md-3 col-xs-12">
                                             <input title="delete-schedule" class="btn btn-primary" value="Delete Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
