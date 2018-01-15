@@ -80,14 +80,15 @@
         </div><!-- /.container-fluid -->
     </nav>
     {% block body %}{% endblock %}
+    {% comment %}
     {% if request.path == login_url %}
         <div class="container">
             <div class="col-md-offset-3">
                 <small><a href="{% url 'password-reset' %}">Forgot Password</a></small>
             </div>
         </div>
-
     {% endif %}
+    {% endcomment %}
     <footer class="navbar navbar-default footer">
         <div class="container">
             <ul class="nav navbar-nav">

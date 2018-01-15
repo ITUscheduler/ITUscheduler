@@ -82,7 +82,6 @@ def db_refresh_courses(request):
                             times_start += time[0] + ","
                             times_finish += time[1] + ","
 
-
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
 
@@ -109,25 +108,21 @@ def db_refresh_courses(request):
 
                         if crn in crns:
                             course = Course.objects.get(crn=crn)
-
-                            course.lecture_count=lecture_count
-                            course.course_code=course_code
-                            course.code=data[1]
-                            course.title=data[2]
-                            course.instructor=data[3]
-                            course.capacity=int(data[8])
-                            course.enrolled=int(data[9])
-                            course.reservation=data[10]
-                            course.class_restriction=data[13]
+                            course.lecture_count = lecture_count
+                            course.course_code = course_code
+                            course.code = data[1]
+                            course.title = data[2]
+                            course.instructor = data[3]
+                            course.capacity = int(data[8])
+                            course.enrolled = int(data[9])
+                            course.reservation = data[10]
+                            course.class_restriction = data[13]
 
                             course.save()
 
                             for lecture in course.lecture_set.all():
                                 lecture.delete()
-
-
                         else:
-
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
                                 course_code=course_code,
@@ -145,7 +140,6 @@ def db_refresh_courses(request):
                             time_start = times_start.split(",")[i]
                             time_finish = times_finish.split(",")[i]
 
-
                             Lecture.objects.create(
                                 building=buildings[i],
                                 day=days[i],
@@ -156,7 +150,6 @@ def db_refresh_courses(request):
                             )
 
                         for major in majors:
-
                             major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
                             course.major_restriction.add(major_restriction)
 

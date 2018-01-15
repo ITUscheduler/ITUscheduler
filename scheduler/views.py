@@ -28,7 +28,7 @@ def is_available(courses, course):
 class IndexView(generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
-    #success_url = "."
+    # success_url = "."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -58,9 +58,8 @@ class IndexView(generic.CreateView):
         return kwargs
 
     def form_valid(self, form):
-
         object = form.save()
-        #select the new created schedule
+        # select the new created schedule
         self.request.user.my_schedule = object
         self.request.user.save()
         courses = form.instance.courses
@@ -162,7 +161,6 @@ class CoursesView(generic.DetailView):
             if course.code not in context["codes"]:
                 context["codes"].append(course.code)
 
-
         if self.request.GET.get("search_course") and self.request.GET.get("search_code") and self.request.GET.get("search_day"):
             if self.request.GET["search_course"] != "all":
                 context["object"] = get_object_or_404(CourseCode, code=self.request.GET["search_course"])
@@ -196,8 +194,6 @@ class CoursesView(generic.DetailView):
 
                 if day != "all":
                     courses = [course for course in courses for lecture in course.lecture_set.all() if lecture.day == day]
-
-
 
         if self.request.GET.get("query"):
             code = self.request.GET["query"]

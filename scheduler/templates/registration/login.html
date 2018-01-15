@@ -10,6 +10,7 @@
                     <input type="hidden" name="next" value="{{ next }}">
                     {{ form|bootstrap }}
                     <button class="btn btn-primary">Login</button>
+                    <a href="{% url 'password-reset' %}" class="btn btn-primary">Forgot Password?</a>
                 </form>
             </div>
         </div>
