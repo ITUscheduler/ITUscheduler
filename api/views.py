@@ -156,7 +156,7 @@ def db_refresh_courses(request):
 
             course_code.refreshed = timezone.now()
             course_code.save()
-    return HttpResponse("<a href='/'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
+    return HttpResponse("<a href='{% url "refresh_courses" %}'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
 
 
 @user_passes_test(lambda u: u.is_superuser)
