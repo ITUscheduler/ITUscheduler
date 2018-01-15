@@ -67,8 +67,6 @@ def db_refresh_courses(request):
                         data = [row.get_text() for row in raw_course.find_all("td")]
                         lecture_count = len(data[4]) // 3
                         crn = int(data[0])
-                        print(crn)
-                        print(type(lecture_count))
                         times_start = ""
                         times_finish = ""
                         for index in range(lecture_count):
@@ -80,7 +78,7 @@ def db_refresh_courses(request):
                             for i in range(2):
                                 if time[i][0] == "0":
                                     time[i] = time[i][1::]
-                            print(time, crn, "asdasd")
+
                             times_start += time[0] + ","
                             times_finish += time[1] + ","
 
@@ -88,30 +86,47 @@ def db_refresh_courses(request):
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
 
-                        print(times_start, times_finish)
-
                         prerequisites = re.sub("veya", " veya", data[12])
-                        if crn in crns:
-                            _ = Course.objects.get(crn=crn)
-                            # Edit course object (Not implemented)
-                        else:
-                            buildings = [data[4][3*i:3*i+3:] for i in range(lecture_count)]
-                            days = data[5].split()
-                            majors = data[11].split(", ")
-                            prerequisites_objects = []
-                            if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel":
-                                for prerequisite in prerequisites.split(' veya '):
-                                    prerequisite = prerequisite.split(' ')
-                                    course = " ".join(prerequisite[:2])
-                                    grade = str(prerequisite[-1])
 
-                                    try:
-                                        prerequisites_objects.append(Prerequisite.objects.get(code=course,
-                                                                                              min_grade=grade))
-                                    except Prerequisite.DoesNotExist:
-                                        prerequisites_objects.append(Prerequisite.objects.create(code=course, min_grade=grade))
-                            else:
-                                prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
+                        buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
+                        days = data[5].split()
+                        majors = data[11].split(", ")
+                        prerequisites_objects = []
+                        if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel":
+                            for prerequisite in prerequisites.split(' veya '):
+                                prerequisite = prerequisite.split(' ')
+                                course = " ".join(prerequisite[:2])
+                                grade = str(prerequisite[-1])
+
+                                try:
+                                    prerequisites_objects.append(Prerequisite.objects.get(code=course,
+                                                                                          min_grade=grade))
+                                except Prerequisite.DoesNotExist:
+                                    prerequisites_objects.append(
+                                        Prerequisite.objects.create(code=course, min_grade=grade))
+                        else:
+                            prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
+
+                        if crn in crns:
+                            course = Course.objects.get(crn=crn)
+
+                            course.lecture_count=lecture_count
+                            course.course_code=course_code
+                            course.code=data[1]
+                            course.title=data[2]
+                            course.instructor=data[3]
+                            course.capacity=int(data[8])
+                            course.enrolled=int(data[9])
+                            course.reservation=data[10]
+                            course.class_restriction=data[13]
+
+                            course.save()
+
+                            for lecture in course.lecture_set.all():
+                                lecture.delete()
+
+
+                        else:
 
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
@@ -126,27 +141,27 @@ def db_refresh_courses(request):
                                 class_restriction=data[13]
                             )
 
-                            for i in range(lecture_count):
-                                time_start = times_start.split(",")[i]
-                                time_finish = times_finish.split(",")[i]
+                        for i in range(lecture_count):
+                            time_start = times_start.split(",")[i]
+                            time_finish = times_finish.split(",")[i]
 
 
-                                Lecture.objects.create(
-                                    building=buildings[i],
-                                    day=days[i],
-                                    time_start=time_start,
-                                    time_finish=time_finish,
-                                    room=data[7].split()[i],
-                                    course=course
-                                )
+                            Lecture.objects.create(
+                                building=buildings[i],
+                                day=days[i],
+                                time_start=time_start,
+                                time_finish=time_finish,
+                                room=data[7].split()[i],
+                                course=course
+                            )
 
-                            for major in majors:
+                        for major in majors:
 
-                                major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
-                                course.major_restriction.add(major_restriction)
+                            major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
+                            course.major_restriction.add(major_restriction)
 
-                            for prerequisite in prerequisites_objects:
-                                course.prerequisites.add(prerequisite)
+                        for prerequisite in prerequisites_objects:
+                            course.prerequisites.add(prerequisite)
 
                         nth_course += 1
                     except AttributeError:

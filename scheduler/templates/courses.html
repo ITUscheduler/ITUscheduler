@@ -28,8 +28,11 @@
                         </div>
                         <div class="form-group col-md-12 col-xs-12" id="select_search_days">
                             <select class="form-control" name="search_day">
-                                {% if searched_day or searched_day == "all" %}
+                                {% if searched_day %}
                                     <option value="{{ searched_day }}">{{ searched_day }}</option>
+                                    {% if searched_day != "all" %}
+                                        <option value="all">Days</option>
+                                    {% endif %}
                                     {% else %}
                                         <option value="all">Days</option>
                                 {% endif %}

@@ -63,6 +63,9 @@ class Course(models.Model):
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"
         return lectures
 
+    def get_code_only(self):
+        return self.code.split(' ')[-1]
+
 
 class Lecture(models.Model):
     building = models.CharField(max_length=65)
