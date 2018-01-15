@@ -9,7 +9,7 @@ urlpatterns = [
     path('accounts/reset-password', auth_views.PasswordResetView.as_view(), name="password-reset"),
     path('accounts/reset-password-done', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
     path('accounts/reset-password-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('accounts/reset-password-done', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('accounts/reset-password-complete', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('', include('scheduler.urls')),
     path('api/', include('api.urls')),
     path('rest-api/', include('api.rest_api.urls', namespace='course_api')),
