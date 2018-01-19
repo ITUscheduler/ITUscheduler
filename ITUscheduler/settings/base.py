@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bootstrapform',
     'django_gravatar',
+    'social_django',
     'api',
     'scheduler'
 ]
@@ -34,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'ITUscheduler.urls'
@@ -50,6 +52,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'scheduler.context_processors.global_processor',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -75,6 +79,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "scheduler.ExtendedUser"
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 # Internationalization
 
@@ -91,6 +101,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 
 SITE_ID = 1
 MIGRATION_MODULES = {

@@ -25,6 +25,7 @@ urlpatterns = [
             })
         }
     }, name='django.contrib.sitemaps.views.sitemap'),
+    path('oauth/', include('social_django.urls', namespace='social')),
     path('', include('scheduler.urls')),
     path('api/', include('api.urls')),
     path('rest-api/', include('api.rest_api.urls', namespace='course_api')),

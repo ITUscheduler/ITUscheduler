@@ -252,6 +252,10 @@ def contact(request):
     })
 
 
+def privacy_policy(request):
+    return render(request, 'privacypolicy.htm')
+
+
 @login_required
 def add_course(request):
     try:
