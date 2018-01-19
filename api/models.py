@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -62,6 +63,9 @@ class Course(models.Model):
             lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"
         return lectures
+
+    def get_absolute_url(self):
+        return reverse("schedule", kwargs={"pk": self.crn})
 
     def get_code_only(self):
         return self.code.split(' ')[-1]

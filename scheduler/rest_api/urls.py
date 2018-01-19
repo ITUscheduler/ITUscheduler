@@ -1,5 +1,4 @@
 from django.urls import path
-
 from .views import ScheduleListAPIView, ScheduleDetailAPIView, course_remove, course_replace, add_to_schedule
 
 app_name = 'rest_api_scheduler'

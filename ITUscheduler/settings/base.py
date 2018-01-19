@@ -17,6 +17,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     'rest_framework',
     'bootstrapform',
     'django_gravatar',
@@ -89,5 +91,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = "/"
+
+SITE_ID = 1
+MIGRATION_MODULES = {
+    'sites': 'ITUscheduler.migrations',
+}
 
 from .secrets import *

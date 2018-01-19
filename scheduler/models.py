@@ -17,4 +17,4 @@ class Schedule(models.Model):
         return str(self.user) + " #" + str(self.id)
 
     def get_absolute_url(self):
-        return reverse("schedule", kwargs={"pk":self.id})
+        return reverse("schedule", kwargs={"pk": self.id})
