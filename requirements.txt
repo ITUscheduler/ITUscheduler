@@ -9,3 +9,4 @@ html5lib
 django_rest_framework
 psycopg2
 social-auth-app-django
+django-font-awesome

@@ -12,8 +12,15 @@
                     <button class="btn btn-primary">Login</button>
                     <a href="{% url 'password-reset' %}" class="btn btn-primary">Forgot Password?</a>
                 </form>
-                <a href="{% url 'social:begin' 'twitter' %}">Login with Twitter</a>
-                <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                    <a href="{% url 'social:begin' 'twitter' %}" class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span> Sign in with Twitter</a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-block btn-social btn-facebook"><span class="fa fa-facebook"></span> Sign in with Facebook</a>
+                </div>
+                </div>
             </div>
         </div>
     </div>

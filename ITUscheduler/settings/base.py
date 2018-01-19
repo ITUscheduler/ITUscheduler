@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'django_gravatar',
     'social_django',
+    'font_awesome',
     'api',
     'scheduler'
 ]
