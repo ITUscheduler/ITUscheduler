@@ -14,6 +14,9 @@ class CourseCode(models.Model):
     def __str__(self):
         return str(self.code)
 
+    def get_absolute_url(self):
+        return reverse("courses", kwargs={"slug": self.code})
+
 
 class Prerequisite(models.Model):
     code = models.CharField(max_length=30, null=True, blank=True)
@@ -63,9 +66,6 @@ class Course(models.Model):
             lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"
         return lectures
-
-    def get_absolute_url(self):
-        return reverse("schedule", kwargs={"pk": self.crn})
 
     def get_code_only(self):
         return self.code.split(' ')[-1]

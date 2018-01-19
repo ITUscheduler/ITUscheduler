@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import GenericSitemap
-from scheduler.models import Course
+from api.models import CourseCode
 from .sitemaps import StaticViewSitemap, IndexViewSitemap
 
 
@@ -21,7 +21,7 @@ urlpatterns = [
             'home': IndexViewSitemap,
             'pages': StaticViewSitemap,
             'courses': GenericSitemap({
-                "queryset": Course.objects.all()
+                "queryset": CourseCode.objects.all()
             })
         }
     }, name='django.contrib.sitemaps.views.sitemap'),
