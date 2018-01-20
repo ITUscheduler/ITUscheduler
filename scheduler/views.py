@@ -8,6 +8,7 @@ from django.contrib import messages
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
+from meta.views import MetadataMixin
 
 
 def is_available(courses, course):
@@ -25,10 +26,15 @@ def is_available(courses, course):
     return True, ""
 
 
-class IndexView(generic.CreateView):
+class IndexView(MetadataMixin, generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
     # success_url = "."
+
+    title = 'ITU Scheduler'
+    description = 'With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily.'
+    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi', 'itü', 'dersler']
+    url = '/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

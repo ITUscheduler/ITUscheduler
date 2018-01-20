@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'django_gravatar',
     'social_django',
+    'meta',
     'font_awesome',
     'api',
     'scheduler'
@@ -109,5 +110,8 @@ SITE_ID = 1
 MIGRATION_MODULES = {
     'sites': 'ITUscheduler.migrations',
 }
+
+META_SITE_PROTOCOL = 'http'
+META_USE_SITES = True
 
 from .secrets import *
