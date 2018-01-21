@@ -1,14 +1,18 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib import messages
+from django.conf import settings
 from api.models import CourseCode, Course
 from scheduler.models import Schedule
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
+from easy_pdf.views import PDFTemplateView
+from easy_pdf.rendering import render_to_pdf
+from pdf2image import convert_from_bytes
 
 
 def is_available(courses, course):
@@ -41,20 +45,6 @@ class IndexView(MetadataMixin, generic.CreateView):
         user = self.request.user
         if user.is_authenticated:
             kwargs["courses"] = user.courses
-            _ = [
-                "8:30-9:29",
-                "9:30-10:29",
-                "10:30-11:29",
-                "11:30-12:29",
-                "12:30-13:29",
-                "13:30-14:29",
-                "14:30-15:29",
-                "15:30-16:29",
-                "16:30-17:29",
-                "17:30-18:29",
-                "18:30-19:29",
-                "19:30-20:29"
-            ]
             if self.request.method == "POST":
                 post_data = kwargs["data"].copy()
                 post_data["user"] = user.id
@@ -103,10 +93,7 @@ class IndexView(MetadataMixin, generic.CreateView):
             Hour("14:30-15:29", 1430, 1529),
             Hour("15:30-16:29", 1530, 1629),
             Hour("16:30-17:29", 1630, 1729),
-            Hour("17:30-18:29", 1730, 1829),
-            Hour("18:30-19:29", 1830, 1929),
-            Hour("19:30-20:29", 1930, 2029),
-            Hour("20:30-21:29", 2030, 2129)
+            Hour("17:30-18:29", 1730, 1829)
         ]
         context["hours"] = hours
 
@@ -139,6 +126,52 @@ class IndexView(MetadataMixin, generic.CreateView):
                     break
 
         return context
+
+
+def schedule_export(request):
+    if request.method == "POST":
+        request.session["table_html"] = request.POST["table_html"]
+        request.session["pdf_or_png"] = request.POST["pdf_or_png"]
+        pdf_or_png = request.POST["pdf_or_png"]
+        if pdf_or_png == "pdf":
+            return HttpResponseRedirect("/schedule.pdf")
+        elif pdf_or_png == "png":
+            return HttpResponseRedirect("/schedule.png")
+        else:
+            return HttpResponseRedirect("/")
+    else:
+        return HttpResponseRedirect("/")
+
+
+class ScheduleExportView(PDFTemplateView):
+    template_name = 'schedule.html'
+    base_url = 'http://' + settings.STATIC_ROOT
+    download_filename = 'ITUscheduler.pdf'
+    pdf_or_png = "pdf"
+
+    def get_context_data(self, **kwargs):
+        context = super(ScheduleExportView, self).get_context_data(
+            pagesize='A4 landscape',
+            title='ITUscheduler',
+            **kwargs
+        )
+        context["schedule_html"] = self.request.session.get("table_html")
+        self.pdf_or_png = self.request.session.get("pdf_or_png")
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if self.pdf_or_png == "pdf":
+            return self.render_to_response(context)
+        elif self.pdf_or_png == "png":
+            pdf = render_to_pdf("schedule.html", context=context, request=request, **kwargs)
+            img = convert_from_bytes(pdf)[0]
+            response = HttpResponse(content_type='image/png')
+            response['Content-Disposition'] = 'attachment; filename=ITUscheduler'
+            img.save(response, "PNG")
+            return response
+        else:
+            return HttpResponseRedirect("/")
 
 
 class CoursesView(generic.DetailView):

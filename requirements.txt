@@ -4,10 +4,12 @@ requests
 Pillow
 django-bootstrap-form
 django-gravatar2
-hopcroftkarp
 html5lib
 django_rest_framework
 psycopg2
 social-auth-app-django
 django-font-awesome
 django-meta
+django-easy-pdf>=0.2.0.dev1
+WeasyPrint
+pdf2image

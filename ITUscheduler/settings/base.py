@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'social_django',
     'meta',
     'font_awesome',
+    'easy_pdf',
     'api',
     'scheduler'
 ]

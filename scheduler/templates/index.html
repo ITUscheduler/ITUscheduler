@@ -17,10 +17,10 @@
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
                                 <div class="row">
-                                    <div class="col-md-2 col-sm-6 col-xs-6">
+                                    <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
                                         <button class="btn btn-primary" name="save">New Schedule</button>
                                     </div>
-                                    <div class="col-md-2 col-sm-6 col-xs-6">
+                                    <div style="margin-bottom: 5px;" class="col-md-2 col-sm-6 col-xs-6">
                                         <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
                                     </div>
                                     <div class="col-md-8 col-sm-12 col-xs-12">
@@ -64,8 +64,8 @@
                     <div class="panel-heading">
                         <h2 class="panel-title">My Schedules</h2>
                     </div>
-                    {% if user.is_authenticated %}
-                        <div class="panel-body">
+                    <div class="panel-body">
+                        {% if user.is_authenticated %}
                             <div class="row">
                                 <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
                                     <form>
@@ -77,26 +77,23 @@
                                 </form>
                                 </div>
                                 <div class="col-md-9 col-sm-12 col-xs-12">
-                                    <div class="row">
-                                        <div class="col-md-3 col-xs-12">
-                                            <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
-                                        </div>
-                                        <div class="col-md-6 col-xs-9">
-                                            <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
-                                        </div>
-                                        <div class="col-md-3 col-xs-3">
-                                            <a href="javascript:alert('Drag and Drop Fill CRNs button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
-                                        </div>
+                                    <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
+                                        <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                    </div>
+                                    <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
+                                        <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
+                                    </div>
+                                    <div class="col-md-3 col-xs-3">
+                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop Fill CRNs button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
+                        {% endif %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
                                         <tr>
                                             <th>Hours</th>
                                             <th>Monday</th>
@@ -105,8 +102,8 @@
                                             <th>Thursday</th>
                                             <th>Friday</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for hour in hours %}
                                             <tr id="{{ hour.time|slugify }}">
                                                 <th>{{ hour.time }}</th>
@@ -117,60 +114,78 @@
                                                 <td id="{{ hour.time|slugify }}-{{ 5 }}"></td>
                                             </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                                <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">Export as PNG</a>
                             </div>
-                        </li>
-                    </ul>
+                            <div class="col-md-6 col-xs-6">
+                                <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">Export as PDF</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
         $(document).ready(function() {
-                if("{{ selected_schedule }}") {
-                    writeLectures();
+            if ("{{ selected_schedule }}") {
+                writeLectures();
+            }
+            var select = document.getElementById('id_courses');
+            select.size = select.length;
+
+            {% if request.user.is_authenticated %}
+            $("#addToSchedule").click(function(e) {
+                e.preventDefault();
+                var _data = $("#courses_form").serializeArray();
+                var _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
+                var empty = false;
+
+                if (_data[2]) {
+                    empty = true
                 }
-                var select = document.getElementById('id_courses');
-                select.size = select.length;
 
-
-                {% if request.user.is_authenticated %}
-                $("#addToSchedule").click( function(e){
-                   e.preventDefault();
-                   var _data = $("#courses_form").serializeArray();
-                   var _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
-                   var empty = false;
-
-                   if(_data[2]){
-                       empty = true
-                   }
-
-                   if(empty){
-                       $.ajax({
-                       url: _url,
-                       type: "POST",
-                       data: _data,
-                       success: function(data){
-                           location.reload();
-                       },
-                       error: function(data){
-                           alert("First you must create a new schedule.");
-                           console.log(data);
-                       }
-
-                       });
-                   }else{
-                       alert('You must choose at least one course.');
-                   }
-
-
-                });
-                {% endif %}
-
+                if (empty) {
+                    $.ajax({
+                        url: _url,
+                        type: "POST",
+                        data: _data,
+                        success: function(data) {
+                            location.reload();
+                        },
+                        error: function(data) {
+                            alert("First you must create a new schedule.");
+                            console.log(data);
+                        }
+                    });
+                } else {
+                    alert('You must choose at least one course.');
+                }
+            });
+            {% endif %}
         });
 
-
+        function getTableHTML(isPDF) {
+            var tableHTML = $(".table-responsive:first").html();
+            $.post("{% url "schedule_export" %}",
+                {
+                    "csrfmiddlewaretoken": getCookie('csrftoken'),
+                    "table_html": tableHTML,
+                    "pdf_or_png": isPDF ? "pdf" : "png"
+                },
+                function() {
+                    location.href = isPDF ? "{% url "schedule_pdf" %}" : "{% url "schedule_png" %}";
+                }
+            );
+        }
 
         function idGenerator(start, finish, Ids) {
             var ids = Ids;
@@ -194,54 +209,46 @@
                 {% endif %}
 
                 success: function(result) {
-                    for(course in result.courses) {
-                        for(lecture in result.courses[course].lectures){
-                            c_lecture = result.courses[course].lectures[lecture];
-                            c_course = result.courses[course];
+                    for (var course in result.courses) {
+                        for (var lecture in result.courses[course].lectures) {
+                            var c_lecture = result.courses[course].lectures[lecture];
+                            var c_course = result.courses[course];
 
-                            if(c_lecture.time_start.toString().substring(2,) === "00"){
+                            if (c_lecture.time_start.toString().substring(2) === "00") {
                                 c_lecture.time_start = (c_lecture.time_start - 70);
                                 c_lecture.time_finish = (c_lecture.time_finish + 70);
                             }
 
-                            ids = [];
-                            blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
-                            if(blocks === 1){
+                            var ids = [];
+                            var blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
 
-                                id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
+                            if (blocks === 1) {
+                                var id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
                                 ids.push(id);
-
-
-                            }
-                            else{
+                            } else {
                                 //blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
                                 ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
                             }
 
-                            for(Id in ids){
-                                id = ids[Id];
-                                if(c_lecture.day === "Pazartesi"){
+                            for (var Id in ids) {
+                                var id = ids[Id];
+                                if (c_lecture.day === "Pazartesi") {
                                     id += "-" + "1"
-                                }
-                                else if(c_lecture.day === "Salı"){
+                                } else if (c_lecture.day === "Salı") {
                                     id += "-" + "2"
-                                }
-                                else if(c_lecture.day === "Çarşamba"){
+                                } else if (c_lecture.day === "Çarşamba") {
                                     id += "-" + "3"
-                                }
-                                else if(c_lecture.day === "Perşembe"){
+                                } else if (c_lecture.day === "Perşembe") {
                                     id += "-" + "4"
-                                }
-                                else if(c_lecture.day === "Cuma"){
+                                } else if (c_lecture.day === "Cuma") {
                                     id += "-" + "5"
                                 }
 
-                                if(c_course.overlaps){
+                                if (c_course.overlaps) {
                                     $(id).css({'background-color': '#d9534f', 'color': 'white'});
                                 }
 
                                 $(id).html(c_course.title);
-
                             }
                         }
                     }
@@ -338,7 +345,5 @@
                 )
             }
         }
-
-
     </script>
 {% endblock %}
