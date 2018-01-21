@@ -120,16 +120,18 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-6 col-xs-6">
-                                <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">Export as PNG</a>
-                            </div>
-                            <div class="col-md-6 col-xs-6">
-                                <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">Export as PDF</a>
+                    {% if user.is_authenticated %}
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6">
+                                    <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">Export as PNG</a>
+                                </div>
+                                <div class="col-md-6 col-xs-6">
+                                    <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">Export as PDF</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

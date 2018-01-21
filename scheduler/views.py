@@ -128,6 +128,7 @@ class IndexView(MetadataMixin, generic.CreateView):
         return context
 
 
+@login_required
 def schedule_export(request):
     if request.method == "POST":
         request.session["table_html"] = request.POST["table_html"]
