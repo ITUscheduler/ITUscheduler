@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="col-md-9 col-sm-12 col-xs-12">
                                     <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
-                                        <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule{% if user.my_schedule %} #{{ user.my_schedule.id }}{% endif %}" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                        <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
                                     </div>
                                     <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
                                         <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
