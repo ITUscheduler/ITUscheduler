@@ -129,17 +129,16 @@
                                                 </td>
                                             {% endif %}
                                             <th>{{ course.crn }}</th>
-                                            <td>{{ course.code }}</td>
+                                            <td><a target="_blank" href="{{ course.catalogue }}">{{ course.code }}</a></td>
                                             <td>{{ course.title }}</td>
                                             <td>{{ course.instructor }}</td>
-                                            <td>{% for lecture in course.lecture_set.all %}{{ lecture.building }}<br>{% endfor %}</td>
+                                            <td><a href="javascript:listBuildings();">{% for lecture in course.lecture_set.all %}{{ lecture.building }}<br>{% endfor %}</a></td>
                                             <td>{% for lecture in course.lecture_set.all %}{{ lecture.day }}<br>{% endfor %}</td>
-                                            <!--<td>{{ course.times|join:"<br>" }}</td>-->
                                             <td>{% for lecture in course.lecture_set.all %}{{ lecture.time_str_tuple|join:"/" }}<br>{% endfor %}</td>
                                             <td>{% for lecture in course.lecture_set.all %}{{ lecture.room }}<br>{% endfor %}</td>
                                             <td>{{ course.enrolled }}/{{ course.capacity }}</td>
-                                            <td><a href="javascript:alert('Major Restrictions: {{ course.major_restriction.all|join:", " }}{{ major }}')">{{ course.major_restriction.all|join:"<br>"|truncatechars:40 }}</a></td>
-                                            <td>{{ course.prerequisites.all|join:"<br>" }}</td>
+                                            <td><a href="javascript:alert('Major Restrictions: {{ course.major_restriction.all|join:", " }}')">{{ course.major_restriction.all|join:"<br>"|truncatechars:40 }}</a></td>
+                                            <td><a href="javascript:alert('Prerequisites: {{ course.prerequisites.all|join:", " }}')">{{ course.prerequisites.all|join:"<br>"|truncatechars:40 }}</a></td>
                                             <td>{{ course.class_restriction }}</td>
                                         </tr>
                                     {% endfor %}

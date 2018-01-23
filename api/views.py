@@ -65,6 +65,7 @@ def db_refresh_courses(request):
                         break
                     try:
                         data = [row.get_text() for row in raw_course.find_all("td")]
+                        rows = raw_course.find_all("td")
                         lecture_count = len(data[4]) // 3
                         crn = int(data[0])
                         times_start = ""
@@ -111,6 +112,7 @@ def db_refresh_courses(request):
                             course.lecture_count = lecture_count
                             course.course_code = course_code
                             course.code = data[1]
+                            course.catalogue = rows[1].contents[0]["href"]
                             course.title = data[2]
                             course.instructor = data[3]
                             course.capacity = int(data[8])
@@ -127,6 +129,7 @@ def db_refresh_courses(request):
                                 lecture_count=lecture_count,
                                 course_code=course_code,
                                 crn=crn,
+                                catalogue=rows[1].contents[0]["href"],
                                 code=data[1],
                                 title=data[2],
                                 instructor=data[3],
