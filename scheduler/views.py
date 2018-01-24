@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, FileResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib import messages
 from django.conf import settings
-from api.models import CourseCode, Course
+from api.models import CourseCode, Course, Semester
 from scheduler.models import Schedule
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
@@ -194,7 +194,7 @@ class CoursesView(generic.DetailView):
         context["course_codes"] = CourseCode.objects.all()
         first_object = context["object"]
 
-        courses = context["object"].course_set.all()
+        courses = context["object"].course_set.filter(semester=Semester.objects.current())
         first_courses_copy = courses  # for later use
         context["codes"] = []
         for course in courses:
@@ -204,7 +204,7 @@ class CoursesView(generic.DetailView):
         if self.request.GET.get("search_course") and self.request.GET.get("search_code") and self.request.GET.get("search_day"):
             if self.request.GET["search_course"] != "all":
                 context["object"] = get_object_or_404(CourseCode, code=self.request.GET["search_course"])
-                courses = context["object"].course_set.all()
+                courses = context["object"].course_set.filter(semester=Semester.objects.current())
                 context["codes"] = []
                 for course in courses:
                     if course.code not in context["codes"]:

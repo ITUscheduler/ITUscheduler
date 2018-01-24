@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import CourseCode, Course, Prerequisite, MajorRestriction, Lecture
+from api.models import CourseCode, Course, Prerequisite, MajorRestriction, Lecture, Semester
 
 
 @admin.register(CourseCode)
@@ -15,3 +15,4 @@ class CourseAdmin(admin.ModelAdmin):
 admin.site.register(Prerequisite)
 admin.site.register(MajorRestriction)
 admin.site.register(Lecture)
+admin.site.register(Semester)

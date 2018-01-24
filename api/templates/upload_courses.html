@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Refresh Courses | ITUscheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <form action="{% url "db_refresh_courses" %}" method="post">
+                {% csrf_token %}
+                    <select multiple name="course_codes[]" class="form-control">
+                        {% for course_code in object_list %}
+                            <option value="{{ course_code }}">{{ course_code }}</option>
+                        {% endfor %}
+                    </select><br>
+                    <input type="submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

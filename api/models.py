@@ -3,6 +3,33 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+class SemesterManager(models.Manager):
+    def current(self):
+        return super().get_queryset().get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
+
+
+class Semester(models.Model):
+    SPRING_17 = "S17"
+    FALL_17 = "F17"
+    SPRING_18 = "S18"
+    SEMESTER_CHOICES = (
+        (SPRING_17, "2016-2017 Spring"),
+        (FALL_17, "2017-2018 Fall"),
+        (SPRING_18, "2017-2018 Spring")
+    )
+    name = models.CharField(
+        unique=True,
+        primary_key=True,
+        max_length=3,
+        choices=SEMESTER_CHOICES,
+        default=SPRING_18
+    )
+    objects = SemesterManager()
+
+    def __str__(self):
+        return self.name
+
+
 class CourseCode(models.Model):
     refreshed = models.DateTimeField(default=timezone.now)
     code = models.CharField(max_length=10, unique=True, primary_key=True)
@@ -37,6 +64,7 @@ class MajorRestriction(models.Model):
 
 
 class Course(models.Model):
+    semester = models.ForeignKey(Semester, default=Semester.SPRING_18, on_delete=models.SET_DEFAULT)
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
