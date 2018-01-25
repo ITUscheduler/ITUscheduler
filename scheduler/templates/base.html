@@ -22,12 +22,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>{% block title %}{% endblock %}</title>
-    {% include 'meta/meta.html' %}
-    {% load static %}
     <meta property="og:title" content="ITU Scheduler">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{% url "index" %}">
-    <meta property="og:image" content="{% static "icons/apple-touch-icon.png" %}">
+    <meta property="og:url" content="https://ituscheduler.com">
+    <meta property="og:image" content="https://ituscheduler.com/static/icons/apple-touch-icon.png">
+    {% include 'meta/meta.html' %}
+    {% load static %}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static "icons/apple-touch-icon.png" %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static "icons/favicon-32x32.png" %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static "icons/favicon-16x16.png" %}">
