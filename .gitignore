@@ -13,3 +13,6 @@ media/
 migrations/
 db.sqlite3*
 secrets.py
+
+# Server
+.well-known/
