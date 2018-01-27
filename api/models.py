@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+
 class SemesterManager(models.Manager):
     def get_queryset(self):
         queryset = super(SemesterManager, self).get_queryset()
