@@ -328,7 +328,10 @@ def delete_schedule(request):
     try:
         schedule_id = int(request.POST["schedule_id"])
         schedule = Schedule.objects.get(id=schedule_id)
-        schedule.delete()
+        if request.user == schedule.user:
+            schedule.delete()
+        else:
+            raise Exception("You are not authorized to delete that schedule.")
     except Exception as error:
         return JsonResponse({"successful": False, "error": str(error)})
     return JsonResponse({"successful": True, "scheduleId": schedule_id})
