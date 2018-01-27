@@ -34,7 +34,15 @@
                                            		{{ message }}
                                        		</div>
                                 		{% endfor %}
+                                        <hr>
                                		{% endif %}
+                                    {% if notifications %}
+                                        {% for notification in notifications %}
+                                            <div class="alert alert-danger" id="not-{{ notification.id }}">
+                                                {{ notification.msg }} | <a href="javascript:readNotification('{{ notification.id }}')">Okay</a>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
 								</div>
                             </form>
                             {% if user.my_schedule %}
@@ -342,5 +350,23 @@
                 )
             }
         }
+
+        function readNotification(id){
+            $.ajax({
+                url: '{% url "rest_api_scheduler:read_notification" %}',
+                type: 'POST',
+                data: {
+                 "id": id,
+                 "csrfmiddlewaretoken": getCookie('csrftoken')
+                },
+                success: function(result){
+                    $('#not-'+id).fadeOut();
+                },
+                error: function(result){
+                    console.log(result);
+                }
+            })
+        }
+
     </script>
 {% endblock %}

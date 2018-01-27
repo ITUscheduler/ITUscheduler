@@ -125,6 +125,8 @@ class IndexView(MetadataMixin, generic.CreateView):
                     context["selected_schedule"] = schedule
                     break
 
+            context["notifications"] = user.notification_set.all().filter(read=False)
+
         return context
 
 
@@ -298,6 +300,7 @@ def privacy_policy(request):
 
 @login_required
 def add_course(request):
+    print("asdasd")
     try:
         course_crn = int(request.POST["course_crn"])
         course = Course.objects.get(crn=course_crn)
@@ -306,9 +309,9 @@ def add_course(request):
             my_courses.remove(course.crn)
         else:
             my_courses.add(course.crn)
-        return JsonResponse({"courses": [course.crn for course in request.user.courses.all()], "successful": True})
+        return JsonResponse({"successful": True})
     except Exception as error:
-        return JsonResponse({"courses": [course.crn for course in request.user.courses.all()], "successful": False, "error": error})
+        return JsonResponse({"successful": False, "error": error})
 
 
 @login_required

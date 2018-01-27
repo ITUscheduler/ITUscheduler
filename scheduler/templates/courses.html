@@ -176,6 +176,7 @@
         }
 
         function addCourse(courseCrn) {
+            console.log("works");
             $.post(
                 "{% url "add_course" %}",
                 {

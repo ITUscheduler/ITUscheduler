@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from api.models import CourseCode, Course, Lecture, Prerequisite, MajorRestriction
-from scheduler.models import Schedule
+from scheduler.models import Schedule, Notification
 from django.utils import timezone
 from django.core.mail import send_mail
 
@@ -20,6 +20,10 @@ def notify_course_removal(course):
     users = list(set([schedule.user for schedule in schedules]))
 
     for user in users:
+        notification = Notification()
+        notification.user = user
+        notification.msg = 'Course #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(course.crn, ", #".join([str(schedule.id) for schedule in schedules]))
+        notification.save()
         recipients = [user.email, 'info@ituscheduler.com', 'dorukgezici96@gmail.com', 'altunerism@gmail.com']
         send_mail(
             '[ITUscheduler] | Course #{} is Removed'.format(course.crn),
@@ -68,6 +72,7 @@ def db_refresh_courses(request):
         for code in codes:
             course_code = get_object_or_404(CourseCode, code=code)
             crns = [course.crn for course in Course.objects.filter(course_code=code).all()]
+            old_crns = [course.crn for course in Course.objects.filter(course_code=code).filter(active=True)]
 
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
@@ -183,7 +188,7 @@ def db_refresh_courses(request):
                 except IndexError:
                     break
 
-            removed_crns = [crn for crn in crns if crn not in new_crns]
+            removed_crns = [crn for crn in old_crns if crn not in new_crns]
             if removed_crns:
                 for removed_crn in removed_crns:
                     old_course = Course.objects.get(crn=removed_crn)

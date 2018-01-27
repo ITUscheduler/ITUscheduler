@@ -12,7 +12,7 @@ from .serializers import ScheduleSerializer
 from scheduler.views import is_available
 from api.rest_api.serializers import CourseSerializer, LectureSerializer, PrerequisiteSerializer
 from api.models import Course
-from scheduler.models import Schedule
+from scheduler.models import Schedule, Notification
 
 
 class ScheduleListAPIView(ListAPIView):
@@ -133,6 +133,25 @@ def add_to_schedule(request, id):
             raise Exception("Unauthorized attempt")
     except Exception as error:
         return Response({'error': error})
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((SessionAuthentication, ))
+def read_notification(request):
+    try:
+        notification = Notification.objects.get(id=request.data['id'])
+        if notification.user != request.user:
+            raise Exception("Not authorized!")
+
+        notification.read = True
+        notification.save()
+
+        return Response({'success': 'attempt is accomplished'})
+
+    except Exception as error:
+        return Response({'error': error})
+
 
 
 
