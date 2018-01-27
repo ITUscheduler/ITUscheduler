@@ -23,7 +23,7 @@ class ScheduleListAPIView(ListAPIView):
         queryset = self.get_queryset()
         queryset = queryset.filter(user=request.user)
 
-        #serializer = self.get_serializer(queryset, many=True)
+        # serializer = self.get_serializer(queryset, many=True)
 
         data = [(self.get_serializer(query).data, query) for query in queryset]
         response_data = []
@@ -37,7 +37,6 @@ class ScheduleListAPIView(ListAPIView):
                 query = Course.objects.get(crn=course['crn'])
                 course['lectures'] = LectureSerializer(query.lecture_set.all(), many=True).data
                 course['prerequisites'] = PrerequisiteSerializer(query.prerequisites.all(), many=True).data
-
 
         return Response(response_data)
 
@@ -69,6 +68,7 @@ class ScheduleDetailAPIView(RetrieveAPIView):
 
         return Response({'Unauthorized attempt'}, status=HTTP_401_UNAUTHORIZED)
 
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @authentication_classes((SessionAuthentication, ))
@@ -88,6 +88,7 @@ def course_remove(request):
         schedule.delete()
 
     return Response({'success': 'Successfuly removed course {}'.format(course.crn)})
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
@@ -109,6 +110,7 @@ def course_replace(request):
     schedule.courses.add(new_course)
 
     return Response({'success': 'Replaced {} with {}'.format(old_crn, new_crn)})
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
@@ -133,8 +135,3 @@ def add_to_schedule(request, id):
             raise Exception("Unauthorized attempt")
     except Exception as error:
         return Response({'error': error})
-
-
-
-
-
