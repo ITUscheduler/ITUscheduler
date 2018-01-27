@@ -4,8 +4,14 @@ from django.utils import timezone
 
 
 class SemesterManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(SemesterManager, self).get_queryset()
+        current = queryset.get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
+        current.save()
+        return queryset
+
     def current(self):
-        return super().get_queryset().get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
+        return self.get_queryset().get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
 
 
 class Semester(models.Model):
