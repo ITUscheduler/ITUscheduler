@@ -10,8 +10,21 @@ from django.views import generic
 from api.models import CourseCode, Course, Lecture, Prerequisite, MajorRestriction
 from scheduler.models import Schedule
 from django.utils import timezone
+from django.core.mail import send_mail
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
+
+def notify(course):
+    schedules = [schedule for schedule in Schedule.objects.all() if course in schedule.courses.all()]
+    users = [(schedule.user, schedule) for schedule in schedules]
+
+    for user, schedule in users:
+        send_mail(
+            'Course {} in your schedule {} has been deleted by SIS'.format(course, schedule),
+            'Please update your schedule, ITUscheduler loves you',
+            'info@ituscheduler.com',
+            user.email,
+        )
 
 
 class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
@@ -58,6 +71,7 @@ def db_refresh_courses(request):
             raw_table = soup.find("table", class_="dersprg")
 
             nth_course = 3
+            new_crns = []
             while True:
                 try:
                     raw_course = raw_table.select_one("tr:nth-of-type({})".format(nth_course))
@@ -68,6 +82,7 @@ def db_refresh_courses(request):
                         rows = raw_course.find_all("td")
                         lecture_count = len(data[4]) // 3
                         crn = int(data[0])
+                        new_crns.append(crn)
                         times_start = ""
                         times_finish = ""
                         for index in range(lecture_count):
@@ -165,6 +180,15 @@ def db_refresh_courses(request):
                 except IndexError:
                     break
 
+
+            removed = [crn for crn in crns if crn not in new_crns]
+            if removed:
+                for removed_crn in removed:
+                    old_course = Course.objects.get(crn=removed_crn)
+                    old_course.active = False
+                    old_course.save()
+                    notify(old_course)
+                    print("Course {} is old".format(old_course))
             course_code.refreshed = timezone.now()
             course_code.save()
     return HttpResponse("<a href='/api/refresh/courses'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))

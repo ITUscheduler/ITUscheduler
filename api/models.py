@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-
 class SemesterManager(models.Manager):
     def get_queryset(self):
         queryset = super(SemesterManager, self).get_queryset()
@@ -84,6 +83,7 @@ class Course(models.Model):
     major_restriction = models.ManyToManyField(MajorRestriction)
     prerequisites = models.ManyToManyField(Prerequisite)
     class_restriction = models.CharField(max_length=110)
+    active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['code']
