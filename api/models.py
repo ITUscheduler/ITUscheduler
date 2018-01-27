@@ -69,6 +69,11 @@ class MajorRestriction(models.Model):
         return str(self.major)
 
 
+class CourseManager(models.Manager):
+    def get_queryset(self):
+        return super(CourseManager, self).get_queryset().filter(active=True)
+
+
 class Course(models.Model):
     semester = models.ForeignKey(Semester, default=Semester.SPRING_18, on_delete=models.SET_DEFAULT)
     lecture_count = models.PositiveSmallIntegerField(default=1)
@@ -85,6 +90,7 @@ class Course(models.Model):
     prerequisites = models.ManyToManyField(Prerequisite)
     class_restriction = models.CharField(max_length=110)
     active = models.BooleanField(default=True)
+    objects = CourseManager()
 
     class Meta:
         ordering = ['code']
@@ -97,7 +103,7 @@ class Course(models.Model):
             return True
 
     def __str__(self):
-        lectures = '#' + str(self.crn) + " " + str(self.code) + " " + str(self.title) + "\t| "
+        lectures = '#' + str(self.crn) + " " + str(self.code) + " " + str(self.title) + " | " + str(self.instructor) + " | "
         for lecture in self.lecture_set.all():
             lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"

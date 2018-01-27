@@ -16,15 +16,15 @@ BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?f
 
 
 def notify_course_removal(course):
-    schedules = [schedule.id for schedule in Schedule.objects.all() if course in schedule.courses.all()]
+    schedules = [schedule for schedule in Schedule.objects.all() if course in schedule.courses.all()]
     users = list(set([schedule.user for schedule in schedules]))
 
     for user in users:
         recipients = [user.email, 'info@ituscheduler.com', 'dorukgezici96@gmail.com', 'altunerism@gmail.com']
         send_mail(
             '[ITUscheduler] | Course #{} is Removed'.format(course.crn),
-            'Course #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes, ITUscheduler loves you.'.format(
-                course.crn, ", #".join(schedules)),
+            '\tCourse #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(
+                course.crn, ", #".join([str(schedule.id) for schedule in schedules])),
             'info@ituscheduler.com',
             recipients,
         )
