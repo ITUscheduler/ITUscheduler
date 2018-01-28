@@ -1,38 +1,53 @@
 {% extends 'base.html' %}
 {% load bootstrap %}
-{% block title %}ITU Scheduler | Blog{% endblock %}
+
+{% block title %}Blog | ITUscheduler{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row"> <!-- statistics and important info -->
-        <div class="col-md-3 col-xs-12">
-            <h3>ITUscheduler has</h3>
-            <h3>{{ user_count }} users</h3>
-                <hr>
-            <h3>The amount of schedules people have created</h3>
-            <h3>{{ total_schedule_count }}</h3>
-                <hr>
-            <h3>Deleted courses so far</h3>
-            <h3>{{ deleted_courses_count }}</h3>
-
-        </div>
-        <div class="col-md-5 col-xs-12">
-            {% for post in posts %}
-                <div class="media">
-                    <div class="media-body">
-                        <h5 class="media-heading">by <strong>{{ post.admin }}</strong>, {{ post.date_created|timesince }} ago</h5>
-                        <p>{{ post.content }}</p>
-                        {% if post.media %}
-                            <img src="{{ post.media.url }}" class="img img-responsive img-rounded">
-                        {% endif %}
+    <div class="container">
+        <div class="row"> <!-- statistics and important info -->
+            <div class="col-md-3 col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3>Statistics</h3>
+                    </div>
+                    <div class="panel-body">
+                        <h4>ITUscheduler has</h4>
+                        <h4><strong>{{ user_count }}</strong> users</h4>
+                        <hr>
+                        <h4>Users have created</h4>
+                        <h4><strong>{{ total_schedule_count }}</strong> schedules</h4>
+                        <hr>
+                        <h4>Number of courses removed from SIS</h4>
+                        <h4><strong>{{ deleted_courses_count }}</strong> courses</h4>
+                    </div>
+                    <div class="panel-heading">
+                        <h3>Latest Refresh</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% for course_code in course_codes|slice:":25" %}
+                            <p>{{ course_code.code }}: {{ course_code.refreshed }}</p>
+                            <hr>
+                        {% endfor %}
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="col-md-4 col-xs-12">
-            <a class="twitter-timeline" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+            <div class="col-md-5 col-xs-12">
+                {% for post in posts %}
+                    <div class="media">
+                        <div class="media-body">
+                            <h5 class="media-heading">by <strong>{{ post.admin }}</strong>, {{ post.date_created|timesince }} ago</h5>
+                            <p>{{ post.content }}</p>
+                            {% if post.media %}
+                                <img src="{{ post.media.url }}" class="img img-responsive img-rounded">
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <a class="twitter-timeline" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
         </div>
     </div>
-
-</div>
 {% endblock %}

@@ -16,7 +16,7 @@ BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?f
 
 
 def notify_course_removal(course):
-    schedules = [schedule for schedule in Schedule.objects.all() if course in schedule.courses.all()]
+    schedules = course.schedule_set.all()
     users = list(set([schedule.user for schedule in schedules]))
 
     for user in users:
@@ -71,8 +71,8 @@ def db_refresh_courses(request):
     with transaction.atomic():
         for code in codes:
             course_code = get_object_or_404(CourseCode, code=code)
-            crns = [course.crn for course in Course.objects.filter(course_code=code).all()]
-            old_crns = [course.crn for course in Course.objects.filter(course_code=code).filter(active=True)]
+            crns = [course.crn for course in Course.unfiltered.filter(course_code=code)]
+            active_crns = [course.crn for course in Course.objects.filter(course_code=code)]
 
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
@@ -131,7 +131,7 @@ def db_refresh_courses(request):
                             prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
 
                         if crn in crns:
-                            course = Course.objects.get(crn=crn)
+                            course = Course.unfiltered.get(crn=crn)
                             course.lecture_count = lecture_count
                             course.course_code = course_code
                             course.code = data[1]
@@ -142,13 +142,14 @@ def db_refresh_courses(request):
                             course.enrolled = int(data[9])
                             course.reservation = data[10]
                             course.class_restriction = data[13]
+                            course.active = True
 
                             course.save()
 
                             for lecture in course.lecture_set.all():
                                 lecture.delete()
                         else:
-                            course = Course.objects.create(
+                            course = Course.unfiltered.create(
                                 lecture_count=lecture_count,
                                 course_code=course_code,
                                 crn=crn,
@@ -188,14 +189,13 @@ def db_refresh_courses(request):
                 except IndexError:
                     break
 
-            removed_crns = [crn for crn in old_crns if crn not in new_crns]
-            if removed_crns:
-                for removed_crn in removed_crns:
-                    old_course = Course.objects.get(crn=removed_crn)
-                    old_course.active = False
-                    old_course.save()
-                    notify_course_removal(old_course)
-                    print("Course {} is removed from ITU SIS.".format(old_course))
+            removed_crns = [crn for crn in active_crns if crn not in new_crns]
+            for removed_crn in removed_crns:
+                old_course = Course.objects.get(crn=removed_crn)
+                notify_course_removal(old_course)
+                old_course.active = False
+                old_course.save()
+                print("Course {} is removed from ITU SIS.".format(old_course))
 
             course_code.refreshed = timezone.now()
             course_code.save()

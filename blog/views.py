@@ -2,9 +2,10 @@ from django.views.generic import ListView
 from django.core.paginator import Paginator
 
 from .models import Post
-from api.models import Course
+from api.models import Course, CourseCode
 from scheduler.models import Schedule
 from scheduler.models import ExtendedUser
+
 
 class PostListView(ListView):
     queryset = Post.objects.all()

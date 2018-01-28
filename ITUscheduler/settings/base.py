@@ -104,8 +104,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'
@@ -116,7 +116,7 @@ MIGRATION_MODULES = {
     'sites': 'ITUscheduler.migrations',
 }
 
-META_SITE_PROTOCOL = 'http'
+META_SITE_PROTOCOL = 'https'
 META_USE_SITES = True
 
 from .secrets import *
