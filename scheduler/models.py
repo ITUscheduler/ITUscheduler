@@ -28,5 +28,3 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.msg)
-
-

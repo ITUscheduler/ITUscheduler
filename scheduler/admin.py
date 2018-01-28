@@ -14,4 +14,4 @@ class ExtendedUserAdmin(admin.ModelAdmin):
 
 @admin.register(Notification)
 class NotificationUserAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('read')
