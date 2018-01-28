@@ -55,7 +55,7 @@ class CourseDetailAPIView(APIView):
         crn = request.data['crn']
         instance = get_object_or_404(Course, crn=crn)
         serializer = CourseSerializer(instance).data
-        schedule = get_object_or_404(Schedule, user=request.user)
+        schedule = request.user.schedule_set.latest()
         available, _ = is_available(schedule.courses.all(), instance)
 
         if not available:

@@ -380,12 +380,15 @@
             $(id).empty();
         }
 
+        var selected_courses = [];
+
 
         $("#id_courses").change(function() {
-            count += 1;
 
-            $( "select option:selected" ).each(function() {
+            $( "select option" ).each(function() {
+            if($(this).is(':selected')){
                 var crn = $(this).val();
+                selected_courses.push(crn);
                 if(crn.length === 5){
                     console.log(crn);
                     $.ajax({
@@ -449,17 +452,6 @@
                                 }
                             });
 
-
-
-                            if(latest_ids.length < general_ids.length){
-                                for(id in latest_ids){
-                                    console.log("asd");
-                                    if(!latest_ids[id] in general_ids){
-                                        deleteHtml(latest_ids[id]);
-                                    }
-                                }
-                                writeLectures();
-                            }
                             latest_ids = general_ids;
 
                         },
@@ -467,8 +459,17 @@
                             console.log(result);
                         }
 
-                    })
+                    });
                 }
+                }else{
+                    console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
+                    if(selected_courses.includes($(this).val())){
+                        alert($(this).val());
+                        selected_courses.pop($(this).val());
+                    }
+                }
+
+
 
             });
             return "asd";

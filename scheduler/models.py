@@ -13,11 +13,15 @@ class Schedule(models.Model):
     user = models.ForeignKey(ExtendedUser, null=True, on_delete=models.CASCADE)
     courses = models.ManyToManyField(Course)
 
+    class Meta:
+        get_latest_by = 'id'
+
     def __str__(self):
         return str(self.user) + " #" + str(self.id)
 
     def get_absolute_url(self):
         return reverse("schedule", kwargs={"pk": self.id})
+
 
 
 class Notification(models.Model):
