@@ -1,8 +1,13 @@
 from .serializers import CourseSerializer, CourseCodeSerializer, LectureSerializer, PrerequisiteSerializer
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from api.models import Course, CourseCode
+from scheduler.models import Schedule
+from scheduler.views import is_available
 
 
 class CourseListAPIView(ListAPIView):
@@ -40,17 +45,27 @@ class CourseSearchAPIView(ListAPIView):
 
 
 
-class CourseDetailAPIView(RetrieveAPIView):
-    serializer_class = CourseSerializer
+class CourseDetailAPIView(APIView):
     queryset = Course.objects.all()
+    http_method_names = ["post", ]
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance).data
+    def post(self, request, format=None):
+        crn = request.data['crn']
+        instance = get_object_or_404(Course, crn=crn)
+        serializer = CourseSerializer(instance).data
+        schedule = get_object_or_404(Schedule, user=request.user)
+        available, _ = is_available(schedule.courses.all(), instance)
+
+        if not available:
+            serializer['overlaps'] = True
+
         serializer['lectures'] = LectureSerializer(instance.lecture_set.all(), many=True).data
         serializer['prerequisites'] = PrerequisiteSerializer(instance.prerequisites.all(), many=True).data
 
         return Response(serializer)
+
 
 
 class CourseCodeListAPIView(ListAPIView):
