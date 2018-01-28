@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'font_awesome',
     'easy_pdf',
     'api',
-    'scheduler'
+    'scheduler',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -102,6 +103,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'

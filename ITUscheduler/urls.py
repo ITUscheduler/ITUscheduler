@@ -5,6 +5,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import GenericSitemap
 from api.models import CourseCode
 from .sitemaps import StaticViewSitemap, IndexViewSitemap
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -30,4 +32,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('rest-api/', include('api.rest_api.urls', namespace='course_api')),
     path('schedules-rest-api/', include('scheduler.rest_api.urls', namespace='rest_api_scheduler')),
+    path('blog/', include('blog.urls', namespace='blog')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
