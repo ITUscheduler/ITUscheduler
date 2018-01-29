@@ -125,10 +125,19 @@ def add_to_schedule(request, id):
             for course in courses:
                 if course not in schedule.courses.all():
                     schedule.courses.add(course)
-                    available, _course = is_available(schedule.courses.all(), course)
+                    if not course.is_full():
+                        available, _course = is_available(schedule.courses.all(), course)
 
-                    if not available:
-                        messages.warning(request._request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
+                        if not available:
+                            messages.warning(request._request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
+                    else:
+                        msg = "Course {} is full, your schedule is created anyway but please mind this.".format(
+                            course.crn)
+
+                        notification = Notification()
+                        notification.user = request.user
+                        notification.msg = msg
+                        notification.save()
 
             return Response({'success': 'attempt is accomplished'})
         else:
