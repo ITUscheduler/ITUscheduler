@@ -37,7 +37,7 @@
                     <div class="media">
                         <div class="media-body">
                             <h5 class="media-heading">by <strong>{{ post.admin }}</strong>, {{ post.date_created|timesince }} ago</h5>
-                            <p>{{ post.content }}</p>
+                            <p>{{ post.content|safe }}</p>
                             {% if post.media %}
                                 <img src="{{ post.media.url }}" class="img img-responsive img-rounded">
                             {% endif %}
