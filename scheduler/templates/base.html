@@ -43,84 +43,84 @@
     <link rel="stylesheet" href="{% static "css/font-awesome.css" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap-social.css" %}">
     <link rel="stylesheet" href="{% static "css/style.css" %}">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a style="position: relative; top: -6px;" class="navbar-brand" href="/">
-                    <img src="{% static "icons/bee-transparent-white.png" %}" style="display: inline-block; height: 95%;">
-                    <span style="display: inline-block;"><strong>ITUscheduler</strong></span>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    {% url "index" as index_url %}
-                    <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a></li>
-                    {% url "courses" slug="BLG" as courses_url %}
-                    <li {% if "courses" in request.path %}class="active"{% endif %}><a href="{{ courses_url }}">Courses </a></li>
-                    {% url "contact" as contact_url %}
-                    <li {% if "contact" in request.path %}class="active"{% endif %}><a href="{{ contact_url }}">Contact </a></li>
-                    {% url "info:index" as info_url %}
-                    <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{% url "course_api:course_code_list_api"%}">Course Codes</a></li>
-                            <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="http://notkutusu.com" target="_blank">Not Kutusu </a></li>
-                    {% if request.user.is_authenticated %}
-                        {% if request.user.is_superuser %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
-                                    <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
-                                    <li><a href="{% url "db_flush" %}">Flush</a></li>
-                                </ul>
-                            </li>
+    <div class="content">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a style="position: relative; top: -6px;" class="navbar-brand" href="/">
+                        <img src="{% static "icons/bee-transparent-white.png" %}" style="display: inline-block; height: 95%;">
+                        <span style="display: inline-block;"><strong>ITUscheduler</strong></span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        {% url "index" as index_url %}
+                        <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a></li>
+                        {% url "courses" slug="BLG" as courses_url %}
+                        <li {% if "courses" in request.path %}class="active"{% endif %}><a href="{{ courses_url }}">Courses </a></li>
+                        {% url "contact" as contact_url %}
+                        <li {% if "contact" in request.path %}class="active"{% endif %}><a href="{{ contact_url }}">Contact </a></li>
+                        {% url "info:index" as info_url %}
+                        <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{% url "course_api:course_code_list_api"%}">Course Codes</a></li>
+                                <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="http://notkutusu.com" target="_blank">Not Kutusu </a></li>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.is_superuser %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
+                                        <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
+                                        <li><a href="{% url "db_flush" %}">Flush</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li><a href="/{% if request.user.is_superuser %}admin{% endif %}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
+                            {% url "logout" as logout_url %}
+                            <li {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
+                        {% else %}
+                            {% url "signup" as signup_url %}
+                            <li {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign Up </a></li>
+                            {% url "login" as login_url %}
+                            <li {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a></li>
                         {% endif %}
-                        <li><a href="/{% if request.user.is_superuser %}admin{% endif %}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
-                        {% url "logout" as logout_url %}
-                        <li {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
-                    {% else %}
-                        {% url "signup" as signup_url %}
-                        <li {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign Up </a></li>
-                        {% url "login" as login_url %}
-                        <li {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a></li>
-                    {% endif %}
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-    <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
-    <script src="{% static "js/tether.min.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-    <script src="{% static "js/main.js" %}"></script>
-    {% block body %}{% endblock %}
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <script src="{% static "js/tether.min.js" %}"></script>
+        <script src="{% static "js/bootstrap.min.js" %}"></script>
+        <script src="{% static "js/main.js" %}"></script>
+        {% block body %}{% endblock %}
+    </div>
     <footer class="navbar navbar-default footer">
         <div class="container">
             <ul class="nav navbar-nav">
                 <li><a href="//github.com/dorukgezici/ITUscheduler" target="_blank" class="no-hover"><span class="copyleft">&copy;</span> Copyleft 2018 | ITU Scheduler</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-		        <li><a href="//github.com/EESTECist" target="_blank">EESTEC LC Istanbul IT Team</a></li>
+                <li><a href="//github.com/EESTECist" target="_blank">EESTEC LC Istanbul IT Team</a></li>
                 <li><a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a></li>
                 <li><a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
             </ul>
         </div>
     </footer>
-
 </body>
 </html>
