@@ -23,7 +23,6 @@ class Schedule(models.Model):
         return reverse("schedule", kwargs={"pk": self.id})
 
 
-
 class Notification(models.Model):
     user = models.ForeignKey(ExtendedUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)

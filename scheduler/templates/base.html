@@ -68,8 +68,8 @@
                     <li {% if "courses" in request.path %}class="active"{% endif %}><a href="{{ courses_url }}">Courses </a></li>
                     {% url "contact" as contact_url %}
                     <li {% if "contact" in request.path %}class="active"{% endif %}><a href="{{ contact_url }}">Contact </a></li>
-                    {% url "blog:index" as blog_url %}
-                    <li {% if "blog" in request.path %}class="active"{% endif %}><a href="{{ blog_url }}">Info </a></li>
+                    {% url "info:index" as info_url %}
+                    <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -79,6 +79,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="//notkutusu.com" target="_blank">Not Kutusu </a></li>
                     {% if request.user.is_authenticated %}
                         {% if request.user.is_superuser %}
                             <li class="dropdown">
@@ -92,12 +93,12 @@
                         {% endif %}
                         <li><a href="/{% if request.user.is_superuser %}admin{% endif %}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
                         {% url "logout" as logout_url %}
-                        <li  {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
+                        <li {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
                     {% else %}
                         {% url "signup" as signup_url %}
-                        <li  {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign Up </a></li>
+                        <li {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign Up </a></li>
                         {% url "login" as login_url %}
-                        <li  {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a></li>
+                        <li {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a></li>
                     {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->

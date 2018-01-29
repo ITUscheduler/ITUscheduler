@@ -32,7 +32,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('rest-api/', include('api.rest_api.urls', namespace='course_api')),
     path('schedules-rest-api/', include('scheduler.rest_api.urls', namespace='rest_api_scheduler')),
-    path('blog/', include('blog.urls', namespace='blog')),
+    path('info/', include('blog.urls', namespace='info')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
