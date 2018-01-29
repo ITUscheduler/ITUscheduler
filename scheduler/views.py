@@ -7,7 +7,7 @@ from django.views import generic
 from django.contrib import messages
 from django.conf import settings
 from api.models import CourseCode, Course, Semester
-from scheduler.models import Schedule
+from scheduler.models import Schedule, Notification
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
 from easy_pdf.views import PDFTemplateView
@@ -62,10 +62,22 @@ class IndexView(MetadataMixin, generic.CreateView):
         overlapping_courses = []
 
         for _course in courses.all():
-            available, course = is_available(courses.all(), _course)
-            if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
-                messages.warning(self.request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
-                overlapping_courses.append((course, _course))
+            print(_course, "kajshdakd")
+            if not _course.is_full():
+                available, course = is_available(courses.all(), _course)
+                if not available and (course, _course) not in overlapping_courses and (
+                _course, course) not in overlapping_courses:
+                    messages.warning(self.request,
+                                     "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(
+                                         course.crn, _course.crn, course.crn))
+                    overlapping_courses.append((course, _course))
+            else:
+                msg = "Course {} is full, your schedule is created anyway but please mind this.".format(
+                    _course.crn)
+                notification = Notification()
+                notification.user = self.request.user
+                notification.msg = msg
+                notification.save()
 
         return super(IndexView, self).form_valid(form)
 
