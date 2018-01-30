@@ -33,11 +33,10 @@ def is_available(courses, course):
 class IndexView(MetadataMixin, generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
-    # success_url = "."
 
     title = 'ITU Scheduler'
-    description = 'With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily.'
-    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi', 'itü', 'dersler']
+    description = 'With ITU Scheduler you can browse up-to-date & detailed information about ITU courses and create possible course schedules with ease.'
+    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi', 'dersler']
     url = '/'
 
     def get_form_kwargs(self):
@@ -55,21 +54,16 @@ class IndexView(MetadataMixin, generic.CreateView):
 
     def form_valid(self, form):
         object = form.save()
-        # select the new created schedule
         self.request.user.my_schedule = object
         self.request.user.save()
         courses = form.instance.courses
         overlapping_courses = []
 
         for _course in courses.all():
-            print(_course, "kajshdakd")
             if not _course.is_full():
                 available, course = is_available(courses.all(), _course)
-                if not available and (course, _course) not in overlapping_courses and (
-                _course, course) not in overlapping_courses:
-                    messages.warning(self.request,
-                                     "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(
-                                         course.crn, _course.crn, course.crn))
+                if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
+                    messages.warning(self.request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
                     overlapping_courses.append((course, _course))
             else:
                 msg = "Course {} is full, your schedule is created anyway but please mind this.".format(
@@ -312,7 +306,6 @@ def privacy_policy(request):
 
 @login_required
 def add_course(request):
-    print("asdasd")
     try:
         course_crn = int(request.POST["course_crn"])
         course = Course.objects.get(crn=course_crn)

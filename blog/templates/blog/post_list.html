@@ -25,10 +25,19 @@
                         <h3>Latest Refresh</h3>
                     </div>
                     <div class="panel-body">
-                        {% for course_code in course_codes|slice:":25" %}
+                        {% for course_code in refreshes %}
                             <p>{{ course_code.code }}: {{ course_code.refreshed }}</p>
-                            <hr>
+                            {% if not forloop.last %}<hr>{% endif %}
                         {% endfor %}
+                        <nav aria-label="Latest Refresh Pagination">
+                            <ul class="pagination pagination-sm">
+                                {% for object in refreshes.paginator.page_range %}
+                                    <li class="page-item{% if object == refreshes.number %} active{% endif %}">
+                                        <a class="page-link" href="{% url 'blog:index' %}?refresh_page={{ object }}">{{ object }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
