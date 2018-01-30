@@ -30,10 +30,10 @@
                             {% if not forloop.last %}<hr>{% endif %}
                         {% endfor %}
                         <nav aria-label="Latest Refresh Pagination">
-                            <ul class="pagination pagination-sm">
+                            <ul id="paginator" class="pagination pagination-sm">
                                 {% for object in refreshes.paginator.page_range %}
                                     <li class="page-item{% if object == refreshes.number %} active{% endif %}">
-                                        <a class="page-link" href="{% url 'blog:index' %}?refresh_page={{ object }}">{{ object }}</a>
+                                        <a class="page-link" href="{% url 'blog:index' %}?refresh_page={{ object }}#paginator">{{ object }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -55,7 +55,7 @@
                 {% endfor %}
             </div>
             <div class="col-md-4 col-xs-12">
-                <a class="twitter-timeline" data-height="2000" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a class="twitter-timeline" data-height="1800" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
     </div>
