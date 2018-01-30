@@ -11,8 +11,8 @@
                     <div class="panel-heading">
                         <h2 class="panel-title">My Courses</h2>
                     </div>
-                    {% if user.is_authenticated %}
-                        <div class="panel-body">
+                    <div class="panel-body">
+                        {% if user.is_authenticated %}
                             <form action="" method="POST" id="courses_form">
                                 {% csrf_token %}
                                 {{ form|bootstrap }}
@@ -57,11 +57,37 @@
                                     </div>
                                 </div>
                             {% endif %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1 center">
+                                    <h2>Welcome to ITU Scheduler!</h2><hr>
+                                    <h4 style="line-height: 1.3em;">ITUscheduler is an <a href="//github.com/dorukgezici/ITUscheduler" target="_blank">open-source</a> web application that allows Istanbul Technical University students to browse up-to-date & detailed information about courses and create schedules with ease. It has features like course queries according to days, filling CRNs automatically, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have some features planned like automatic schedule generation, displaying data from previous years, prerequisite checking, etc..</h4><hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3 center">
+                                    <h4>Please <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a> to start creating your schedules.</h4><br>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-md-offset-1 col-xs-6">
+                                    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-block btn-social btn-facebook"><span class="fa fa-facebook"></span> Sign in with Facebook</a>
+                                </div>
+                                <div class="col-md-5 col-xs-6">
+                                    <a href="{% url 'social:begin' 'twitter' %}" class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span> Sign in with Twitter</a><br>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not user.is_authenticated %}
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12 center">
+                                    <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a> & <a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                                    <em>We do not gurantee or can be responsible for the accuracy of information found here. If in doubt, please check <a href="http://www.sis.itu.edu.tr" target="_blank">SIS</a>.</em>
+                                </div>
+                            </div>
                         </div>
-                    {% else %}
-                        <ul class="list-group">
-                            <li class="list-group-item">Please <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a></li>
-                        </ul>
                     {% endif %}
                 </div>
             </div>

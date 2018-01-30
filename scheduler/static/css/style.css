@@ -37,3 +37,7 @@ body {
     background-color: transparent !important;
     color: white !important;
 }
+
+.center {
+    text-align: center;
+}
