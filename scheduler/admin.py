@@ -10,7 +10,8 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(ExtendedUser)
 class ExtendedUserAdmin(admin.ModelAdmin):
-    search_fields = ("username", "email")
+    list_display = ("username", "email", "first_name", "last_name", "my_schedule", "date_joined")
+    search_fields = ("username", "email", "first_name", "last_name", "my_schedule__id")
 
 
 @admin.register(Notification)
