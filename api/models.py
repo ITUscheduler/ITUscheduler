@@ -73,12 +73,8 @@ class CourseManager(models.Manager):
     def inactive(self):
         return super(CourseManager, self).get_queryset().filter(active=False)
 
-    def get_queryset(self):
+    def active(self):
         return super(CourseManager, self).get_queryset().filter(active=True)
-
-
-class CourseUnfilteredManager(models.Manager):
-    pass
 
 
 class Course(models.Model):
@@ -98,7 +94,6 @@ class Course(models.Model):
     class_restriction = models.CharField(max_length=110)
     active = models.BooleanField(default=True)
     objects = CourseManager()
-    unfiltered = CourseUnfilteredManager()
 
     class Meta:
         ordering = ['code']

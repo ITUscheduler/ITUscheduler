@@ -5,7 +5,8 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-10 col-md-offset-1 center">
+                <h2>Select Course Codes to Refresh</h2><br>
                 <form action="{% url "db_refresh_courses" %}" method="post">
                 {% csrf_token %}
                     <select multiple name="course_codes[]" class="form-control">

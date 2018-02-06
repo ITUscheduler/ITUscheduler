@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Refresh Courses | ITUscheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 center">
+                <form action="{% url "db_flush" %}" method="post" onsubmit="return confirm('Are you sure you want to flush the database?');">
+                {% csrf_token %}
+                    <h2>Flush Database?</h2>
+                    <h4>Deletes all course codes, courses and schedules.</h4><br>
+                    <input value="Flush" type="submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

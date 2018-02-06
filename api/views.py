@@ -59,9 +59,11 @@ def db_refresh_course_codes(request):
             query = CourseCode.objects.filter(code=opt)
             if not query.exists():
                 CourseCode.objects.create(code=opt)
-    for code in codes:
-        course_code = CourseCode.objects.get(code=code)
-        course_code.delete()
+
+    if soup.find("select").find_all("option"):
+        for code in codes:
+            course_code = CourseCode.objects.get(code=code)
+            course_code.delete()
     return HttpResponse("<a href='/'><h1>Course Codes refreshed!</h1></a>")
 
 
@@ -71,8 +73,8 @@ def db_refresh_courses(request):
     with transaction.atomic():
         for code in codes:
             course_code = get_object_or_404(CourseCode, code=code)
-            crns = [course.crn for course in Course.unfiltered.filter(course_code=code)]
-            active_crns = [course.crn for course in Course.objects.filter(course_code=code)]
+            crns = [course.crn for course in Course.objects.filter(course_code=code)]
+            active_crns = [course.crn for course in Course.objects.active().filter(course_code=code)]
 
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
@@ -88,7 +90,16 @@ def db_refresh_courses(request):
                     try:
                         data = [row.get_text() for row in raw_course.find_all("td")]
                         rows = raw_course.find_all("td")
-                        lecture_count = len(data[4]) // 3
+
+                        buildings_raw = rows[4].contents[0].contents
+                        buildings = []
+                        length = len(buildings_raw) // 2
+                        for i in range(length):
+                            buildings.append(rows[4].contents[0].contents[2 * i])
+                        lecture_count = len(buildings)
+                        # buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
+                        # lecture_count = len(data[4]) // 3
+
                         crn = int(data[0])
                         new_crns.append(crn)
                         times_start = ""
@@ -111,7 +122,7 @@ def db_refresh_courses(request):
 
                         prerequisites = re.sub("veya", " veya", data[12])
 
-                        buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
+                        # buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
                         days = data[5].split()
                         majors = data[11].split(", ")
                         prerequisites_objects = []
@@ -131,7 +142,7 @@ def db_refresh_courses(request):
                             prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
 
                         if crn in crns:
-                            course = Course.unfiltered.get(crn=crn)
+                            course = Course.objects.get(crn=crn)
                             course.lecture_count = lecture_count
                             course.course_code = course_code
                             course.code = data[1]
@@ -149,7 +160,7 @@ def db_refresh_courses(request):
                             for lecture in course.lecture_set.all():
                                 lecture.delete()
                         else:
-                            course = Course.unfiltered.create(
+                            course = Course.objects.create(
                                 lecture_count=lecture_count,
                                 course_code=course_code,
                                 crn=crn,
@@ -183,6 +194,7 @@ def db_refresh_courses(request):
                         for prerequisite in prerequisites_objects:
                             course.prerequisites.add(prerequisite)
 
+                        course.save()
                         nth_course += 1
                     except AttributeError:
                         nth_course += 1
@@ -191,7 +203,7 @@ def db_refresh_courses(request):
 
             removed_crns = [crn for crn in active_crns if crn not in new_crns]
             for removed_crn in removed_crns:
-                old_course = Course.objects.get(crn=removed_crn)
+                old_course = Course.objects.active().get(crn=removed_crn)
                 notify_course_removal(old_course)
                 old_course.active = False
                 old_course.save()
@@ -200,6 +212,17 @@ def db_refresh_courses(request):
             course_code.refreshed = timezone.now()
             course_code.save()
     return HttpResponse("<a href='/api/refresh/courses'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
+
+
+class FlushView(UserPassesTestMixin, generic.TemplateView):
+    model = CourseCode
+    template_name = "flush.html"
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        else:
+            return False
 
 
 @user_passes_test(lambda u: u.is_superuser)
