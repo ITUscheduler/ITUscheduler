@@ -187,9 +187,17 @@ def db_refresh_courses(request):
                                 course=course
                             )
 
+                        for old_major in course.major_restriction.all():
+                            course.major_restriction.remove(old_major)
+
+                        print("1, ", course.major_restriction.all())
+
                         for major in majors:
                             major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
+
                             course.major_restriction.add(major_restriction)
+
+                        print("2, ", course.major_restriction.all())
 
                         for prerequisite in prerequisites_objects:
                             course.prerequisites.add(prerequisite)
