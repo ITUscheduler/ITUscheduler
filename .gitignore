@@ -1,6 +1,7 @@
 # MacOS
 .DS_Store
 .idea/
+*.icloud
 
 # Python
 __pycache__/
