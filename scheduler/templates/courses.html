@@ -138,7 +138,7 @@
                                             <td>{% for lecture in course.lecture_set.all %}{{ lecture.room }}<br>{% endfor %}</td>
                                             <td>{{ course.enrolled }}/{{ course.capacity }}</td>
                                             <td><a href="javascript:alert('Major Restrictions: {{ course.major_restriction.all|join:", " }}')">{{ course.major_restriction.all|join:"<br>"|truncatechars:40 }}</a></td>
-                                            <td><a href="javascript:alert('Prerequisites: {{ course.prerequisites.all|join:", " }}')">{{ course.prerequisites.all|join:"<br>"|truncatechars:40 }}</a></td>
+                                            <td><a href="javascript:alert('Prerequisites: {{ course.prerequisites.all|join:" or " }}')">{{ course.prerequisites.all|join:" or <br>"|truncatechars:40 }}</a></td>
                                             <td>{{ course.class_restriction }}</td>
                                         </tr>
                                     {% endfor %}

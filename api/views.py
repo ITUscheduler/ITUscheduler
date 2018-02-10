@@ -120,26 +120,21 @@ def db_refresh_courses(request):
                         times_start = times_start[:-1:]
                         times_finish = times_finish[:-1:]
 
-                        prerequisites = re.sub("veya", " veya", data[12])
-
-                        # buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
                         days = data[5].split()
                         majors = data[11].split(", ")
+
+                        prerequisites = re.sub("veya", " or", data[12])
+                        prerequisites.replace("(", "")
+                        prerequisites.replace(")", "")
+
                         prerequisites_objects = []
-                        if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel":
-                            for prerequisite in prerequisites.split(' veya '):
-                                prerequisite = prerequisite.split(' ')
-                                course = " ".join(prerequisite[:2])
+                        if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" not in prerequisites:
+                            for prerequisite in prerequisites.split(' or '):
+                                prerequisite = prerequisite.split()
+                                course = " ".join([str(prerequisite) for prerequisite in prerequisite[:2]])
                                 grade = str(prerequisite[-1])
 
-                                try:
-                                    prerequisites_objects.append(Prerequisite.objects.get(code=course,
-                                                                                          min_grade=grade))
-                                except Prerequisite.DoesNotExist:
-                                    prerequisites_objects.append(
-                                        Prerequisite.objects.create(code=course, min_grade=grade))
-                        else:
-                            prerequisites_objects.append(Prerequisite.objects.get_or_create(code=None)[0])
+                                prerequisites_objects.append(Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
 
                         if crn in crns:
                             course = Course.objects.get(crn=crn)
@@ -190,17 +185,12 @@ def db_refresh_courses(request):
                         for old_major in course.major_restriction.all():
                             course.major_restriction.remove(old_major)
 
-                        print("1, ", course.major_restriction.all())
-
                         for major in majors:
                             major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
-
-                            course.major_restriction.add(major_restriction)
-
-                        print("2, ", course.major_restriction.all())
+                            course.major_restriction.add(major_restriction.major)
 
                         for prerequisite in prerequisites_objects:
-                            course.prerequisites.add(prerequisite)
+                            course.prerequisites.add(prerequisite.id)
 
                         course.save()
                         nth_course += 1
