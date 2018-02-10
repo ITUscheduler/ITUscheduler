@@ -59,7 +59,7 @@ class Prerequisite(models.Model):
         get_latest_by = "code"
 
     def __str__(self):
-        return str(self.code) + " MIN " + str(self.min_grade)
+        return str(self.code) + " (MIN " + str(self.min_grade) + ")"
 
 
 class MajorRestriction(models.Model):
