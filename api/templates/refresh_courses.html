@@ -9,7 +9,7 @@
                 <h2>Select Course Codes to Refresh</h2><br>
                 <form action="{% url "db_refresh_courses" %}" method="post">
                 {% csrf_token %}
-                    <select multiple name="course_codes[]" class="form-control">
+                    <select multiple id="courses"  name="course_codes[]" class="form-control">
                         {% for course_code in object_list %}
                             <option value="{{ course_code }}">{{ course_code }}</option>
                         {% endfor %}
@@ -19,4 +19,10 @@
             </div>
         </div>
     </div>
+	<script>
+		$.ready(function() {
+			var select = document.getElementById('courses');
+            select.size = select.length;
+		});
+	</script>
 {% endblock %}
