@@ -6,6 +6,10 @@ ITU Scheduler is a Python Django Web Application that parses ITU's SIS website a
 # Installation
 - Install Python 3
 - `pip3 install -r requirements.txt`
+- Install [WeasyPrint's dependencies](http://weasyprint.readthedocs.io/en/latest/install.html)
+    - MacOS: `brew install python3 cairo pango gdk-pixbuf libffi`
+    - Debian / Ubuntu: `sudo apt-get install build-essential python3-dev python3-pip python3-setuptools python3-wheel python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info`
+    - [Windows](http://weasyprint.readthedocs.io/en/latest/install.html#windows)
 
 # Usage on localhost
 - `python3 manage.py makemigrations api scheduler blog`
