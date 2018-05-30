@@ -16,14 +16,14 @@
                                 {% else %}
                                     <option value="all">Major Codes</option>
                                 {% endif %}
-                                {% for course in course_codes %}
+                                {% for course in major_codes %}
                                     <option value="{{ course }}">{{ course }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="form-group col-md-12" id="select_search_codes">
                             <select class="form-control" name="search_code">
-                                <option value="all">Course Codes</option>
+                                <option value="all">Major Codes</option>
                             </select>
                         </div>
                         <div class="form-group col-md-12 col-xs-12" id="select_search_days">
@@ -65,10 +65,10 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-5 col-xs-12">
-                                <form>
-                                    <select class="form-control" name="course_code" onchange="redirect(this.form.course_code)" title="course_code">
-                                        {% for option in course_codes %}
+                            <div class="col-md-4 col-xs-12">
+                                <form id="form_major_code">
+                                    <select class="form-control" name="major_code" onchange="redirectQuery()" title="major_code">
+                                        {% for option in major_codes %}
                                             {% if not searched_course or searched_course == "all" %}
                                                 <option {% if option.code in request.path %}selected{% endif %} value="{{ option }}">{{ option }} </option>
                                             {% endif %}
@@ -79,13 +79,13 @@
                                     </select>
                                 </form>
                             </div>
-                            <div class="col-md-5 col-xs-12">
-                                <form>
-                                    <select class="form-control" name="code" onchange="redirectGet(this.form.code)">
-                                        {% if query %}
-                                            <option value="{{ query }}">{{ query }}</option>
+                            <div class="col-md-4 col-xs-12">
+                                <form id="form_code">
+                                    <select class="form-control" name="code" onchange="redirectQuery()">
+                                        {% if code %}
+                                            <option value="{{ code }}">{{ code }}</option>
                                         {% else %}
-                                            <option value="">Please select a code below.</option>
+                                            <option selected value="">Please select a code below.</option>
                                         {% endif %}
                                         {% for code in codes %}
                                             <option value="{{ code }}">{{ code }}</option>
@@ -93,16 +93,11 @@
                                     </select>
                                 </form>
                             </div>
-                            <div class="col-md-2 col-xs-12">
-                                <form>
-                                    <select class="form-control" name="semester" onchange="redirectGet(this.form.semester)">
-                                        {% if query %}
-                                            <option value="{{ query }}">{{ query }}</option>
-                                        {% else %}
-                                            <option value="">Semester</option>
-                                        {% endif %}
-                                        {% for code in codes %}
-                                            <option value="{{ code }}">{{ code }}</option>
+                            <div class="col-md-4 col-xs-12">
+                                <form id="form_semester">
+                                    <select class="form-control" name="semester" onchange="redirectQuery()">
+                                        {% for semester in semesters %}
+                                            <option {% if semester == searched_semester %}selected {% endif %}value="{{ semester }}">{{ semester.get_name_display }}</option>
                                         {% endfor %}
                                     </select>
                                 </form>
@@ -119,7 +114,7 @@
                                             <th>My Courses</th>
                                         {% endif %}
                                         <th>CRN</th>
-                                        <th>Course Code</th>
+                                        <th>Major Code</th>
                                         <th>Title</th>
                                         <th>Instructor</th>
                                         <th>Building</th>
@@ -171,18 +166,15 @@
         </div>
     </div>
     <script>
-        function redirect(selected) {
-            location.href = "/courses/" + selected.options[selected.selectedIndex].value;
-        }
-
-        function redirectGet(selected) {
-            {% if searched_course %}
-                var course = selected.options[selected.selectedIndex].value.substring(0, 3);
-                location.href = "/courses/" + course + "?query=" + selected.options[selected.selectedIndex].value;
-            {% else %}
-                var url = "/courses/{{ object }}" + "?query=" + selected.options[selected.selectedIndex].value;
-                location.href = url;
-            {% endif %}
+        function redirectQuery() {
+            var major_code = document.getElementById("form_major_code").major_code;
+            var code = document.getElementById("form_code").code;
+            var semester = document.getElementById("form_semester").semester;
+            var url = new URL("/courses/" + major_code.options[major_code.selectedIndex].value, location.origin);
+            url.searchParams.append("code", code.options[code.selectedIndex].value);
+            url.searchParams.append("semester", semester.options[semester.selectedIndex].value);
+            console.log(url);
+            location = url;
         }
 
         function addCourse(courseCrn) {
@@ -203,38 +195,36 @@
             )
         }
 
-        function getCodesForSearch(selected, rememberedQuery, onchange){
+        function getCodesForSearch(selected, rememberedQuery, onchange) {
+            var major_code_value = "BLG";
             if (rememberedQuery === '') {
-                var Course_code = selected.options[selected.selectedIndex].value;
+                major_code_value = selected.options[selected.selectedIndex].value;
             } else {
-                var Course_code = rememberedQuery;
+                major_code_value = rememberedQuery;
             }
 
             var codes = [];
 
             $.ajax({
-
-                url: "/rest-api/courses/" + Course_code,
+                url: "/rest-api/courses/" + major_code_value,
                 type: "GET",
 
                 success: function(data) {
                     $.each(data, function(index, value) {
-                        if($.inArray(value.code, codes) === -1) {
+                        if ($.inArray(value.code, codes) === -1) {
                             codes.push(value.code);
                         }
                     });
 
                     var html = "";
-
                     {% if searched_code %}
-                        if(onchange===false){
-                            html += "<select class='form-control' name='search_code'>\n<option value='{{ searched_code }}'>{{ searched_code }}</option>\n<option value='all'>Course Codes</option>";
+                        if (onchange === false) {
+                            html += "<select class='form-control' name='search_code'>\n<option value='{{ searched_code }}'>{{ searched_code }}</option>\n<option value='all'>Major Codes</option>";
                         } else {
-                            html += "<select class='form-control' name='search_code'>\n<option value='all'>Course Codes</option>";
+                            html += "<select class='form-control' name='search_code'>\n<option value='all'>Major Codes</option>";
                         }
-
                     {% else %}
-                        html += "<select class='form-control' name='search_code'>\n<option value='all'>Course Codes</option>";
+                        html += "<select class='form-control' name='search_code'>\n<option value='all'>Major Codes</option>";
                     {% endif %}
 
                     $.each(codes, function(index, value) {
@@ -242,14 +232,11 @@
                     });
 
                     html += "</select>";
-
                     $("#select_search_codes").html(html);
-
                 },
                 error: function(error) {
                     console.log(error);
                 }
-
             });
         }
 

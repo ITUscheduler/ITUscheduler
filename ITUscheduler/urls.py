@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.sitemaps import GenericSitemap
-from api.models import CourseCode
+from api.models import MajorCode
 from .sitemaps import StaticViewSitemap, IndexViewSitemap
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,7 +23,7 @@ urlpatterns = [
             'home': IndexViewSitemap,
             'pages': StaticViewSitemap,
             'courses': GenericSitemap(
-                {"queryset": CourseCode.objects.all()},
+                {"queryset": MajorCode.objects.all()},
                 priority=0.7
             )
         }

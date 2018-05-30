@@ -1,9 +1,9 @@
 from django.contrib import admin
-from api.models import CourseCode, Course, Prerequisite, MajorRestriction, Lecture, Semester
+from api.models import MajorCode, Course, Prerequisite, MajorRestriction, Lecture, Semester
 
 
-@admin.register(CourseCode)
-class CourseCodeAdmin(admin.ModelAdmin):
+@admin.register(MajorCode)
+class MajorCodeAdmin(admin.ModelAdmin):
     list_display = ("code", "refreshed")
     search_fields = ("code",)
 
@@ -11,8 +11,8 @@ class CourseCodeAdmin(admin.ModelAdmin):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_filter = ("active", "semester__name")
-    list_display = ("crn", "course_code", "code", "title", "instructor", "lecture_count", "enrolled", "capacity", "reservation", "class_restriction", "catalogue", "active")
-    search_fields = ("course_code__code", "crn")
+    list_display = ("crn", "major_code", "code", "title", "instructor", "lecture_count", "enrolled", "capacity", "reservation", "class_restriction", "catalogue", "active")
+    search_fields = ("major_code__code", "crn")
 
 
 @admin.register(Prerequisite)

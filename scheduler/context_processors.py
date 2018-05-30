@@ -1,5 +1,5 @@
-from api.models import CourseCode
+from api.models import MajorCode
 
 
 def global_processor(request):
-    return {"course_codes": CourseCode.objects.all()}
+    return {"major_codes": MajorCode.objects.all()}

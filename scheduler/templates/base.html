@@ -76,8 +76,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url "course_api:course_code_list_api"%}">Course Codes</a></li>
-                                <li><a href="{% url "course_api:list_api" course_code="BLG"%}">Courses</a></li>
+                                <li><a href="{% url "course_api:major_code_list_api"%}">Major Codes</a></li>
+                                <li><a href="{% url "course_api:list_api" major_code="BLG"%}">Courses</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -88,7 +88,7 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{% url "db_refresh_course_codes" %}">Refresh Course Codes</a></li>
+                                        <li><a href="{% url "db_refresh_major_codes" %}">Refresh Major Codes</a></li>
                                         <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
                                         <li><a href="{% url "flush" %}">Flush</a></li>
                                     </ul>

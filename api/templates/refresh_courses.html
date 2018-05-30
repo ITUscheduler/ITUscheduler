@@ -6,12 +6,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1 center">
-                <h2>Select Course Codes to Refresh</h2><br>
+                <h2>Select Major Codes to Refresh</h2><br>
                 <form action="{% url "db_refresh_courses" %}" method="post">
                 {% csrf_token %}
-                    <select multiple id="courses"  name="course_codes[]" class="form-control">
-                        {% for course_code in object_list %}
-                            <option value="{{ course_code }}">{{ course_code }}</option>
+                    <select multiple id="courses"  name="major_codes[]" class="form-control">
+                        {% for major_code in object_list %}
+                            <option value="{{ major_code }}">{{ major_code }}</option>
                         {% endfor %}
                     </select><br>
                     <input type="submit" class="btn btn-primary">

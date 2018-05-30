@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.core.paginator import Paginator
 from .models import Post
-from api.models import Course, CourseCode
+from api.models import Course, MajorCode
 from scheduler.models import Schedule
 from scheduler.models import ExtendedUser
 
@@ -10,7 +10,7 @@ class PostListView(ListView):
     queryset = Post.objects.all()
     context_object_name = 'posts'
     paginate_by = 3
-    refresh_paginator = Paginator(CourseCode.objects.all(), 17)
+    refresh_paginator = Paginator(MajorCode.objects.all(), 17)
 
     def get_context_data(self, **kwargs):
         context = super(PostListView, self).get_context_data(**kwargs)

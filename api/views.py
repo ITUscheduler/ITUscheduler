@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import CourseCode, Course, Lecture, Prerequisite, MajorRestriction
+from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction
 from scheduler.models import Schedule, Notification
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -35,7 +35,7 @@ def notify_course_removal(course):
 
 
 class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
-    model = CourseCode
+    model = MajorCode
     template_name = "refresh_courses.html"
 
     def test_func(self):
@@ -46,35 +46,35 @@ class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def db_refresh_course_codes(request):
+def db_refresh_major_codes(request):
     r = requests.get(BASE_URL)
     soup = BeautifulSoup(r.content, "html.parser")
-    codes = [course_code.code for course_code in CourseCode.objects.all()]
+    codes = [major_code.code for major_code in MajorCode.objects.all()]
 
     for option in soup.find("select").find_all("option"):
         if option.attrs["value"] != "":
             opt = option.get_text()[:-1:]
             if opt in codes:
                 codes.remove(opt)
-            query = CourseCode.objects.filter(code=opt)
+            query = MajorCode.objects.filter(code=opt)
             if not query.exists():
-                CourseCode.objects.create(code=opt)
+                MajorCode.objects.create(code=opt)
 
     if soup.find("select").find_all("option"):
         for code in codes:
-            course_code = CourseCode.objects.get(code=code)
-            course_code.delete()
-    return HttpResponse("<a href='/'><h1>Course Codes refreshed!</h1></a>")
+            major_code = MajorCode.objects.get(code=code)
+            major_code.delete()
+    return HttpResponse("<a href='/'><h1>Major Codes refreshed!</h1></a>")
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_courses(request):
-    codes = request.POST.getlist("course_codes[]")
+    codes = request.POST.getlist("major_codes[]")
     with transaction.atomic():
         for code in codes:
-            course_code = get_object_or_404(CourseCode, code=code)
-            crns = [course.crn for course in Course.objects.filter(course_code=code)]
-            active_crns = [course.crn for course in Course.objects.active().filter(course_code=code)]
+            major_code = get_object_or_404(MajorCode, code=code)
+            crns = [course.crn for course in Course.objects.filter(major_code=code)]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code)]
 
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
@@ -139,7 +139,7 @@ def db_refresh_courses(request):
                         if crn in crns:
                             course = Course.objects.get(crn=crn)
                             course.lecture_count = lecture_count
-                            course.course_code = course_code
+                            course.major_code = major_code
                             course.code = data[1]
                             course.catalogue = rows[1].contents[0]["href"]
                             course.title = data[2]
@@ -157,7 +157,7 @@ def db_refresh_courses(request):
                         else:
                             course = Course.objects.create(
                                 lecture_count=lecture_count,
-                                course_code=course_code,
+                                major_code=major_code,
                                 crn=crn,
                                 catalogue=rows[1].contents[0]["href"],
                                 code=data[1],
@@ -207,13 +207,13 @@ def db_refresh_courses(request):
                 old_course.save()
                 print("Course {} is removed from ITU SIS.".format(old_course))
 
-            course_code.refreshed = timezone.now()
-            course_code.save()
+            major_code.refreshed = timezone.now()
+            major_code.save()
     return HttpResponse("<a href='/api/refresh/courses'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
 
 
 class FlushView(UserPassesTestMixin, generic.TemplateView):
-    model = CourseCode
+    model = MajorCode
     template_name = "flush.html"
 
     def test_func(self):
@@ -225,8 +225,8 @@ class FlushView(UserPassesTestMixin, generic.TemplateView):
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_flush(request):
-    CourseCode.objects.all().delete()
+    MajorCode.objects.all().delete()
     Course.objects.all().delete()
     Schedule.objects.all().delete()
 
-    return HttpResponse("<a href='/'><h1>Course Codes and Courses flushed!</h1></a>")
+    return HttpResponse("<a href='/'><h1>Major Codes and Courses flushed!</h1></a>")

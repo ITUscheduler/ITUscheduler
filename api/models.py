@@ -45,7 +45,7 @@ class Semester(models.Model):
         return self.name
 
 
-class CourseCode(models.Model):
+class MajorCode(models.Model):
     refreshed = models.DateTimeField(default=timezone.now)
     code = models.CharField(max_length=10, unique=True, primary_key=True)
 
@@ -89,7 +89,7 @@ class CourseManager(models.Manager):
 class Course(models.Model):
     semester = models.ForeignKey(Semester, default=Semester.CURRENT_SEMESTER, on_delete=models.SET_DEFAULT)
     lecture_count = models.PositiveSmallIntegerField(default=1)
-    course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
+    major_code = models.ForeignKey(MajorCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)
     catalogue = models.URLField(null=True, blank=True)
     code = models.CharField(max_length=40)

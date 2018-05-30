@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from api.models import Course, CourseCode, Lecture, Prerequisite
+from api.models import Course, MajorCode, Lecture, Prerequisite
 
 
-class CourseCodeSerializer(serializers.ModelSerializer):
+class MajorCodeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CourseCode
+        model = MajorCode
         fields = ('__all__')
 
 
@@ -22,6 +22,7 @@ class PrerequisiteSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     prerequisites = PrerequisiteSerializer
+
     class Meta:
         model = Course
         fields = ('__all__')

@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib import messages
 from django.conf import settings
-from api.models import CourseCode, Course, Semester
+from api.models import MajorCode, Course, Semester
 from scheduler.models import Schedule, Notification
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
@@ -184,7 +184,7 @@ class ScheduleExportView(PDFTemplateView):
 
 
 class CoursesView(generic.DetailView):
-    model = CourseCode
+    model = MajorCode
     slug_url_kwarg = "slug"
     template_name = "courses.html"
 
@@ -192,17 +192,27 @@ class CoursesView(generic.DetailView):
         return "code"
 
     def dispatch(self, request, *args, **kwargs):
-        if not CourseCode.objects.all() or not Course.objects.filter(course_code=kwargs["slug"]).all():
-            return render(request, "courses.html", context={"course_codes": CourseCode.objects.all()})
+        if not MajorCode.objects.all() or not Course.objects.filter(major_code=kwargs["slug"]).all():
+            return render(request, "courses.html", context={"major_codes": MajorCode.objects.all()})
         else:
             return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["course_codes"] = CourseCode.objects.all()
+        context["major_codes"] = MajorCode.objects.all()
         first_object = context["object"]
+        context["current_semester"] = Semester.objects.current()
+        context["semesters"] = Semester.objects.all()
 
-        courses = context["object"].course_set.filter(semester=Semester.objects.current())
+        if self.request.GET.get("semester"):
+            semester = self.request.GET.get("semester")
+            context["searched_semester"] = semester
+            context["current_semester"] = semester
+            courses = context["object"].course_set.filter(semester=semester)
+        else:
+            context["current_semester"] = Semester.objects.current()
+            courses = context["object"].course_set.filter(semester=Semester.objects.current())
+
         first_courses_copy = courses  # for later use
         context["codes"] = []
         for course in courses:
@@ -211,7 +221,7 @@ class CoursesView(generic.DetailView):
 
         if self.request.GET.get("search_course") and self.request.GET.get("search_code") and self.request.GET.get("search_day"):
             if self.request.GET["search_course"] != "all":
-                context["object"] = get_object_or_404(CourseCode, code=self.request.GET["search_course"])
+                context["object"] = get_object_or_404(MajorCode, code=self.request.GET["search_course"])
                 courses = context["object"].course_set.filter(semester=Semester.objects.current())
                 context["codes"] = []
                 for course in courses:
@@ -235,7 +245,7 @@ class CoursesView(generic.DetailView):
             else:
 
                 if course != "all":
-                    courses = courses.filter(course_code=course)
+                    courses = courses.filter(major_code=course)
 
                 if code != "all":
                     courses = courses.filter(code=code)
@@ -243,10 +253,10 @@ class CoursesView(generic.DetailView):
                 if day != "all":
                     courses = [course for course in courses for lecture in course.lecture_set.all() if lecture.day == day]
 
-        if self.request.GET.get("query"):
-            code = self.request.GET["query"]
+        if self.request.GET.get("code"):
+            code = self.request.GET["code"]
             courses = courses.filter(code=code)
-            context["query"] = code
+            context["code"] = code
 
         for course in courses:
             course.times = []

@@ -1,12 +1,11 @@
-from .serializers import CourseSerializer, CourseCodeSerializer, LectureSerializer, PrerequisiteSerializer
+from .serializers import CourseSerializer, MajorCodeSerializer, LectureSerializer, PrerequisiteSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from api.models import Course, CourseCode
-from scheduler.models import Schedule
+from api.models import Course, MajorCode
 from scheduler.views import is_available
 
 
@@ -16,9 +15,9 @@ class CourseListAPIView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        code = kwargs['course_code']
-        course_code = get_object_or_404(CourseCode, code=code)
-        queryset = queryset.filter(course_code=course_code)
+        code = kwargs['major_code']
+        major_code = get_object_or_404(MajorCode, code=code)
+        queryset = queryset.filter(major_code=major_code)
 
         if request.GET.get('code'):
             code = request.GET['code']
@@ -44,7 +43,6 @@ class CourseSearchAPIView(ListAPIView):
         queryset = self.get_queryset()
 
 
-
 class CourseDetailAPIView(APIView):
     queryset = Course.objects.all()
     http_method_names = ["post", ]
@@ -67,9 +65,6 @@ class CourseDetailAPIView(APIView):
         return Response(serializer)
 
 
-
-class CourseCodeListAPIView(ListAPIView):
-    queryset = CourseCode.objects.all()
-    serializer_class = CourseCodeSerializer
-
-
+class MajorCodeListAPIView(ListAPIView):
+    queryset = MajorCode.objects.all()
+    serializer_class = MajorCodeSerializer
