@@ -6,7 +6,7 @@ django-bootstrap-form
 django-gravatar2
 html5lib
 django_rest_framework
-psycopg2
+psycopg2-binary
 social-auth-app-django
 django-font-awesome
 django-meta

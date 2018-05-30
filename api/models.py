@@ -6,29 +6,38 @@ from django.utils import timezone
 class SemesterManager(models.Manager):
     def get_queryset(self):
         queryset = super(SemesterManager, self).get_queryset()
-        current = queryset.get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
+        current = queryset.get_or_create(name=self.model.CURRENT_SEMESTER)[0]
         current.save()
         return queryset
 
     def current(self):
-        return self.get_queryset().get_or_create(name=self.model.SEMESTER_CHOICES[-1][0])[0]
+        return self.get_queryset().get_or_create(name=self.model.CURRENT_SEMESTER)[0]
 
 
 class Semester(models.Model):
     SPRING_17 = "S17"
     FALL_17 = "F17"
     SPRING_18 = "S18"
+    SUMMER_18 = "SU18"
+    FALL_18 = "F18"
+    SPRING_19 = "S19"
+    SUMMER_19 = "SU19"
+    CURRENT_SEMESTER = SUMMER_18
     SEMESTER_CHOICES = (
         (SPRING_17, "2016-2017 Spring"),
         (FALL_17, "2017-2018 Fall"),
-        (SPRING_18, "2017-2018 Spring")
+        (SPRING_18, "2017-2018 Spring"),
+        (SUMMER_18, "2017-2018 Summer"),
+        (FALL_18, "2018-2019 Fall"),
+        (SPRING_19, "2018-2019 Spring"),
+        (SUMMER_19, "2018-2019 Summer")
     )
     name = models.CharField(
         unique=True,
         primary_key=True,
-        max_length=3,
+        max_length=4,
         choices=SEMESTER_CHOICES,
-        default=SPRING_18
+        default=CURRENT_SEMESTER
     )
     objects = SemesterManager()
 
@@ -78,7 +87,7 @@ class CourseManager(models.Manager):
 
 
 class Course(models.Model):
-    semester = models.ForeignKey(Semester, default=Semester.SPRING_18, on_delete=models.SET_DEFAULT)
+    semester = models.ForeignKey(Semester, default=Semester.CURRENT_SEMESTER, on_delete=models.SET_DEFAULT)
     lecture_count = models.PositiveSmallIntegerField(default=1)
     course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE)
     crn = models.PositiveIntegerField(unique=True, primary_key=True)

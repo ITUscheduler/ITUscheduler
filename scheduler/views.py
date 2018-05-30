@@ -53,8 +53,8 @@ class IndexView(MetadataMixin, generic.CreateView):
         return kwargs
 
     def form_valid(self, form):
-        object = form.save()
-        self.request.user.my_schedule = object
+        obj = form.save()
+        self.request.user.my_schedule = obj
         self.request.user.save()
         courses = form.instance.courses
         overlapping_courses = []
