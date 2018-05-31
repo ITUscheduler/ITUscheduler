@@ -23,6 +23,10 @@ class CourseListAPIView(ListAPIView):
             code = request.GET['code']
             queryset = queryset.filter(code=code)
 
+        if request.GET.get("semester"):
+            semester = request.GET["semester"]
+            queryset = queryset.filter(semester=semester)
+
         data = [(self.get_serializer(query).data, query) for query in queryset]
 
         response_data = []
