@@ -195,24 +195,21 @@ class CoursesView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        semester = Semester.objects.current()
+        major_code = MajorCode.objects.get(pk="BLG")
 
         if self.request.GET.get("semester"):
             semester = Semester.objects.get(pk=self.request.GET["semester"])
-            self.request.user.my_semester = semester
-            self.request.user.save()
-        context["semester"] = self.request.user.my_semester
+        context["semester"] = semester
 
         if self.request.GET.get("major"):
             major_code = MajorCode.objects.get(pk=self.request.GET["major"])
-            self.request.user.my_major_code = major_code
-            self.request.user.save()
-        context["major"] = self.request.user.my_major_code
+        context["major"] = major_code
 
         courses = Course.objects.active().filter(
-            semester=self.request.user.my_semester,
-            major_code=self.request.user.my_major_code
+            semester=semester,
+            major_code=major_code
         )
-        print(courses)
 
         codes = sorted(set(course.code for course in courses))
         context["codes"] = codes
@@ -220,7 +217,6 @@ class CoursesView(generic.ListView):
             code = self.request.GET["code"]
             courses = courses.filter(code=code)
             context["code"] = code
-        print(courses)
 
         days = [("Pazartesi", "Monday"), ("Salı", "Tuesday"), ("Çarşamba", "Wednesday"), ("Perşembe", "Thursday"), ("Cuma", "Friday")]
         context["days"] = days
@@ -228,7 +224,6 @@ class CoursesView(generic.ListView):
             day = self.request.GET["day"]
             courses = courses.filter(lecture__day=day).distinct()
             context["day"] = day
-        print(courses)
 
         for course in courses:
             course.times = []
@@ -236,10 +231,13 @@ class CoursesView(generic.ListView):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
-        context["refreshed"] = self.request.user.my_major_code.refreshed
+        context["refreshed"] = major_code.refreshed
 
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
+            self.request.user.my_semester = semester
+            self.request.user.my_major_code = major_code
+            self.request.user.save()
 
         return context
 
