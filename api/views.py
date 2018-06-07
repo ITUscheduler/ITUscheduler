@@ -168,7 +168,7 @@ def db_refresh_courses(request, source=BASE_URL):
                                 capacity=int(data[8]),
                                 enrolled=int(data[9]),
                                 reservation=data[10],
-                                class_restriction=data[13]
+                                class_restriction=data[13],
                             )
 
                         for i in range(lecture_count):
@@ -203,7 +203,7 @@ def db_refresh_courses(request, source=BASE_URL):
 
             removed_crns = [crn for crn in active_crns if crn not in new_crns]
             for removed_crn in removed_crns:
-                old_course = Course.objects.get(crn=removed_crn)
+                old_course = Course.objects.get(crn=removed_crn, semester=Semester.objects.current())
                 #  notify_course_removal(old_course)
                 old_course.active = False
                 old_course.save()

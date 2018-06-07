@@ -75,12 +75,6 @@ class MajorRestriction(models.Model):
 
 
 class CourseManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(semester=Semester.objects.current())
-
-    def all_semesters(self):
-        return super().get_queryset().all()
-
     def inactive(self):
         return super().get_queryset().filter(active=False)
 
