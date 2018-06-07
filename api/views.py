@@ -230,4 +230,6 @@ def db_flush(request):
     MajorCode.objects.all().delete()
     Course.objects.all().delete()
     Schedule.objects.all().delete()
+    MajorRestriction.objects.all().delete()
+    Prerequisite.objects.all().delete()
     return HttpResponse("<a href='/'><h1>Major Codes and Courses flushed!</h1></a>")
