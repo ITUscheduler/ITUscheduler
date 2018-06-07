@@ -111,7 +111,7 @@ class Course(models.Model):
             return True
 
     def __str__(self):
-        lectures = '#' + str(self.crn) + " " + str(self.code) + " " + str(self.title) + " | " + str(self.instructor) + " | "
+        lectures = "{} #{} {} {} | {} | ".format(self.semester.get_name_display(), self.crn, self.code, self.title, self.instructor)
         for lecture in self.lecture_set.all():
             lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"
