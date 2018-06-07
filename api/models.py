@@ -14,22 +14,22 @@ class SemesterManager(models.Manager):
 
 
 class Semester(models.Model):
-    SPRING_17 = "S17"
-    FALL_17 = "F17"
-    SPRING_18 = "S18"
-    SUMMER_18 = "SU18"
-    FALL_18 = "F18"
-    SPRING_19 = "S19"
     SUMMER_19 = "SU19"
+    SPRING_19 = "S19"
+    FALL_18 = "F18"
+    SUMMER_18 = "SU18"
+    SPRING_18 = "S18"
+    FALL_17 = "F17"
+    SPRING_17 = "S17"
     CURRENT_SEMESTER = SUMMER_18
     SEMESTER_CHOICES = (
-        (SPRING_17, "2016-2017 Spring"),
-        (FALL_17, "2017-2018 Fall"),
-        (SPRING_18, "2017-2018 Spring"),
-        (SUMMER_18, "2017-2018 Summer"),
-        (FALL_18, "2018-2019 Fall"),
+        (SUMMER_19, "2018-2019 Summer"),
         (SPRING_19, "2018-2019 Spring"),
-        (SUMMER_19, "2018-2019 Summer")
+        (FALL_18, "2018-2019 Fall"),
+        (SUMMER_18, "2017-2018 Summer"),
+        (SPRING_18, "2017-2018 Spring"),
+        (FALL_17, "2017-2018 Fall"),
+        (SPRING_17, "2016-2017 Spring")
     )
     name = models.CharField(
         unique=True,
