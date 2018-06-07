@@ -283,6 +283,15 @@ def privacy_policy(request):
 
 
 @login_required
+def remove_my_courses(request):
+    try:
+        request.user.courses.clear()
+        return JsonResponse({"successful": True})
+    except Exception as error:
+        return JsonResponse({"successful": False, "error": error})
+
+
+@login_required
 def add_course(request):
     try:
         course_crn = int(request.POST["course_crn"])

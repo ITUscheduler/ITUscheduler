@@ -9,7 +9,8 @@
             <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h2 class="panel-title">My Courses</h2>
+                        <h2 class="panel-title" style="display: inline-block">My Courses</h2>
+                        <small><a href="javascript:removeMyCourses()" style="padding-left: 10px">Remove All</a></small>
                     </div>
                     <div class="panel-body">
                         {% if user.is_authenticated %}
@@ -118,7 +119,7 @@
                                         <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
                                     </div>
                                     <div class="col-md-3 col-xs-3">
-                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop Fill CRNs button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
+                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
                                     </div>
                                 </div>
                             </div>
@@ -290,6 +291,24 @@
                 }
 
             });
+        }
+
+        function removeMyCourses() {
+            $.post(
+                "{% url "remove_my_courses" %}",
+                {
+                    "csrfmiddlewaretoken": getCookie('csrftoken')
+                },
+                function(response) {
+                    var isSuccessful = response["successful"];
+                    if (!isSuccessful) {
+                        alert("Error: " + response["error"]);
+                    } else {
+                        location.reload();
+                    }
+                },
+                "json"
+            )
         }
 
         function removeCourse(Crn) {
