@@ -10,7 +10,7 @@ class MajorCodeAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_filter = ("active", "semester__name")
+    list_filter = ("active", "semester__name", "major_code")
     list_display = ("crn", "major_code", "code", "title", "instructor", "lecture_count", "enrolled", "capacity", "reservation", "class_restriction", "catalogue", "active")
     search_fields = ("major_code__code", "crn")
 

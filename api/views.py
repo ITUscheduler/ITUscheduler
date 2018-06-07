@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction
+from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
 from scheduler.models import Schedule, Notification
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
 
 
+# Disabled
 def notify_course_removal(course):
     schedules = course.schedule_set.all()
     users = list(set([schedule.user for schedule in schedules]))
@@ -50,6 +51,7 @@ def db_refresh_major_codes(request):
     r = requests.get(BASE_URL)
     soup = BeautifulSoup(r.content, "html.parser")
     codes = [major_code.code for major_code in MajorCode.objects.all()]
+    html = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
 
     for option in soup.find("select").find_all("option"):
         if option.attrs["value"] != "":
@@ -59,22 +61,24 @@ def db_refresh_major_codes(request):
             query = MajorCode.objects.filter(code=opt)
             if not query.exists():
                 MajorCode.objects.create(code=opt)
+                html += "<p>{} added</p>".format(opt)
 
+    # Check if any major_code is removed from SIS
     if soup.find("select").find_all("option"):
         for code in codes:
             major_code = MajorCode.objects.get(code=code)
-            major_code.delete()
-    return HttpResponse("<a href='/'><h1>Major Codes refreshed!</h1></a>")
+            html += "<p>ATTENTION! {} is removed from SIS</p>".format(major_code)
+    return HttpResponse(html)
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def db_refresh_courses(request):
+def db_refresh_courses(request, source=BASE_URL):
     codes = request.POST.getlist("major_codes[]")
     with transaction.atomic():
         for code in codes:
             major_code = get_object_or_404(MajorCode, code=code)
-            crns = [course.crn for course in Course.objects.filter(major_code=code)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code)]
+            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.current())]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.current())]
 
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
@@ -95,10 +99,8 @@ def db_refresh_courses(request):
                         buildings = []
                         length = len(buildings_raw) // 2
                         for i in range(length):
-                            buildings.append(rows[4].contents[0].contents[2 * i])
+                            buildings.append(buildings_raw[2 * i])
                         lecture_count = len(buildings)
-                        # buildings = [data[4][3 * i:3 * i + 3:] for i in range(lecture_count)]
-                        # lecture_count = len(data[4]) // 3
 
                         crn = int(data[0])
                         new_crns.append(crn)
@@ -201,8 +203,8 @@ def db_refresh_courses(request):
 
             removed_crns = [crn for crn in active_crns if crn not in new_crns]
             for removed_crn in removed_crns:
-                old_course = Course.objects.active().get(crn=removed_crn)
-                notify_course_removal(old_course)
+                old_course = Course.objects.get(crn=removed_crn)
+                #  notify_course_removal(old_course)
                 old_course.active = False
                 old_course.save()
                 print("Course {} is removed from ITU SIS.".format(old_course))
@@ -228,5 +230,4 @@ def db_flush(request):
     MajorCode.objects.all().delete()
     Course.objects.all().delete()
     Schedule.objects.all().delete()
-
     return HttpResponse("<a href='/'><h1>Major Codes and Courses flushed!</h1></a>")

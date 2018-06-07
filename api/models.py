@@ -4,10 +4,10 @@ from django.utils import timezone
 
 class SemesterManager(models.Manager):
     def get_queryset(self):
-        queryset = super(SemesterManager, self).get_queryset()
-        current = queryset.get_or_create(name=self.model.CURRENT_SEMESTER)[0]
+        qs = super().get_queryset()
+        current = qs.get_or_create(name=self.model.CURRENT_SEMESTER)[0]
         current.save()
-        return queryset
+        return qs
 
     def current(self):
         return self.get_queryset().get_or_create(name=self.model.CURRENT_SEMESTER)[0]
@@ -75,11 +75,17 @@ class MajorRestriction(models.Model):
 
 
 class CourseManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(semester=Semester.objects.current())
+
+    def all_semesters(self):
+        return super().get_queryset().all()
+
     def inactive(self):
-        return super(CourseManager, self).get_queryset().filter(active=False)
+        return super().get_queryset().filter(active=False)
 
     def active(self):
-        return super(CourseManager, self).get_queryset().filter(active=True)
+        return super().get_queryset().filter(active=True)
 
 
 class Course(models.Model):

@@ -196,7 +196,7 @@ class CoursesView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         semester = self.request.user.my_semester if self.request.user.is_authenticated else Semester.objects.current()
-        major_code = self.request.user.my_major_code if self.request.user.is_authenticated else MajorCode.objects.get(pk="BLG")
+        major_code = self.request.user.my_major_code if self.request.user.is_authenticated and self.request.user.my_major_code else MajorCode.objects.first()
 
         if self.request.GET.get("semester"):
             semester = Semester.objects.get(pk=self.request.GET["semester"])
@@ -231,7 +231,7 @@ class CoursesView(generic.ListView):
                 lectures = course.lecture_set.all()
                 course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
         context["courses"] = courses
-        context["refreshed"] = major_code.refreshed
+        context["refreshed"] = major_code.refreshed if major_code else None
 
         if self.request.user.is_authenticated:
             context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
