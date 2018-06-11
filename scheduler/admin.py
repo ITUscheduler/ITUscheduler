@@ -6,12 +6,14 @@ from scheduler.models import Schedule, ExtendedUser, Notification
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ("user", "id")
     search_fields = ("user__username", "id")
+    raw_id_fields = ("courses",)
 
 
 @admin.register(ExtendedUser)
 class ExtendedUserAdmin(admin.ModelAdmin):
     list_display = ("username", "email", "first_name", "last_name", "my_schedule", "date_joined")
     search_fields = ("username", "email", "first_name", "last_name", "my_schedule__id")
+    raw_id_fields = ("courses",)
 
 
 @admin.register(Notification)

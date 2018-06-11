@@ -49,7 +49,7 @@
                             {% if user.my_schedule %}
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 20px;">
-                                        <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule #{{ selected_schedule.id }}]</label>
+                                        <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule: {{ selected_schedule }}]</label>
                                         <ul class="list-group" id="selected-courses">
                                             {% for course in my_courses %}
                                                 <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
@@ -106,7 +106,7 @@
                                     <form>
                                     <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
                                         {% for schedule in schedules %}
-                                            <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule #{{ schedule.id }}</option>
+                                            <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule: {{ schedule }}</option>
                                         {% endfor %}
                                     </select>
                                 </form>
