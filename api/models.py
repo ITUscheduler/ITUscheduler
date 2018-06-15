@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -51,6 +52,9 @@ class MajorCode(models.Model):
     class Meta:
         ordering = ['code']
         get_latest_by = "code"
+
+    def get_absolute_url(self):
+        return reverse("courses") + "?major={}".format(self.code)
 
     def __str__(self):
         return str(self.code)

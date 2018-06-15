@@ -22,10 +22,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': {
             'home': IndexViewSitemap,
             'pages': StaticViewSitemap,
-            'courses': GenericSitemap(
-                {"queryset": MajorCode.objects.all()},
-                priority=0.7
-            )
+            'courses': GenericSitemap({"queryset": MajorCode.objects.all()}, priority=0.7)
         }
     }, name='django.contrib.sitemaps.views.sitemap'),
     path('oauth/', include('social_django.urls', namespace='social')),
