@@ -15,14 +15,14 @@
                         {% endfor %}
                     </select><br>
                     <input type="submit" class="btn btn-primary">
-                </form>
+                </form><br>
             </div>
         </div>
     </div>
 	<script>
-		$.ready(function() {
+		$(document).ready(function() {
 			var select = document.getElementById('courses');
-            select.size = select.length;
+            select.size = select.length / 5;
 		});
 	</script>
 {% endblock %}
