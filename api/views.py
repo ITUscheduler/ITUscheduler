@@ -75,7 +75,7 @@ def db_refresh_major_codes(request):
 def db_refresh_courses(request, source=BASE_URL):
     export_from_file = False
     # if user has uploaded a file instead
-    if request.FILES > 0: 
+    if len(request.FILES) > 0: 
         # keep codes and soups in two seperated arrays, with respect to each other
         codes = []
         soups = []
@@ -83,7 +83,7 @@ def db_refresh_courses(request, source=BASE_URL):
             soup = BeautifulSoup(exported.read(), "html5lib")
             soups.append(soup)
 
-            code = soup.find("option", selected=True)
+            code = soup.find("option", selected=True)['value']
             codes.append(code)
             export_from_file = True
 
@@ -101,20 +101,21 @@ def db_refresh_courses(request, source=BASE_URL):
             semester = ""
             for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
                 if semester_txt in semester_html:
-                      semester = semester_code
-                      break
+                        semester = semester_code
+                        break
 
             if semester == "":
                 # Means there is something wrong with my approach to semester. Needs to be revisited 
                 print("Semester could not be found.")
-            
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.get(name=semester)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.get(name=semester)]
+            semester, _ = Semester.objects.get_or_create(name=semester)
+            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
         else:
             r = requests.get(BASE_URL + code)
             soup = BeautifulSoup(r.content, "html5lib")
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.current())]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.current())]
+            semester = Semester.objects.current()
+            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
 
         raw_table = soup.find("table", class_="dersprg")
 
@@ -162,8 +163,8 @@ def db_refresh_courses(request, source=BASE_URL):
                     prerequisites = re.sub("veya", " or", data[12])
                     prerequisites.replace("(", "")
                     prerequisites.replace(")", "")
-
                     prerequisites_objects = []
+
                     if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" not in prerequisites:
                         for prerequisite in prerequisites.split(' or '):
                             prerequisite = prerequisite.split()
@@ -174,6 +175,7 @@ def db_refresh_courses(request, source=BASE_URL):
 
                     if crn in crns:
                         course = Course.objects.get(crn=crn)
+                        course.semester = semester
                         course.lecture_count = lecture_count
                         course.major_code = major_code
                         course.code = data[1]
@@ -192,6 +194,7 @@ def db_refresh_courses(request, source=BASE_URL):
                             lecture.delete()
                     else:
                         course = Course.objects.create(
+                            semester=semester,
                             lecture_count=lecture_count,
                             major_code=major_code,
                             crn=crn,
@@ -204,6 +207,8 @@ def db_refresh_courses(request, source=BASE_URL):
                             reservation=data[10],
                             class_restriction=data[13],
                         )
+
+                    
 
                     for i in range(lecture_count):
                         time_start = times_start.split(",")[i]
@@ -237,7 +242,7 @@ def db_refresh_courses(request, source=BASE_URL):
 
         removed_crns = [crn for crn in active_crns if crn not in new_crns]
         for removed_crn in removed_crns:
-            old_course = Course.objects.get(crn=removed_crn, semester=Semester.objects.current())
+            old_course = Course.objects.get(crn=removed_crn, semester=semester)
             #  notify_course_removal(old_course)
             old_course.active = False
             old_course.save()
