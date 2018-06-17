@@ -73,14 +73,49 @@ def db_refresh_major_codes(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_courses(request, source=BASE_URL):
-    codes = request.POST.getlist("major_codes[]")
-    for code in codes:
-        major_code = get_object_or_404(MajorCode, code=code)
-        crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.current())]
-        active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.current())]
+    export_from_file = False
+    # if user has uploaded a file instead
+    if request.FILES > 0: 
+        # keep codes and soups in two seperated arrays, with respect to each other
+        codes = []
+        soups = []
+        for exported in request.FILES.getlist("exported"):
+            soup = BeautifulSoup(exported.read(), "html5lib")
+            soups.append(soup)
 
-        r = requests.get(BASE_URL + code)
-        soup = BeautifulSoup(r.content, "html5lib")
+            code = soup.find("option", selected=True)
+            codes.append(code)
+            export_from_file = True
+
+    else:
+        codes = request.POST.getlist("major_codes[]")
+    
+    index = -1
+    for code in codes:
+        index += 1
+        major_code = get_object_or_404(MajorCode, code=code)
+        
+        if export_from_file:
+            soup = soups[index]
+            semester_html = soup.find("span", {"class": "ustbaslik"}).text
+            semester = ""
+            for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
+                if semester_txt in semester_html:
+                      semester = semester_code
+                      break
+
+            if semester == "":
+                # Means there is something wrong with my approach to semester. Needs to be revisited 
+                print("Semester could not be found.")
+            
+            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.get(name=semester)]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.get(name=semester)]
+        else:
+            r = requests.get(BASE_URL + code)
+            soup = BeautifulSoup(r.content, "html5lib")
+            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=Semester.objects.current())]
+            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=Semester.objects.current())]
+
         raw_table = soup.find("table", class_="dersprg")
 
         nth_course = 3

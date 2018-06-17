@@ -32,6 +32,15 @@ class Semester(models.Model):
         (FALL_17, "2017-2018 Fall"),
         (SPRING_17, "2016-2017 Spring")
     )
+    SEMESTER_CHOICES_TURKISH = (
+        (SUMMER_19, "2018-2019 Yaz"),
+        (SPRING_19, "2018-2019 Bahar"),
+        (FALL_18, "2018-2019 Güz"),
+        (SUMMER_18, "2017-2018 Yaz"),
+        (SPRING_18, "2017-2018 Bahar"),
+        (FALL_17, "2017-2018 Güz"),
+        (SPRING_17, "2016-2017 Bahar")
+    )
     name = models.CharField(
         unique=True,
         primary_key=True,
