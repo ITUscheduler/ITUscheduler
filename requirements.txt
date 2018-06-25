@@ -13,3 +13,5 @@ django-meta
 django-easy-pdf>=0.2.0.dev1
 WeasyPrint
 pdf2image
+numpy
+anytree

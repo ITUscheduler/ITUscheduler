@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Courses | ITU Scheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <p>{{ tree }}</p>
+        <hr>
+        <p>{{ matrix }}</p>
+        <hr>
+        {% for course in courses %}
+            <p>{{ course }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
