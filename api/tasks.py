@@ -9,6 +9,11 @@ from api.views import BASE_URL
 
 
 @shared_task(bind=True)
+def test(self):
+    print(dir(self), self.request)
+
+
+@shared_task(bind=True)
 def refresh_courses(self):
     codes = [code.code for code in MajorCode.objects.all()]
 

@@ -6,6 +6,7 @@
 # Python
 __pycache__/
 venv/
+celerybeat.pid
 
 # Django
 static/
