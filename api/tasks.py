@@ -1,118 +1,25 @@
-import requests
 import re
-from bs4 import BeautifulSoup
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.views import generic
-from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
-from scheduler.models import Schedule, Notification
 from django.utils import timezone
-from django.core.mail import send_mail
-
-BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
-
-
-# Disabled
-def notify_course_removal(course):
-    schedules = course.schedule_set.all()
-    users = list(set([schedule.user for schedule in schedules]))
-
-    for user in users:
-        notification = Notification()
-        notification.user = user
-        notification.msg = 'Course #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(course.crn, ", #".join([str(schedule.id) for schedule in schedules]))
-        notification.save()
-        recipients = [user.email, 'info@ituscheduler.com', 'dorukgezici96@gmail.com', 'altunerism@gmail.com']
-        send_mail(
-            '[ITUscheduler] | Course #{} is Removed'.format(course.crn),
-            '\tCourse #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(
-                course.crn, ", #".join([str(schedule.id) for schedule in schedules])),
-            'info@ituscheduler.com',
-            recipients,
-        )
+import requests
+from bs4 import BeautifulSoup
+from celery import shared_task
+from django.shortcuts import get_object_or_404
+from api.models import Semester, MajorCode, Course, Prerequisite, MajorRestriction, Lecture
+from api.views import BASE_URL
 
 
-class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
-    model = MajorCode
-    template_name = "refresh_courses.html"
+@shared_task(bind=True)
+def refresh_courses(self):
+    codes = [code.code for code in MajorCode.objects.all()]
 
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        else:
-            return False
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def db_refresh_major_codes(request):
-    r = requests.get(BASE_URL)
-    soup = BeautifulSoup(r.content, "html.parser")
-    codes = [major_code.code for major_code in MajorCode.objects.all()]
-    html = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
-
-    for option in soup.find("select").find_all("option"):
-        if option.attrs["value"] != "":
-            opt = option.get_text()[:-1:]
-            if opt in codes:
-                codes.remove(opt)
-            query = MajorCode.objects.filter(code=opt)
-            if not query.exists():
-                MajorCode.objects.create(code=opt)
-                html += "<p>{} added</p>".format(opt)
-
-    # Check if any major_code is removed from SIS
-    if soup.find("select").find_all("option"):
-        for code in codes:
-            major_code = MajorCode.objects.get(code=code)
-            html += "<p>ATTENTION! {} is removed from SIS</p>".format(major_code)
-    return HttpResponse(html)
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def db_refresh_courses(request):
-    export_from_file = False
-    # if user has uploaded a file instead
-    if len(request.FILES) > 0: 
-        # keep codes and soups in two seperated arrays, with respect to each other
-        codes = []
-        soups = {}
-        for exported in request.FILES.getlist("exported"):
-            soup = BeautifulSoup(exported.read(), "html5lib")
-            code = soup.find("option", selected=True)['value']
-            if not code == "":
-                soups[code] = soup
-                codes.append(code)
-            export_from_file = True
-
-    else:
-        codes = request.POST.getlist("major_codes[]")
-    
     for code in codes:
         major_code = get_object_or_404(MajorCode, code=code)
-        
-        if export_from_file:
-            soup = soups[code]
-            semester_html = soup.find("span", {"class": "ustbaslik"}).text
-            semester = ""
-            for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
-                if semester_txt in semester_html:
-                    semester = semester_code
-                    break
 
-            if semester == "":
-                # Means there is something wrong with my approach to semester. Needs to be revisited 
-                print("Semester could not be found.")
-            semester, _ = Semester.objects.get_or_create(name=semester)
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
-        else:
-            r = requests.get(BASE_URL + code)
-            soup = BeautifulSoup(r.content, "html5lib")
-            semester = Semester.objects.current()
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
+        r = requests.get(BASE_URL + code)
+        soup = BeautifulSoup(r.content, "html5lib")
+        semester = Semester.objects.current()
+        crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
+        active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
 
         raw_table = soup.find("table", class_="dersprg")
 
@@ -168,7 +75,8 @@ def db_refresh_courses(request):
                             course = " ".join([str(prerequisite) for prerequisite in prerequisite[:2]])
                             grade = str(prerequisite[-1])
 
-                            prerequisites_objects.append(Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
+                            prerequisites_objects.append(
+                                Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
 
                     if crn in crns:
                         course = Course.objects.get(crn=crn)
@@ -238,32 +146,9 @@ def db_refresh_courses(request):
         removed_crns = [crn for crn in active_crns if crn not in new_crns]
         for removed_crn in removed_crns:
             old_course = Course.objects.get(crn=removed_crn, semester=semester)
-            #  notify_course_removal(old_course)
             old_course.active = False
             old_course.save()
             print("Course {} is removed from ITU SIS.".format(old_course))
 
         major_code.refreshed = timezone.now()
         major_code.save()
-    return HttpResponse("<a href='/api/refresh/courses'><h1>{} Courses refreshed!</h1></a>".format(", ".join(codes)))
-
-
-class FlushView(UserPassesTestMixin, generic.TemplateView):
-    model = MajorCode
-    template_name = "flush.html"
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        else:
-            return False
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def db_flush(request):
-    MajorCode.objects.all().delete()
-    Course.objects.all().delete()
-    Schedule.objects.all().delete()
-    MajorRestriction.objects.all().delete()
-    Prerequisite.objects.all().delete()
-    return HttpResponse("<a href='/'><h1>Major Codes and Courses flushed!</h1></a>")

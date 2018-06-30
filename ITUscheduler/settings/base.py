@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'meta',
     'font_awesome',
     'easy_pdf',
+    'django_celery_results',
+    'django_celery_beat',
     'api',
     'scheduler',
     'blog',
@@ -119,4 +121,5 @@ MIGRATION_MODULES = {
 META_SITE_PROTOCOL = 'https'
 META_USE_SITES = True
 
-from .secrets import *
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
