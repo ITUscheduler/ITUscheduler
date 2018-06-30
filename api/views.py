@@ -72,37 +72,35 @@ def db_refresh_major_codes(request):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def db_refresh_courses(request, source=BASE_URL):
+def db_refresh_courses(request):
     export_from_file = False
     # if user has uploaded a file instead
     if len(request.FILES) > 0: 
         # keep codes and soups in two seperated arrays, with respect to each other
         codes = []
-        soups = []
+        soups = {}
         for exported in request.FILES.getlist("exported"):
             soup = BeautifulSoup(exported.read(), "html5lib")
-            soups.append(soup)
-
             code = soup.find("option", selected=True)['value']
-            codes.append(code)
+            if not code == "":
+                soups[code] = soup
+                codes.append(code)
             export_from_file = True
 
     else:
         codes = request.POST.getlist("major_codes[]")
     
-    index = -1
     for code in codes:
-        index += 1
         major_code = get_object_or_404(MajorCode, code=code)
         
         if export_from_file:
-            soup = soups[index]
+            soup = soups[code]
             semester_html = soup.find("span", {"class": "ustbaslik"}).text
             semester = ""
             for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
                 if semester_txt in semester_html:
-                        semester = semester_code
-                        break
+                    semester = semester_code
+                    break
 
             if semester == "":
                 # Means there is something wrong with my approach to semester. Needs to be revisited 
@@ -207,8 +205,6 @@ def db_refresh_courses(request, source=BASE_URL):
                             reservation=data[10],
                             class_restriction=data[13],
                         )
-
-                    
 
                     for i in range(lecture_count):
                         time_start = times_start.split(",")[i]
