@@ -259,9 +259,8 @@ class CoursesView(generic.ListView):
 
         for course in courses:
             course.times = []
-            for i in range(course.lecture_count):
-                lectures = course.lecture_set.all()
-                course.times.append("{}/{} ".format(lectures[i].time_start, lectures[i].time_finish))
+            for lecture in course.lecture_set.all():
+                course.times.append("{}/{} ".format(lecture.time_start, lecture.time_finish))
         context["courses"] = courses
         context["refreshed"] = major_code.refreshed if major_code else None
 

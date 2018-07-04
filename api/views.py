@@ -208,13 +208,14 @@ def db_refresh_courses(request):
                     for i in range(lecture_count):
                         time_start = times_start.split(",")[i]
                         time_finish = times_finish.split(",")[i]
+                        room = data[7].split()[i]
 
                         Lecture.objects.create(
                             building=buildings[i],
                             day=days[i],
                             time_start=time_start,
                             time_finish=time_finish,
-                            room=data[7].split()[i],
+                            room=room,
                             course=course
                         )
 
