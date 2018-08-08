@@ -190,6 +190,9 @@ def db_refresh_courses(request):
                         for lecture in course.lecture_set.all():
                             lecture.delete()
                     else:
+                        if Course.objects.get(crn=crn):
+                            removed_course = Course.objects.get(crn=crn)
+                            removed_course.delete()
                         course = Course.objects.create(
                             semester=semester,
                             lecture_count=lecture_count,
