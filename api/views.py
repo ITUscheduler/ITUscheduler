@@ -181,8 +181,8 @@ def db_refresh_courses(request):
                         course.instructor = data[3]
                         course.capacity = int(data[8])
                         course.enrolled = int(data[9])
-                        course.reservation = data[10]
-                        course.class_restriction = data[13][:59]
+                        course.reservation = data[10][:100]
+                        course.class_restriction = data[13][:110]
                         course.active = True
 
                         course.save()
@@ -204,8 +204,8 @@ def db_refresh_courses(request):
                             instructor=data[3],
                             capacity=int(data[8]),
                             enrolled=int(data[9]),
-                            reservation=data[10],
-                            class_restriction=data[13][:59],
+                            reservation=data[10][:100],
+                            class_restriction=data[13][:110],
                         )
 
                     for i in range(lecture_count):

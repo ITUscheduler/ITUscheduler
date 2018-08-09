@@ -106,7 +106,7 @@ class Course(models.Model):
     instructor = models.CharField(max_length=500)
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)
-    reservation = models.CharField(max_length=60)
+    reservation = models.CharField(max_length=100)
     major_restriction = models.ManyToManyField(MajorRestriction)
     prerequisites = models.ManyToManyField(Prerequisite)
     class_restriction = models.CharField(max_length=110)
