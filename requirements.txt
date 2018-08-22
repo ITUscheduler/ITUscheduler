@@ -5,7 +5,7 @@ Pillow
 django-bootstrap-form
 django-gravatar2
 html5lib
-django_rest_framework
+djangorestframework
 psycopg2-binary
 social-auth-app-django
 django-font-awesome
