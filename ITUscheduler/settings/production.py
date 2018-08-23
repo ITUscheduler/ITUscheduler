@@ -2,8 +2,7 @@ from .base import *
 
 DEBUG = False
 
-from .secrets import SOCIAL_AUTH_FACEBOOK_KEY, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_TWITTER_KEY, SOCIAL_AUTH_TWITTER_SECRET
-from .secrets import POSTGRES_NAME, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST
+from .secrets import *
 
 DATABASES = {
     'default': {
