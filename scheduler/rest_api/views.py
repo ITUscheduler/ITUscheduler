@@ -49,7 +49,6 @@ class ScheduleDetailAPIView(RetrieveAPIView):
         if request.user == self.get_object().user:
             instance = self.get_object()
             serializer = self.get_serializer(instance).data
-
             serializer['courses'] = CourseSerializer(instance.courses.all(), many=True).data
             for data in serializer['courses']:
                 query = Course.objects.get(crn=data['crn'])
@@ -162,6 +161,5 @@ def read_notification(request):
 
     except Exception as error:
         return Response({'error': error})
-
 
 

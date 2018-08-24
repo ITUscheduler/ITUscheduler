@@ -289,7 +289,6 @@
                         }
                     }
                 }
-
             });
         }
 
@@ -334,7 +333,7 @@
             var scheduleId = selected.options[selected.selectedIndex].value;
             if (scheduleId) {
                 $.post(
-                    "{% url "select_schedule" %}",
+                    "{% url 'select_schedule' %}",
                     {
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
@@ -357,7 +356,7 @@
                 alert("Create and select a schedule first.");
             } else {
                 $.post(
-                    "{% url "select_schedule" %}",
+                    "{% url 'select_schedule' %}",
                     {
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
@@ -381,7 +380,7 @@
                 alert("Create and select a schedule first.");
             } else {
                 $.post(
-                    "{% url "delete_schedule" %}",
+                    "{% url 'delete_schedule' %}",
                     {
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
@@ -423,6 +422,7 @@
             console.log("stop displaying ", id);
             $(id).css({"background-color": "white", "color": "black"});
             $(id).empty();
+            $(id).html("<a></a>");
         }
 
         var selected_courses = [];
@@ -456,9 +456,11 @@
         }
 
         function displayCourses(result, value, remove){
-            var ids = [];
+           var ids = [];
            var time_start = value['time_start'];
            var time_finish = value['time_finish'];
+           console.log(result);
+           console.log(value);
 
            if (time_start.toString().substring(2) === "00") {
                time_start = (time_start - 70);
@@ -490,7 +492,6 @@
                 }
 
                 if(remove){
-                    console.log("asdad");
                     deleteHtml(id);
                     writeLectures();
                 }else{
@@ -498,6 +499,15 @@
 
                     if (result['overlaps'] || ($(id).html().length > 0 & $(id).html() !== result['title'])) {
                         $(id).css({'background-color': '#d9534f', 'color': 'white'});
+                        $(id).hover( function(){
+                            if($(this).html() !== "<a></a>"){
+                                $(this).html(result['title'] + "<br>This course overlaps with another course<br>Or its full.");
+                            }
+                        }, function(){
+                            if($(this).html() !== "<a></a>"){
+                                $(this).html(result['title']);
+                            }
+                        });
                     }
 
                     $(id).html(result['title']);
@@ -510,30 +520,27 @@
             }
         }
 
-
         $("#id_courses").change(function() {
 
-            $( "select option" ).each(function() {
+            $( "#schedule select option" ).each(function() {
             if($(this).is(':selected')){
                 var crn = $(this).val();
                 selected_courses.push(crn);
                 if(crn.length === 5){
-                    console.log(crn);
+                    console.log(crn, "asd");
                     getCourseDetail(crn, false);
                 }
                 }else{
                     console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
                     if(selected_courses.includes($(this).val())){
                         selected_courses.splice(selected_courses.indexOf($(this).val()), 1);
+                        console.log("naber zeka ", $(this).val());
                         getCourseDetail($(this).val(), true) // stop displaying the course!
 
                     }
                 }
-
-
-
             });
-            return "asd";
+            return "";
           })
           .trigger( "change" );
 
