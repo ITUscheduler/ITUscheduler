@@ -46,7 +46,7 @@ class ScheduleDetailAPIView(RetrieveAPIView):
     queryset = Schedule.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
-        if request.user == self.get_object().user:
+        # if request.user == self.get_object().user:
             instance = self.get_object()
             serializer = self.get_serializer(instance).data
             serializer['courses'] = CourseSerializer(instance.courses.all(), many=True).data
@@ -65,7 +65,7 @@ class ScheduleDetailAPIView(RetrieveAPIView):
 
             return Response(serializer)
 
-        return Response({'Unauthorized attempt'}, status=HTTP_401_UNAUTHORIZED)
+        # return Response({'Unauthorized attempt'}, status=HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
