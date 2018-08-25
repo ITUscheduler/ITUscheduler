@@ -18,8 +18,8 @@
                         <h4>Users have created</h4>
                         <h4><strong>{{ total_schedule_count }}</strong> schedules</h4>
                         <hr>
-                        <h4>Number of courses removed from SIS</h4>
-                        <h4><strong>{{ deleted_courses_count }}</strong> courses</h4>
+                        <h4>{{ current_semester.get_name_display }}</h4>
+                        <h4>has <strong>{{ courses_count }}</strong> courses</h4>
                     </div>
                     <div class="panel-heading">
                         <h3>Latest Refresh</h3>
@@ -63,13 +63,16 @@
                                 {% if post.media %}
                                     <img src="{{ post.media.url }}" class="img img-responsive img-rounded">
                                 {% endif %}
+                                {% if not forloop.last %}
+                                    <hr>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}
                 </div>
             </div>
             <div class="col-md-4 col-xs-12">
-                <a class="twitter-timeline" data-height="1650" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a class="twitter-timeline" data-height="2450" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
         <div class="row">
