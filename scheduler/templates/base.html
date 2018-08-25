@@ -82,6 +82,14 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Rehberler <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="http://web.itu.edu.tr/durgunor/ders.htm" target="_blank">Ders Seçim Rehberi</a></li>
+                                <li><a href="http://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">ITUscheduler Nasıl Kullanılır?</a></li>
+                                <li><a href="http://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a></li>
+                            </ul>
+                        </li>
                         <li><a href="http://notkutusu.com" target="_blank">Not Kutusu </a></li>
                         {% if request.user.is_authenticated %}
                             {% if request.user.is_superuser %}
