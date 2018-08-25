@@ -116,7 +116,7 @@
                                         <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
                                     </div>
                                     <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
-                                        <a href="javascript:var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}" class="btn btn-block btn-primary">Fill CRNs</a>
+                                        <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>
                                     </div>
                                     <div class="col-md-3 col-xs-3">
                                         <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
