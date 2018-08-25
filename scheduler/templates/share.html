@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{ object }} | ITU Scheduler{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% if has_schedule %}
+                                        {{ object.my_schedule }}
+                                        <button style="margin-left: 40px;" class="btn btn-default btn-xs" onclick="copyStringToClipboard(window.location.href);">Copy share link!</button>
+                                    {% else %}
+                                        {{ object }} has no schedules!
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="pull-right">{{ object.my_schedule.courses.first.semester.get_name_display }}</span>
+                                </div>
+                            </div>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <div style="margin-top: 10px;" class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Hours</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for hour in hours %}
+                                    <tr id="{{ hour.time|slugify }}">
+                                        <th>{{ hour.time }}</th>
+                                        <td id="{{ hour.time|slugify }}-{{ 1 }}"></td>
+                                        <td id="{{ hour.time|slugify }}-{{ 2 }}"></td>
+                                        <td id="{{ hour.time|slugify }}-{{ 3 }}"></td>
+                                        <td id="{{ hour.time|slugify }}-{{ 4 }}"></td>
+                                        <td id="{{ hour.time|slugify }}-{{ 5 }}"></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            {% if has_schedule %}
+                writeLectures();
+            {% endif %}
+        });
+
+        function copyStringToClipboard(str) {
+            var el = document.createElement('textarea');
+            el.value = str;
+            // Set non-editable to avoid focus and move outside of view
+            el.setAttribute('readonly', '');
+            el.style = {position: 'absolute', left: '-9999px'};
+            document.body.appendChild(el);
+            // Select text inside element
+            el.select();
+            // Copy text to clipboard
+            document.execCommand('copy');
+            // Remove temporary element
+            document.body.removeChild(el);
+            alert("Copied share link to clipboard: " + str);
+        }
+
+        function idGenerator(start, finish, Ids) {
+            var ids = Ids;
+            if ((start - 1) === finish) {
+                return ids
+            } else {
+                var id = "#" + start + "-" + (start + 99);
+                ids.push(id);
+                return idGenerator(start + 100, finish, ids);
+            }
+        }
+
+        function writeLectures() {
+            $.ajax({
+                {% if has_schedule %}
+                    url: "{% url 'rest_api_scheduler:api_schedule_detail' pk=object.my_schedule_id %}",
+                {% else %}
+                    url: "#",
+                {% endif %}
+                success: function(result) {
+                    console.log("Lectures writing.");
+                    for (var course in result.courses) {
+                        for (var lecture in result.courses[course].lectures) {
+                            var c_lecture = result.courses[course].lectures[lecture];
+                            var c_course = result.courses[course];
+
+                            if (c_lecture.time_start.toString().substring(2) === "00") {
+                                c_lecture.time_start = (c_lecture.time_start - 70);
+                                c_lecture.time_finish = (c_lecture.time_finish + 70);
+                            }
+
+                            var ids = [];
+                            var blocks = ((c_lecture.time_finish - c_lecture.time_start) % 99) + 1;
+
+                            if (blocks === 1) {
+                                var id = "#" + c_lecture.time_start + "-" + c_lecture.time_finish;
+                                ids.push(id);
+                            } else {
+                                ids = idGenerator(c_lecture.time_start, c_lecture.time_finish, []);
+                            }
+
+                            for (var Id in ids) {
+                                var id = ids[Id];
+                                if (c_lecture.day === "Pazartesi") {
+                                    id += "-" + "1"
+                                } else if (c_lecture.day === "Salı") {
+                                    id += "-" + "2"
+                                } else if (c_lecture.day === "Çarşamba") {
+                                    id += "-" + "3"
+                                } else if (c_lecture.day === "Perşembe") {
+                                    id += "-" + "4"
+                                } else if (c_lecture.day === "Cuma") {
+                                    id += "-" + "5"
+                                }
+
+                                if (c_course.overlaps) {
+                                    $(id).css({'background-color': '#d9534f', 'color': 'white'});
+                                }
+
+                                $(id).html(c_course.title);
+
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

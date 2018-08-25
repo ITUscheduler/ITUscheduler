@@ -7,7 +7,7 @@ from django.views import generic
 from django.contrib import messages
 from django.conf import settings
 from api.models import MajorCode, Course, Semester
-from scheduler.models import Schedule, Notification
+from scheduler.models import Schedule, Notification, ExtendedUser
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
 from easy_pdf.views import PDFTemplateView
@@ -60,6 +60,46 @@ def is_available(courses, course):
                         else:
                             continue
     return True, ""
+
+
+class ScheduleView(generic.DetailView):
+    model = ExtendedUser
+    slug_url_kwarg = "username"
+    slug_field = "username"
+    template_name = "share.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.object
+        if self.object.my_schedule:
+            context["has_schedule"] = True
+        else:
+            context["has_schedule"] = False
+
+        class Hour:
+            def __init__(self, time, time_start, time_finish, course=None):
+                self.time = time
+                self.time_start = time_start
+                self.time_finish = time_finish
+                try:
+                    day = str(course.day).lower()
+                    self.day = {day: "#{} {}".format(course.crn, course.code)}
+                except AttributeError:
+                    self.day = {}
+        hours = [
+            Hour("8:30-9:29", 830, 929),
+            Hour("9:30-10:29", 930, 1029),
+            Hour("10:30-11:29", 1030, 1129),
+            Hour("11:30-12:29", 1130, 1229),
+            Hour("12:30-13:29", 1230, 1329),
+            Hour("13:30-14:29", 1330, 1429),
+            Hour("14:30-15:29", 1430, 1529),
+            Hour("15:30-16:29", 1530, 1629),
+            Hour("16:30-17:29", 1630, 1729),
+            Hour("17:30-18:29", 1730, 1829)
+        ]
+        context["hours"] = hours
+        return context
 
 
 class IndexView(MetadataMixin, generic.CreateView):
