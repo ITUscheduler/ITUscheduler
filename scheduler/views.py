@@ -269,8 +269,13 @@ class CoursesView(generic.ListView):
         user = self.request.user
 
         context = super().get_context_data(**kwargs)
-        semester = user.my_semester if user.is_authenticated else Semester.objects.current()
-        major_code = user.my_major_code if user.is_authenticated and user.my_major_code else MajorCode.objects.first()
+
+        if user.is_authenticated:
+            semester = user.my_semester
+            major_code = user.my_major_code
+        else:
+            semester = Semester.objects.current()
+            major_code = MajorCode.objects.first()
 
         if self.request.GET.get("semester"):
             semester = Semester.objects.get(pk=self.request.GET["semester"])
