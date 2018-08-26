@@ -266,9 +266,11 @@ class CoursesView(generic.ListView):
             return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        user = self.request.user
+
         context = super().get_context_data(**kwargs)
-        semester = self.request.user.my_semester if self.request.user.is_authenticated else Semester.objects.current()
-        major_code = self.request.user.my_major_code if self.request.user.is_authenticated and self.request.user.my_major_code else MajorCode.objects.first()
+        semester = user.my_semester if user.is_authenticated else Semester.objects.current()
+        major_code = user.my_major_code if user.is_authenticated and user.my_major_code else MajorCode.objects.first()
 
         if self.request.GET.get("semester"):
             semester = Semester.objects.get(pk=self.request.GET["semester"])
@@ -304,11 +306,11 @@ class CoursesView(generic.ListView):
         context["courses"] = courses
         context["refreshed"] = major_code.refreshed if major_code else None
 
-        if self.request.user.is_authenticated:
-            context["my_courses"] = self.request.user.courses.all().values_list("crn", flat=True)
-            self.request.user.my_semester = semester
-            self.request.user.my_major_code = major_code
-            self.request.user.save()
+        if user.is_authenticated:
+            context["my_courses"] = user.courses.all().values_list("crn", flat=True)
+            user.my_semester = semester
+            user.my_major_code = major_code
+            user.save()
 
         return context
 
