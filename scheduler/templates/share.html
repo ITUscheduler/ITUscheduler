@@ -26,6 +26,17 @@
                         </h2>
                     </div>
                     <div class="panel-body">
+                        {% if has_schedule %}
+                            <div class="row">
+                                <div class="col-md-12" style="margin-top: 10px;">
+                                    <ul class="list-group">
+                                        {% for course in object.my_schedule.courses.all %}
+                                            <li class="list-group-item">{{ course }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
                         <div style="margin-top: 10px;" class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
