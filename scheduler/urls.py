@@ -4,7 +4,7 @@ from scheduler import views
 urlpatterns = [
     path('', views.IndexView.as_view(), name="index"),
     path('schedule/<int:pk>', views.IndexView.as_view(), name="schedule"),
-    path('share/<slug:username>/', views.ScheduleView.as_view(), name="share"),
+    path('share/<str:username>/', views.ScheduleView.as_view(), name="share"),
     path('signup', views.RegistrationView.as_view(), name="signup"),
     path('courses', views.CoursesView.as_view(), name="courses"),
     path('contact/', views.contact, name="contact"),
