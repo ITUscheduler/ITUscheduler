@@ -10,6 +10,9 @@ class ExtendedUser(AbstractUser):
     my_semester = models.ForeignKey(Semester, default=Semester.objects.current().pk, on_delete=models.SET_DEFAULT)
     my_schedule = models.ForeignKey("Schedule", blank=True, null=True, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return str(self.username)
+
 
 class Schedule(models.Model):
     user = models.ForeignKey(ExtendedUser, null=True, on_delete=models.CASCADE)
