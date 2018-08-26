@@ -23,8 +23,8 @@ def refresh_courses(self):
         r = requests.get(BASE_URL + code)
         soup = BeautifulSoup(r.content, "html5lib")
         semester = Semester.objects.current()
-        crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
-        active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
+        crns = Course.objects.filter(major_code=code, semester=semester).values_list("crn", flat=True)
+        active_crns = Course.objects.active().filter(major_code=code, semester=semester).values_list("crn", flat=True)
 
         raw_table = soup.find("table", class_="dersprg")
 

@@ -283,7 +283,7 @@ class CoursesView(generic.ListView):
             major_code=major_code
         )
 
-        codes = sorted(set(course.code for course in courses))
+        codes = courses.order_by("code").values_list("code", flat=True).distinct()
         context["codes"] = codes
         if self.request.GET.get("code"):
             code = self.request.GET["code"]
@@ -305,7 +305,7 @@ class CoursesView(generic.ListView):
         context["refreshed"] = major_code.refreshed if major_code else None
 
         if self.request.user.is_authenticated:
-            context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
+            context["my_courses"] = self.request.user.courses.all().values_list("crn", flat=True)
             self.request.user.my_semester = semester
             self.request.user.my_major_code = major_code
             self.request.user.save()
