@@ -11,7 +11,7 @@ from scheduler.views import is_available
 
 class CourseListAPIView(ListAPIView):
     serializer_class = CourseSerializer
-    queryset = Course.objects.all()
+    #queryset = Course.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -41,14 +41,14 @@ class CourseListAPIView(ListAPIView):
 
 class CourseSearchAPIView(ListAPIView):
     serializer_class = CourseSerializer
-    queryset = Course.objects.all()
+    #queryset = Course.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
 
 
 class CourseDetailAPIView(APIView):
-    queryset = Course.objects.all()
+    #queryset = Course.objects.all()
     http_method_names = ["post", ]
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsAuthenticated, )
@@ -70,5 +70,5 @@ class CourseDetailAPIView(APIView):
 
 
 class MajorCodeListAPIView(ListAPIView):
-    queryset = MajorCode.objects.all()
+    #queryset = MajorCode.objects.all()
     serializer_class = MajorCodeSerializer
