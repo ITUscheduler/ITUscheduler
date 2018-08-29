@@ -270,9 +270,16 @@ class CoursesView(generic.ListView):
             return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        user = self.request.user
+
         context = super().get_context_data(**kwargs)
-        semester = self.request.user.my_semester if self.request.user.is_authenticated else Semester.objects.current()
-        major_code = self.request.user.my_major_code if self.request.user.is_authenticated and self.request.user.my_major_code else MajorCode.objects.first()
+
+        if user.is_authenticated:
+            semester = user.my_semester
+            major_code = user.my_major_code
+        else:
+            semester = Semester.objects.current()
+            major_code = MajorCode.objects.first()
 
         if self.request.GET.get("semester"):
             semester = Semester.objects.get(pk=self.request.GET["semester"])
@@ -287,7 +294,7 @@ class CoursesView(generic.ListView):
             major_code=major_code
         )
 
-        codes = sorted(set(course.code for course in courses))
+        codes = courses.order_by("code").values_list("code", flat=True).distinct()
         context["codes"] = codes
         if self.request.GET.get("code"):
             code = self.request.GET["code"]
@@ -308,11 +315,11 @@ class CoursesView(generic.ListView):
         context["courses"] = courses
         context["refreshed"] = major_code.refreshed if major_code else None
 
-        if self.request.user.is_authenticated:
-            context["my_courses"] = [course.crn for course in self.request.user.courses.all()]
-            self.request.user.my_semester = semester
-            self.request.user.my_major_code = major_code
-            self.request.user.save()
+        if user.is_authenticated:
+            context["my_courses"] = user.courses.all().values_list("crn", flat=True)
+            user.my_semester = semester
+            user.my_major_code = major_code
+            user.save()
 
         return context
 
