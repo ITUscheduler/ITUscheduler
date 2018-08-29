@@ -62,6 +62,10 @@ def is_available(courses, course):
     return True, ""
 
 
+def shutdown(request):
+    return render(request, template_name="shutdown.html", context={})
+
+
 class ScheduleView(generic.DetailView):
     model = ExtendedUser
     slug_url_kwarg = "username"
