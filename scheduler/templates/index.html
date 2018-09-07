@@ -10,7 +10,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h2 class="panel-title" style="display: inline-block">My Courses</h2>
-                        <small><a href="javascript:removeMyCourses()" style="padding-left: 10px">Remove All</a></small>
+                        <small><a href="javascript:removeMyCourses();" style="padding-left: 10px">Remove All</a></small>
                     </div>
                     <div class="panel-body">
                         {% if user.is_authenticated %}
@@ -40,7 +40,7 @@
                                     {% if notifications %}
                                         {% for notification in notifications %}
                                             <div class="alert alert-danger" id="not-{{ notification.id }}">
-                                                {{ notification.msg }} | <a href="javascript:readNotification('{{ notification.id }}')">Okay</a>
+                                                {{ notification.msg }} | <a href="javascript:readNotification('{{ notification.id }}');">Okay</a>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
@@ -115,11 +115,11 @@
                                     <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
                                         <input title="delete-schedule" class="btn btn-block btn-primary" value="Delete Schedule" onclick="deleteSchedule($('#schedule').find('option:selected').val())">
                                     </div>
-                                    <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
-                                        <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>
-                                    </div>
-                                    <div class="col-md-3 col-xs-3">
-                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
+{#                                    <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">#}
+{#                                        <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 col-xs-3">#}
+{#                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>#}
                                     </div>
                                 </div>
                             </div>
