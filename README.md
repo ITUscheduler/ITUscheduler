@@ -1,7 +1,7 @@
 # ITUscheduler
 [![LICENSE](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/language-python3-blue.svg)](#)
 
-ITU Scheduler is a Python Django Web Application that parses ITU's SIS website and allows students to create possible course schedules with up-to-date & detailed information. The project is maintained by @dorukgezici.
+ITU Scheduler is a Python Django Web Application that parses ITU's SIS website and allows students to create possible course schedules with up-to-date & detailed information. The project is maintained by [@dorukgezici](https://github.com/dorukgezici).
 
 # Installation
 - Install Python 3
