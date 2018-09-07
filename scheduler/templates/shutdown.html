@@ -1,14 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63317374-5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-63317374-5');
+    </script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-9144734939845709",
+            enable_page_level_ads: true
+        });
+    </script>
     <meta charset="UTF-8">
-    <title>ITUscheduler Kapatıldı!</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>{% block title %}ITU Scheduler{% endblock %}</title>
+    <meta property="og:title" content="ITU Scheduler">
+    <meta property="og:description" content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ituscheduler.com/">
+    <meta property="og:image" content="https://ituscheduler.com/static/icons/android-chrome-512x512.png">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:width" content="512">
+    {% include 'meta/meta.html' %}
+    {% load static %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static "icons/apple-touch-icon.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static "icons/favicon-32x32.png" %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "icons/favicon-16x16.png" %}">
+    <link rel="manifest" href="{% static "icons/manifest.json" %}">
+    <link rel="mask-icon" href="{% static "icons/safari-pinned-tab.svg" %}" color="#063d4d">
+    <link rel="shortcut icon" href="{% static "icons/favicon.ico" %}">
+    <meta name="apple-mobile-web-app-title" content="ITUscheduler">
+    <meta name="application-name" content="ITUscheduler">
+    <meta name="msapplication-config" content="{% static "icons/browserconfig.xml" %}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/font-awesome.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-social.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
 </head>
 <body>
-    <h1>ITUscheduler kapatıldı!</h1>
-    <hr>
-    <p>Sitemiz süresiz olarak kapatılmıştır.</p>
-    <hr>
-    <p>Doruk Gezici</p>
+<div class="container">
+    <div class="col-md-6 col-md-offset-3">
+        <h1>ITUscheduler kapatıldı!</h1>
+        <hr>
+        <p>Sitemiz süresiz olarak kapatılmıştır.</p>
+        <hr>
+        <p>Doruk Gezici - <a href="mailto:doruk@gezici.me">E-mail</a></p>
+    </div>
+</div>
 </body>
 </html>

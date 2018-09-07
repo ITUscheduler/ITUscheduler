@@ -2,8 +2,8 @@ from django.urls import path
 from scheduler import views
 
 urlpatterns = [
-    # path('', views.shutdown, name="shutdown")
-    path('', views.IndexView.as_view(), name="index"),
+    path('', views.shutdown, name="index"),
+    # path('', views.IndexView.as_view(), name="index"),
     path('schedule/<int:pk>', views.IndexView.as_view(), name="schedule"),
     path('share/<str:username>/', views.ScheduleView.as_view(), name="share"),
     path('signup', views.RegistrationView.as_view(), name="signup"),
