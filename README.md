@@ -1,7 +1,7 @@
 # ITUscheduler
 [![LICENSE](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/language-python3-blue.svg)](#)
 
-ITU Scheduler is a Python Django Web Application that parses ITU's SIS website and allows students to create possible course schedules with up-to-date & detailed information. The project is maintained by EESTEC LC Istanbul's IT Team.
+ITU Scheduler is a Python Django Web Application that parses ITU's SIS website and allows students to create possible course schedules with up-to-date & detailed information. The project is maintained by @dorukgezici.
 
 # Installation
 - Install Python 3
@@ -34,7 +34,6 @@ Everyone is welcome to contribute. [Contact](http://ituscheduler.com/contact) us
 - [ ] Generate & recommend possible schedules automatically
 
 # Author
-- EESTEC LC Istanbul IT Team [@eestecist](https://github.com/EESTECist)
 - Doruk Gezici [@dorukgezici](https://github.com/dorukgezici)
 - Mehmet Altuner [@mehmetaltuner](https://github.com/mehmetaltuner)
 
