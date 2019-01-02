@@ -403,6 +403,7 @@ def delete_schedule(request):
         schedule = Schedule.objects.get(id=schedule_id)
         if request.user == schedule.user:
             schedule.delete()
+            request.user.my_schedule = Schedule.objects.filter(user=request.user).first()
         else:
             raise Exception("You are not authorized to delete that schedule.")
     except Exception as error:
