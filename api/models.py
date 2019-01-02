@@ -114,7 +114,7 @@ class Course(models.Model):
     objects = CourseManager()
 
     class Meta:
-        # unique_together = (("semester", "crn"),)
+        unique_together = (("semester", "crn"),)
         ordering = ['code']
         get_latest_by = "code"
 
