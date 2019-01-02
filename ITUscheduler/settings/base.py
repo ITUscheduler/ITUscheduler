@@ -6,7 +6,7 @@ SECRET_KEY = SECRET_KEY
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com', 'ituscheduler.pvbsbweajq.eu-central-1.elasticbeanstalk.com']
 
 # Application definition
 
