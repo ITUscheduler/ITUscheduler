@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+import uuid
 
 
 class SemesterManager(models.Manager):
@@ -96,6 +97,7 @@ class CourseManager(models.Manager):
 
 
 class Course(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False)
     semester = models.ForeignKey(Semester, default=Semester.CURRENT_SEMESTER, on_delete=models.CASCADE)
     lecture_count = models.PositiveSmallIntegerField(default=1)
     major_code = models.ForeignKey(MajorCode, on_delete=models.CASCADE)
