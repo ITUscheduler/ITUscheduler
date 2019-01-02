@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+import uuid
 
 
 class SemesterManager(models.Manager):
@@ -99,7 +100,7 @@ class Course(models.Model):
     semester = models.ForeignKey(Semester, default=Semester.CURRENT_SEMESTER, on_delete=models.CASCADE)
     lecture_count = models.PositiveSmallIntegerField(default=1)
     major_code = models.ForeignKey(MajorCode, on_delete=models.CASCADE)
-    crn = models.PositiveIntegerField(unique=True, primary_key=True)
+    crn = models.PositiveIntegerField(unique=True)
     catalogue = models.URLField(null=True, blank=True)
     code = models.CharField(max_length=40)
     title = models.CharField(max_length=250)
@@ -114,6 +115,7 @@ class Course(models.Model):
     objects = CourseManager()
 
     class Meta:
+        unique_together = (("semester", "crn"),)
         ordering = ['code']
         get_latest_by = "code"
 
