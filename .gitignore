@@ -12,7 +12,7 @@ celerybeat.pid
 static/
 !scheduler/static/
 media/
-migrations/*
+migrations/
 db.sqlite3*
 secrets.py
 
