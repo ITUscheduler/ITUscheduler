@@ -1,4 +1,4 @@
-Django==2.1
+Django
 beautifulsoup4==4.6.3
 requests==2.19.1
 Pillow==5.2.0
