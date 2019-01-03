@@ -97,11 +97,11 @@ class CourseManager(models.Manager):
 
 
 class Course(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     semester = models.ForeignKey(Semester, default=Semester.CURRENT_SEMESTER, on_delete=models.CASCADE)
     lecture_count = models.PositiveSmallIntegerField(default=1)
     major_code = models.ForeignKey(MajorCode, on_delete=models.CASCADE)
-    crn = models.PositiveIntegerField(unique=True)
+    crn = models.PositiveIntegerField(unique=True, primary_key=True)
     catalogue = models.URLField(null=True, blank=True)
     code = models.CharField(max_length=40)
     title = models.CharField(max_length=250)
