@@ -101,11 +101,8 @@ def db_refresh_courses(request):
             title = elements[2].text
             instructor = elements[3].text
 
-            buildings_raw = elements[4].full_text
-            buildings = []
-            length = len(buildings_raw) // 3
-            for i in range(length):
-                buildings.append(buildings_raw[i * 3:(i + 1) * 3])
+            buildings_raw = re.search("\">(.*)<br/>", elements[4].html).group(1)
+            buildings = buildings_raw.split("<br/>")
             lecture_count = len(buildings)
 
             times_start = ""
@@ -205,6 +202,7 @@ def db_refresh_courses(request):
                 course_obj.prerequisites.add(prerequisite.id)
 
             course_obj.save()
+            print(course_obj)
             continue
 
         major_code.refreshed = timezone.now()

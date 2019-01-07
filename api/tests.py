@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from django.test import TestCase
-from requests_html import HTMLSession
+from requests_html import HTMLSession, HTML
 from .models import Course, Lecture, MajorCode, MajorRestriction, Prerequisite
-import re
+import regex as re
 
 
 class ParserTestCase(TestCase):
@@ -31,11 +31,8 @@ class ParserTestCase(TestCase):
             title = elements[2].text
             instructor = elements[3].text
 
-            buildings_raw = elements[4].full_text
-            buildings = []
-            length = len(buildings_raw) // 3
-            for i in range(length):
-                buildings.append(buildings_raw[i*3:(i+1)*3])
+            buildings_raw = re.search("\">(.*)<br/>", elements[4].html).group(1)
+            buildings = buildings_raw.split("<br/>")
             lecture_count = len(buildings)
 
             times_start = ""
@@ -110,4 +107,4 @@ class ParserTestCase(TestCase):
                 course_obj.prerequisites.add(prerequisite.id)
 
             course_obj.save()
-            print(course_obj)
+            # print(course_obj)
