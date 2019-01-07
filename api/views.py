@@ -130,6 +130,8 @@ def db_refresh_courses(request):
             if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" not in prerequisites:
                 for prerequisite in prerequisites.split(' or '):
                     prerequisite = prerequisite.split()
+                    if not prerequisite:
+                        continue
                     course = " ".join([str(prerequisite) for prerequisite in prerequisite[:2]])
                     grade = str(prerequisite[-1])
 
