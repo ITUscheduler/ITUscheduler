@@ -1,37 +1,16 @@
-import requests
-import re
-from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
-from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
-from scheduler.models import Schedule, Notification
 from django.utils import timezone
-from django.core.mail import send_mail
+from requests_html import HTMLSession, HTML
+from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
+from scheduler.models import Schedule
+import re
+
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
-
-
-# Disabled
-def notify_course_removal(course):
-    schedules = course.schedule_set.all()
-    users = list(set([schedule.user for schedule in schedules]))
-
-    for user in users:
-        notification = Notification()
-        notification.user = user
-        notification.msg = 'Course #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(course.crn, ", #".join([str(schedule.id) for schedule in schedules]))
-        notification.save()
-        recipients = [user.email, 'info@ituscheduler.com', 'dorukgezici96@gmail.com', 'altunerism@gmail.com']
-        send_mail(
-            '[ITUscheduler] | Course #{} is Removed'.format(course.crn),
-            '\tCourse #{} in your schedule #{} has been removed from ITU SIS. Please update your schedule according to the new changes.\n\nITUscheduler loves you.'.format(
-                course.crn, ", #".join([str(schedule.id) for schedule in schedules])),
-            'info@ituscheduler.com',
-            recipients,
-        )
 
 
 class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
@@ -47,205 +26,186 @@ class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_major_codes(request):
-    r = requests.get(BASE_URL)
-    soup = BeautifulSoup(r.content, "html.parser")
-    codes = [major_code.code for major_code in MajorCode.objects.all()]
-    html = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
+    session = HTMLSession()
+    html = session.get(BASE_URL).html
 
-    for option in soup.find("select").find_all("option"):
-        if option.attrs["value"] != "":
-            opt = option.get_text()[:-1:]
+    html_response = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
+    codes = [major_code.code for major_code in MajorCode.objects.all()]
+    options = html.find("select > option")[1:]
+
+    for option in options:
+        opt = option.text
+        if opt != "":
             if opt in codes:
                 codes.remove(opt)
             query = MajorCode.objects.filter(code=opt)
             if not query.exists():
                 MajorCode.objects.create(code=opt)
-                html += "<p>{} added</p>".format(opt)
+                html_response += "<p>{} added</p>".format(opt)
 
     # Check if any major_code is removed from SIS
-    if soup.find("select").find_all("option"):
+    if options:
         for code in codes:
             major_code = MajorCode.objects.get(code=code)
-            html += "<p>ATTENTION! {} is removed from SIS</p>".format(major_code)
-    return HttpResponse(html)
+            # major_code.delete()
+            html_response += "<p>ATTENTION! {} is removed from SIS</p>".format(major_code)
+    return HttpResponse(html_response)
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_courses(request):
     export_from_file = False
+    codes = []
+    htmls = {}
     # if user has uploaded a file instead
-    if len(request.FILES) > 0: 
+    if len(request.FILES) > 0:
         # keep codes and soups in two seperated arrays, with respect to each other
-        codes = []
-        soups = {}
         for exported in request.FILES.getlist("exported"):
-            soup = BeautifulSoup(exported.read(), "html5lib")
-            code = soup.find("option", selected=True)['value']
+            html = HTML(html=exported.read())
+            code = html.find("option[selected=True]").text
             if not code == "":
-                soups[code] = soup
+                htmls[code] = html
                 codes.append(code)
             export_from_file = True
-
     else:
         codes = request.POST.getlist("major_codes[]")
-    
+
     for code in codes:
         major_code = get_object_or_404(MajorCode, code=code)
-        
+
         if export_from_file:
-            soup = soups[code]
-            semester_html = soup.find("span", {"class": "ustbaslik"}).text
+            html = htmls[code]
+            semester_html = html.find("span.ustbaslik", first=True).text
             semester = ""
             for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
-                if semester_txt in semester_html:
+                if semester_html in semester_txt:
                     semester = semester_code
                     break
-
             if semester == "":
                 # Means there is something wrong with my approach to semester. Needs to be revisited 
                 print("Semester could not be found.")
             semester, _ = Semester.objects.get_or_create(name=semester)
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
         else:
-            r = requests.get(BASE_URL + code)
-            soup = BeautifulSoup(r.content, "html5lib")
+            session = HTMLSession()
+            html = session.get(BASE_URL + code).html
             semester = Semester.objects.current()
-            crns = [course.crn for course in Course.objects.filter(major_code=code, semester=semester)]
-            active_crns = [course.crn for course in Course.objects.active().filter(major_code=code, semester=semester)]
 
-        raw_table = soup.find("table", class_="dersprg")
+        table = html.find("table.dersprg", first=True)
+        courses = table.find("tr")[2::]  # First two rows are table headers
 
-        nth_course = 3
-        new_crns = []
-        while True:
-            try:
-                raw_course = raw_table.select_one("tr:nth-of-type({})".format(nth_course))
-                if raw_course is None:
-                    break
-                try:
-                    data = [row.get_text() for row in raw_course.find_all("td")]
-                    rows = raw_course.find_all("td")
+        for course in courses:
+            elements = course.find("td")
+            catalogue = elements[1].absolute_links.pop()
+            crn = elements[0].text
+            course_code = elements[1].text
+            title = elements[2].text
+            instructor = elements[3].text
 
-                    buildings_raw = rows[4].contents[0].contents
-                    buildings = []
-                    length = len(buildings_raw) // 2
-                    for i in range(length):
-                        buildings.append(buildings_raw[2 * i])
-                    lecture_count = len(buildings)
+            buildings_raw = elements[4].full_text
+            buildings = []
+            length = len(buildings_raw) // 3
+            for i in range(length):
+                buildings.append(buildings_raw[i * 3:(i + 1) * 3])
+            lecture_count = len(buildings)
 
-                    crn = int(data[0])
-                    new_crns.append(crn)
-                    times_start = ""
-                    times_finish = ""
-                    for index in range(lecture_count):
+            times_start = ""
+            times_finish = ""
+            for index in range(lecture_count):
+                time = elements[6].full_text.split()[index].split("/")
+                if "" in time or "----" in time:
+                    time = ["2500", "2500"]
+                for i in range(2):
+                    if time[i][0] == "0":
+                        time[i] = time[i][1::]
+                times_start += time[0] + ","
+                times_finish += time[1] + ","
 
-                        time = data[6][:-1:].split()[index].split("/")
+            times_start = times_start[:-1:]
+            times_finish = times_finish[:-1:]
 
-                        if "" in time or "----" in time:
-                            time = ["2500", "2500"]
-                        for i in range(2):
-                            if time[i][0] == "0":
-                                time[i] = time[i][1::]
+            days = elements[5].text.split()
+            restricted_majors = elements[11].text.split(", ")
 
-                        times_start += time[0] + ","
-                        times_finish += time[1] + ","
+            prerequisites = re.sub("veya", " or", elements[12].text)
+            prerequisites.replace("(", "")
+            prerequisites.replace(")", "")
+            prerequisites_objects = []
+            if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" not in prerequisites:
+                for prerequisite in prerequisites.split(' or '):
+                    prerequisite = prerequisite.split()
+                    course = " ".join([str(prerequisite) for prerequisite in prerequisite[:2]])
+                    grade = str(prerequisite[-1])
 
-                    times_start = times_start[:-1:]
-                    times_finish = times_finish[:-1:]
+                    prerequisites_objects.append(
+                        Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
 
-                    days = data[5].split()
-                    majors = data[11].split(", ")
+            capacity = int(elements[8].text)
+            enrolled = int(elements[9].text)
+            reservation = elements[10].text[:100]
+            class_restriction = elements[13].text[:110]
 
-                    prerequisites = re.sub("veya", " or", data[12])
-                    prerequisites.replace("(", "")
-                    prerequisites.replace(")", "")
-                    prerequisites_objects = []
+            if Course.objects.filter(crn=crn).exists():
+                course_obj = Course.objects.get(crn=crn)
+                course_obj.semester = semester
+                course_obj.lecture_count = lecture_count
+                course_obj.major_code = major_code
+                course_obj.catalogue = catalogue
+                course_obj.code = course_code
+                course_obj.title = title
+                course_obj.instructor = instructor
+                course_obj.capacity = capacity
+                course_obj.enrolled = enrolled
+                course_obj.reservation = reservation
+                course_obj.class_restriction = class_restriction
+                course_obj.active = True
 
-                    if 'Yok/None' not in prerequisites and 'Diğer Şartlar' not in prerequisites and "Özel" not in prerequisites:
-                        for prerequisite in prerequisites.split(' or '):
-                            prerequisite = prerequisite.split()
-                            course = " ".join([str(prerequisite) for prerequisite in prerequisite[:2]])
-                            grade = str(prerequisite[-1])
+                course_obj.save()
 
-                            prerequisites_objects.append(Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
+                for lecture in course_obj.lecture_set.all():
+                    lecture.delete()
+            else:
+                course_obj = Course.objects.create(
+                    semester=semester,
+                    lecture_count=lecture_count,
+                    major_code=major_code,
+                    crn=crn,
+                    catalogue=catalogue,
+                    code=course_code,
+                    title=title,
+                    instructor=instructor,
+                    capacity=capacity,
+                    enrolled=enrolled,
+                    reservation=reservation,
+                    class_restriction=class_restriction,
+                    active=True
+                )
 
-                    if crn in crns:
-                        course = Course.objects.get(crn=crn)
-                        course.semester = semester
-                        course.lecture_count = lecture_count
-                        course.major_code = major_code
-                        course.code = data[1]
-                        course.catalogue = rows[1].contents[0]["href"]
-                        course.title = data[2]
-                        course.instructor = data[3]
-                        course.capacity = int(data[8])
-                        course.enrolled = int(data[9])
-                        course.reservation = data[10][:100]
-                        course.class_restriction = data[13][:110]
-                        course.active = True
+            for i in range(lecture_count):
+                time_start = times_start.split(",")[i]
+                time_finish = times_finish.split(",")[i]
+                room = elements[7].full_text.split()[i]
 
-                        course.save()
+                Lecture.objects.create(
+                    building=buildings[i],
+                    day=days[i],
+                    time_start=time_start,
+                    time_finish=time_finish,
+                    room=room,
+                    course=course_obj
+                )
 
-                        for lecture in course.lecture_set.all():
-                            lecture.delete()
-                    else:
-                        if Course.objects.filter(crn=crn):
-                            removed_course = Course.objects.get(crn=crn)
-                            removed_course.delete()
-                        course = Course.objects.create(
-                            semester=semester,
-                            lecture_count=lecture_count,
-                            major_code=major_code,
-                            crn=crn,
-                            catalogue=rows[1].contents[0]["href"],
-                            code=data[1],
-                            title=data[2],
-                            instructor=data[3],
-                            capacity=int(data[8]),
-                            enrolled=int(data[9]),
-                            reservation=data[10][:100],
-                            class_restriction=data[13][:110],
-                        )
+            for old_major in course_obj.major_restriction.all():
+                course_obj.major_restriction.remove(old_major)
 
-                    for i in range(lecture_count):
-                        time_start = times_start.split(",")[i]
-                        time_finish = times_finish.split(",")[i]
-                        room = data[7].split()[i]
+            for major in restricted_majors:
+                major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
+                course_obj.major_restriction.add(major_restriction.major)
 
-                        Lecture.objects.create(
-                            building=buildings[i],
-                            day=days[i],
-                            time_start=time_start,
-                            time_finish=time_finish,
-                            room=room,
-                            course=course
-                        )
+            for prerequisite in prerequisites_objects:
+                course_obj.prerequisites.add(prerequisite.id)
 
-                    for old_major in course.major_restriction.all():
-                        course.major_restriction.remove(old_major)
-
-                    for major in majors:
-                        major_restriction, _ = MajorRestriction.objects.get_or_create(major=major)
-                        course.major_restriction.add(major_restriction.major)
-
-                    for prerequisite in prerequisites_objects:
-                        course.prerequisites.add(prerequisite.id)
-
-                    course.save()
-                    nth_course += 1
-                except AttributeError:
-                    nth_course += 1
-            except IndexError:
-                break
-
-        removed_crns = [crn for crn in active_crns if crn not in new_crns]
-        for removed_crn in removed_crns:
-            old_course = Course.objects.get(crn=removed_crn, semester=semester)
-            #  notify_course_removal(old_course)
-            old_course.active = False
-            old_course.save()
-            print("Course {} is removed from ITU SIS.".format(old_course))
+            course_obj.save()
+            continue
 
         major_code.refreshed = timezone.now()
         major_code.save()
