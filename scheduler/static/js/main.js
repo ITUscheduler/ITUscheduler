@@ -15,71 +15,7 @@ function getCookie(name) {
 }
 
 function listBuildings() {
-    alert("AYB\t\tAfet Yönetimi Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "BEB\t\tBilişim Enstitüsü Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "DIB\t\tYabancı Diller Yüksekokulu Binası (Maçka)\n" +
-        "--------------------------------------------------\n" +
-        "DMB\t\tDenizcilik Meslek Yüksekokulu Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "DZB\t\tDenizcilik Binası (Tuzla)\n" +
-        "--------------------------------------------------\n" +
-        "EEB\t\tElektrik-Elektronik Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "FEB\t\tFen-Edebiyat Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "GDB\t\tGemi İnşaatı ve Deniz Bilimleri Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "HVZ\t\tOlimpik Havuz (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "INB\t\tİnşaat Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "ISB\t\tİşletme Binası (Maçka)\n" +
-        "--------------------------------------------------\n" +
-        "KSB\t\tKültür ve Sanat Birliği (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "KMB\t\tKimya-Metalürji Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "KORT\t\tTenis Kortları (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "MED\t\tMerkezi Derslik Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "MEDB\t\tGölet Derslik Binası(Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "MDB\t\tMaden Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "MIAB\t\tMüzik İleri Araştırmalar Merkezi (Maçka)\n" +
-        "--------------------------------------------------\n" +
-        "MKB\t\tMakina Binası (Gümüşsuyu)\n" +
-        "--------------------------------------------------\n" +
-        "MMB\t\tMimarlık Binası (Taşkışla)\n" +
-        "--------------------------------------------------\n" +
-        "MOB\t\tMotorlar Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "PYB\t\tProje Yönetim Merkezi (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "RSLN-M\t\tRuhi Sarıalp Seminer Salonu-Beden Eğitimi Bölümü(Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "SLN-M\t\tSpor Salonu-Beden Eğitimi Bölümü(Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "SLN-G\t\tSpor Salonu (Gümüşsuyu)\n" +
-        "--------------------------------------------------\n" +
-        "SDKM\t\tSüleyman Demirel Kültür Merkezi Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "SMB\t\tSpor Merkezi Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "STD\t\tİTÜ Olimpik Stadyumu  (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "SYM\t\tSağlıklı Yaşam Merkezi (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "UUB\t\tUçak ve Uzay Bilimleri Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "UZEM\t\tUzaktan Eğitim Merkezi Binası (Ayazağa)\n" +
-        "--------------------------------------------------\n" +
-        "TMB\t\tKonservatuvar Binası (Maçka)\n" +
-        "--------------------------------------------------\n" +
-        "YDB\t\tYapı Deprem Binası (Ayazağa)");
+    alert("DEP\t\t\tDeprem Mühendisliği ve Afet Yönetimi Enstitü Binası (Ayazağa)\n\nBEB\t\t\tBilişim Enstitüsü Binası (Ayazağa)\n\nDIB\t\t\tYabancı Diller Yüksekokulu Binası (Maçka)\n\nDMB\t\t\tDenizcilik Meslek Yüksekokulu Binası (Ayazağa)\n\nDZB\t\t\tDenizcilik Binası (Tuzla)\n\nEEB\t\t\tElektrik-Elektronik Binası (Ayazağa)\n\nFEB\t\t\tFen-Edebiyat Binası (Ayazağa)\n\nGDB\t\t\tGemi İnşaatı ve Deniz Bilimleri Binası (Ayazağa)\n\nHVZ\t\t\tOlimpik Havuz (Ayazağa)\n\nINB\t\t\tİnşaat Binası (Ayazağa)\n\nISB\t\t\tİşletme Binası (Maçka)\n\nKSB\t\t\tKültür ve Sanat Birliği (Ayazağa)\n\nKMB\t\t\tKimya-Metalürji Binası (Ayazağa)\n\nKORT\t\t\tTenis Kortları (Ayazağa)\n\nMED\t\t\tMerkezi Derslik Binası (Ayazağa)\n\nMEDB\t\t\tGölet Derslik Binası(Ayazağa)\n\nMDB\t\t\tMaden Binası (Ayazağa)\n\nMIAB\t\t\tMüzik İleri Araştırmalar Merkezi (Maçka)\n\nMKB\t\t\tMakina Binası (Gümüşsuyu)\n\nMMB\t\t\tMimarlık Binası (Taşkışla)\n\nMOB\t\t\tMotorlar Binası (Ayazağa)\n\nPYB\t\t\tProje Yönetim Merkezi (Ayazağa)\n\nRSLN-M\t\t\tRuhi Sarıalp Seminer Salonu-Beden Eğitimi Bölümü(Ayazağa)\n\nSLN-M\t\t\tSpor Salonu-Beden Eğitimi Bölümü(Ayazağa)\n\nSLN-G\t\t\tSpor Salonu (Gümüşsuyu)\n\nSDKM\t\t\tSüleyman Demirel Kültür Merkezi Binası (Ayazağa)\n\nSMB\t\t\tSpor Merkezi Binası (Ayazağa)\n\nSTD\t\t\tİTÜ Olimpik Stadyumu  (Ayazağa)\n\nSYM\t\t\tSağlıklı Yaşam Merkezi (Ayazağa)\n\nUUB\t\t\tUçak ve Uzay Bilimleri Binası (Ayazağa)\n\nUZEM\t\t\tUzaktan Eğitim Merkezi Binası (Ayazağa)\n\nTMB\t\t\tKonservatuvar Binası (Maçka)\n\nYDB\t\t\tYapı Deprem Binası (Ayazağa)\n\nMOBGAM\t\tDr. Orhan Öcalgiray Moleküler Biyoloji-Biyoteknoloji & Genetik Araştırmalar Merkezi\n\nENB\t\t\tEnerji Binası (Ayazağa)\n\nHLB\t\t\tHidrolik Laboratuvarı Binası (Ayazağa)");
 }
 
 // Wep-App Standalone URL Fixer
