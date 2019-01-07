@@ -92,6 +92,8 @@ def db_refresh_courses(request):
 
         table = html.find("table.dersprg", first=True)
         courses = table.find("tr")[2::]  # First two rows are table headers
+        qs = Course.objects.filter(semester=semester, major_code=major_code)
+        qs.update(active=False)
 
         for course in courses:
             elements = course.find("td")

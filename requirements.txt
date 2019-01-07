@@ -48,7 +48,7 @@ pytz==2018.7
 redis==3.0.1
 regex==2018.11.22
 requests==2.21.0
-requests-html==0.9.0
+requests-html
 requests-oauthlib==1.0.0
 six==1.12.0
 social-auth-app-django==3.1.0
