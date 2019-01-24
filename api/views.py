@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from requests_html import HTMLSession, HTML
 from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
 from scheduler.models import Schedule
@@ -52,6 +53,7 @@ def db_refresh_major_codes(request):
     return HttpResponse(html_response)
 
 
+@csrf_exempt
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_courses(request):
     export_from_file = False
