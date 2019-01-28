@@ -18,6 +18,7 @@ urlpatterns = [
     path('schedule.png', views.ScheduleExportView.as_view(), name="schedule_png"),
     path('schedule.pdf', views.ScheduleExportView.as_view(), name="schedule_pdf"),
     path('privacy-policy', views.privacy_policy, name="privacy_policy"),
+    path('sis/', views.sis, name="sis")
 
     #path('schedule/removeCourse/<int:pk>/<int:pk>', views.remove_course, name='remove_course'),
     #path('schedule/replaceCourse', views.replace_course, name='replace_course'),

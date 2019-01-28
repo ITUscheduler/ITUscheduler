@@ -115,12 +115,12 @@
                                     <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
                                         <button class="btn btn-block btn-primary" onclick="deleteSchedule($('#schedule').find('option:selected').val())">Delete Schedule</button>
                                     </div>
-                                    {#                                    <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">#}
-                                    {#                                        <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>#}
-                                    {#                                    </div>#}
-                                    {#                                    <div class="col-md-3 col-xs-3">#}
-                                    {#                                        <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>#}
-                                    {#                                    </div>#}
+                                    {#                                                                        <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">#}
+                                    {#                                                                            <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>#}
+                                    {#                                                                        </div>#}
+                                    {#                                                                        <div class="col-md-3 col-xs-3">#}
+                                    {#                                                                            <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>#}
+                                    {#                                                                        </div>#}
                                 </div>
                             </div>
                         {% endif %}
@@ -155,10 +155,10 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-md-4 col-xs-4">
-                                    <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">Export as PNG</a>
+                                    <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">PNG</a>
                                 </div>
                                 <div class="col-md-4 col-xs-4">
-                                    <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">Export as PDF</a>
+                                    <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">PDF</a>
                                 </div>
                                 {% if request.user.is_authenticated %}
                                     <div class="col-md-4 col-xs-4">

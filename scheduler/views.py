@@ -66,6 +66,10 @@ def shutdown(request):
     return render(request, template_name="shutdown.html", context={})
 
 
+def sis(request):
+    return render(request, template_name="sis.html", context={})
+
+
 class ScheduleView(generic.DetailView):
     model = ExtendedUser
     slug_url_kwarg = "username"
