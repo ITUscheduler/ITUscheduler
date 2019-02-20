@@ -342,7 +342,7 @@ def contact(request):
             message = form.cleaned_data['message']
             reply_to = [form.cleaned_data['email']]
             sender = "info@ituscheduler.com"
-            recipients = ['info@ituscheduler.com', 'doruk@gezici.me', 'altunerism@gmail.com']
+            recipients = ['info@ituscheduler.com']
             cc_myself = True  # form.cleaned_data['cc_myself']
             if cc_myself:
                 recipients.extend(reply_to)
