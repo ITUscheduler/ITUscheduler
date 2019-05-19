@@ -1,0 +1,11 @@
+# MacOS
+.DS_Store
+.idea/
+*.icloud
+.git/
+
+# Python
+__pycache__/
+venv/
+*.pid
+*.log
