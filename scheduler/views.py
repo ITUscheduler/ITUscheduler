@@ -13,38 +13,6 @@ from meta.views import MetadataMixin
 from easy_pdf.views import PDFTemplateView
 from easy_pdf.rendering import render_to_pdf
 from pdf2image import convert_from_bytes
-import numpy
-from anytree import Node, RenderTree
-
-
-# ---------------------- DENEMELER - SAÇMALAMALAR ----------------------
-class Branch:
-    matrix = numpy.full((10, 5), True)
-    courses = []
-
-    def extend_branch(self, course):
-        # Check availability
-        self.courses.append(course)
-
-
-def schedule_generate(request):
-    context = {}
-    ex = Course.objects.filter(major_code_id="MAT")
-    indexes = [0, 6, 20, 26, 38, 47, 55, 68, 73]
-    courses = []
-    for index in indexes:
-        courses.append(ex[index])
-    context["courses"] = courses
-
-    main_node = Node(str(courses[0].crn), object=courses[0])
-
-    tree_str = ""
-    for pre, fill, node in RenderTree(main_node):
-        tree_str += pre + node.name
-    context["tree"] = tree_str
-
-    return render(request, "schedule_generator.html", context)
-# ---------------------- DENEMELER - SAÇMALAMALAR ----------------------
 
 
 def is_available(courses, course):

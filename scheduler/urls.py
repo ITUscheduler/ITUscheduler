@@ -14,7 +14,6 @@ urlpatterns = [
     path('schedule/select', views.select_schedule, name="select_schedule"),
     path('schedule/delete', views.delete_schedule, name="delete_schedule"),
     path('schedule', views.schedule_export, name="schedule_export"),
-    path('schedule/generator', views.schedule_generate, name="schedule_generator"),
     path('schedule.png', views.ScheduleExportView.as_view(), name="schedule_png"),
     path('schedule.pdf', views.ScheduleExportView.as_view(), name="schedule_pdf"),
     path('privacy-policy', views.privacy_policy, name="privacy_policy"),
