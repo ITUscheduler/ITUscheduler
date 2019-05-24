@@ -1,5 +1,6 @@
 import os
 from .secrets import SECRET_KEY
+import requests
 
 SECRET_KEY = SECRET_KEY
 
@@ -7,6 +8,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com', '.elasticbeanstalk.com']
+
+
+try:
+    EC2_PRIVATE_IP = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=0.01).text
+    ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
+except requests.exceptions.RequestException:
+    pass
+
 
 # Application definition
 

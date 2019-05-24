@@ -11,4 +11,5 @@ pdf2image
 django-celery-results
 django-celery-beat
 requests-html
+requests
 psycopg2-binary
