@@ -1,10 +1,11 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 from .secrets import *
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 DATABASES = {
     'default': {

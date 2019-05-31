@@ -15,8 +15,8 @@ class ParserTestCase(TestCase):
             if code.text != "":
                 MajorCode.objects.create(code=code.text)
 
-    def get_isl_22414(self):
-        major_code = "MAK"
+    def get_blg_courses(self):
+        major_code = "ATA"
         major_code_obj = get_object_or_404(MajorCode, code=major_code)
         session = HTMLSession()
         r = session.get(self.BASE_URL + major_code)
@@ -107,4 +107,4 @@ class ParserTestCase(TestCase):
                 course_obj.prerequisites.add(prerequisite.id)
 
             course_obj.save()
-            # print(course_obj)
+            print(course_obj)
