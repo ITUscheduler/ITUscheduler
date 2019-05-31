@@ -20,6 +20,8 @@ class ParserTestCase(TestCase):
         major_code_obj = get_object_or_404(MajorCode, code=major_code)
         session = HTMLSession()
         r = session.get(self.BASE_URL + major_code)
+        r.html: HTML
+        r.html.render()
         table = r.html.find("table.dersprg", first=True)
         courses = table.find("tr")[2::]
 

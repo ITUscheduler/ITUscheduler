@@ -89,7 +89,7 @@ def db_refresh_courses(request):
             semester, _ = Semester.objects.get_or_create(name=semester)
         else:
             session = HTMLSession()
-            html = session.get(BASE_URL + code).html
+            html = session.get(BASE_URL + code).html.render()
             semester = Semester.objects.current()
 
         table = html.find("table.dersprg", first=True)
