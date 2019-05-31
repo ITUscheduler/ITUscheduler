@@ -94,6 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "scheduler.ExtendedUser"
+SOCIAL_AUTH_USER_MODEL = "scheduler.ExtendedUser"
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',

@@ -4,6 +4,8 @@ DEBUG = True
 
 from .secrets import *
 
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
