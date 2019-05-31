@@ -11,7 +11,8 @@ pdf2image
 django-celery-results
 django-celery-beat
 requests-html
-html5lib
 requests
+beautifulsoup4
+html5lib
 psycopg2-binary
 regex

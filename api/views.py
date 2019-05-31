@@ -5,10 +5,11 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from requests_html import HTMLSession, HTML
+from requests_html import HTMLSession, HTML, AsyncHTMLSession
 from api.models import MajorCode, Course, Lecture, Prerequisite, MajorRestriction, Semester
 from scheduler.models import Schedule
 import re
+from bs4 import BeautifulSoup
 
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
@@ -88,8 +89,9 @@ def db_refresh_courses(request):
                 print("Semester could not be found.")
             semester, _ = Semester.objects.get_or_create(name=semester)
         else:
-            session = HTMLSession()
-            html = session.get(BASE_URL + code).html.render()
+            r = HTMLSession().get(BASE_URL + code)
+            soup = BeautifulSoup(r.content, "html5lib")
+            html = HTML(html=str(soup))
             semester = Semester.objects.current()
 
         table = html.find("table.dersprg", first=True)

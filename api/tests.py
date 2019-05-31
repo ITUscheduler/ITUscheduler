@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.shortcuts import get_object_or_404
 from django.test import TestCase
 from requests_html import HTMLSession, HTML
@@ -18,11 +19,10 @@ class ParserTestCase(TestCase):
     def get_blg_courses(self):
         major_code = "ATA"
         major_code_obj = get_object_or_404(MajorCode, code=major_code)
-        session = HTMLSession()
-        r = session.get(self.BASE_URL + major_code)
-        r.html: HTML
-        r.html.render()
-        table = r.html.find("table.dersprg", first=True)
+        r = HTMLSession().get(self.BASE_URL + major_code)
+        soup = BeautifulSoup(r.content, "html5lib")
+        html = HTML(html=str(soup))
+        table = html.find("table.dersprg", first=True)
         courses = table.find("tr")[2::]
 
         for course in courses:
