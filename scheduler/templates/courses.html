@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <form id="form-major">
-                            <select class="form-control" name="major" onchange="redirectQuery()">
+                            <select class="form-control" name="major" onchange="redirectQuery(true)">
                                 {% for option in major_codes %}
                                     <option {% if option == major %}selected {% endif %}value="{{ option }}">{{ option }}</option>
                                 {% endfor %}
@@ -144,12 +144,14 @@
             );
         }
 
-        function redirectQuery() {
+        function redirectQuery(isMajorChanged) {
             var url = new URL("{% url "courses" %}", location.origin);
             var major = document.getElementById("form-major").major;
             url.searchParams.append("major", major.options[major.selectedIndex].value);
-            var code = document.getElementById("form-code").code;
-            url.searchParams.append("code", code.options[code.selectedIndex].value);
+            if (typeof isMajorChanged === "undefined") {
+                var code = document.getElementById("form-code").code;
+                url.searchParams.append("code", code.options[code.selectedIndex].value);
+            }
             var day = document.getElementById("form-day").day;
             url.searchParams.append("day", day.options[day.selectedIndex].value);
             var semester = document.getElementById("form-semester").semester;
