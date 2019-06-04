@@ -34,6 +34,10 @@ def ads(request):
     return HttpResponse("google.com, pub-9144734939845709, DIRECT, f08c47fec0942fa0")
 
 
+def robots(request):
+    return HttpResponse("User-agent: *\nDisallow: /admin/")
+
+
 def shutdown(request):
     return render(request, template_name="shutdown.html", context={})
 
