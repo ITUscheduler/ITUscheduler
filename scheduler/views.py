@@ -2,17 +2,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.views import generic
 from django.contrib import messages
-from django.conf import settings
 from api.models import MajorCode, Course, Semester
 from scheduler.models import Schedule, Notification, ExtendedUser
 from scheduler.forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
-from easy_pdf.views import PDFTemplateView
-from easy_pdf.rendering import render_to_pdf
-from pdf2image import convert_from_bytes
 
 
 def is_available(courses, course):
@@ -190,53 +186,6 @@ class IndexView(MetadataMixin, generic.CreateView):
             context["notifications"] = user.notification_set.all().filter(read=False)
 
         return context
-
-
-@login_required
-def schedule_export(request):
-    if request.method == "POST":
-        request.session["table_html"] = request.POST["table_html"]
-        request.session["pdf_or_png"] = request.POST["pdf_or_png"]
-        pdf_or_png = request.POST["pdf_or_png"]
-        if pdf_or_png == "pdf":
-            return HttpResponseRedirect("/schedule.pdf")
-        elif pdf_or_png == "png":
-            return HttpResponseRedirect("/schedule.png")
-        else:
-            return HttpResponseRedirect("/")
-    else:
-        return HttpResponseRedirect("/")
-
-
-class ScheduleExportView(PDFTemplateView):
-    template_name = 'schedule.html'
-    base_url = 'http://' + settings.STATIC_ROOT
-    download_filename = 'ITUscheduler.pdf'
-    pdf_or_png = "pdf"
-
-    def get_context_data(self, **kwargs):
-        context = super(ScheduleExportView, self).get_context_data(
-            pagesize='A4 landscape',
-            title='ITUscheduler',
-            **kwargs
-        )
-        context["schedule_html"] = self.request.session.get("table_html")
-        self.pdf_or_png = self.request.session.get("pdf_or_png")
-        return context
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        if self.pdf_or_png == "pdf":
-            return self.render_to_response(context)
-        elif self.pdf_or_png == "png":
-            pdf = render_to_pdf("schedule.html", context=context, request=request, **kwargs)
-            img = convert_from_bytes(pdf)[0]
-            response = HttpResponse(content_type='image/png')
-            response['Content-Disposition'] = 'attachment; filename=ITUscheduler'
-            img.save(response, "PNG")
-            return response
-        else:
-            return HttpResponseRedirect("/")
 
 
 class CoursesView(generic.ListView):

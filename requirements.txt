@@ -1,13 +1,11 @@
 Django
+Pillow
 djangorestframework
 django-bootstrap-form
 django-gravatar2
 social-auth-app-django
 django-meta
 django-font-awesome
-xhtml2pdf
-django-easy-pdf
-pdf2image
 django-celery-results
 django-celery-beat
 requests-html

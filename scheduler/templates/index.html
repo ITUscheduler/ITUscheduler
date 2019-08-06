@@ -156,14 +156,8 @@
                     {% if user.is_authenticated %}
                         <div class="panel-footer">
                             <div class="row">
-                                <div class="col-md-4 col-xs-4">
-                                    <a href="javascript:getTableHTML(false);" class="btn btn-block btn-primary">PNG</a>
-                                </div>
-                                <div class="col-md-4 col-xs-4">
-                                    <a href="javascript:getTableHTML(true);" class="btn btn-block btn-primary">PDF</a>
-                                </div>
                                 {% if request.user.is_authenticated %}
-                                    <div class="col-md-4 col-xs-4">
+                                    <div class="col-xs-4 col-xs-offset-8">
                                         <a href="{% url "share" request.user.username %}" class="btn btn-block btn-primary">Share!</a>
                                     </div>
                                 {% endif %}
@@ -212,20 +206,6 @@
                 });
             {% endif %}
         });
-
-        function getTableHTML(isPDF) {
-            var tableHTML = $(".table-responsive:first").html();
-            $.post("{% url "schedule_export" %}",
-                {
-                    "csrfmiddlewaretoken": getCookie('csrftoken'),
-                    "table_html": tableHTML,
-                    "pdf_or_png": isPDF ? "pdf" : "png"
-                },
-                function() {
-                    location.href = isPDF ? "{% url "schedule_pdf" %}" : "{% url "schedule_png" %}";
-                }
-            );
-        }
 
         function idGenerator(start, finish, Ids) {
             var ids = Ids;

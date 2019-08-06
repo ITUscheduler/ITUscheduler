@@ -17,3 +17,6 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+MIDDLEWARE.insert(0, 'django.middleware.cache.UpdateCacheMiddleware')
+MIDDLEWARE.append('django.middleware.cache.FetchFromCacheMiddleware')
