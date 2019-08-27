@@ -1,11 +1,7 @@
 from .base import *
-
-DEBUG = False
-
 from .secrets import *
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+DEBUG = False
 
 DATABASES = {
     'default': {
@@ -17,3 +13,6 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
