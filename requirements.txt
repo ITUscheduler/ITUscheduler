@@ -14,4 +14,5 @@ beautifulsoup4
 html5lib
 psycopg2-binary
 regex
-celery[redis]
+celery[sqs]
+celery-progress

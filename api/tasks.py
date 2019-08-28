@@ -5,6 +5,7 @@ from celery import shared_task
 from django.shortcuts import get_object_or_404
 from api.models import Semester, MajorCode, Course, Prerequisite, MajorRestriction, Lecture
 from requests_html import HTMLSession, HTML
+from celery_progress.backend import ProgressRecorder
 import re
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
@@ -12,29 +13,14 @@ BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?f
 
 @shared_task(bind=True)
 def refresh_courses(self, major_codes):
-    export_from_file = False
-    htmls = {}
-
+    progress_recorder = ProgressRecorder(self)
+    major_codes_finished = []
     for code in major_codes:
         major_code = get_object_or_404(MajorCode, code=code)
-
-        if export_from_file:
-            html = htmls[code]
-            semester_html = html.find("span.ustbaslik", first=True).text
-            semester = ""
-            for semester_code, semester_txt in Semester.SEMESTER_CHOICES_TURKISH:
-                if semester_html in semester_txt:
-                    semester = semester_code
-                    break
-            if semester == "":
-                # Means there is something wrong with my approach to semester. Needs to be revisited
-                print("Semester could not be found.")
-            semester, _ = Semester.objects.get_or_create(name=semester)
-        else:
-            r = HTMLSession().get(BASE_URL + code)
-            soup = BeautifulSoup(r.content, "html5lib")
-            html = HTML(html=str(soup))
-            semester = Semester.objects.current()
+        r = HTMLSession().get(BASE_URL + code)
+        soup = BeautifulSoup(r.content, "html5lib")
+        html = HTML(html=str(soup))
+        semester = Semester.objects.current()
 
         table = html.find("table.dersprg", first=True)
         courses = table.find("tr")[2::]  # First two rows are table headers
@@ -157,3 +143,5 @@ def refresh_courses(self, major_codes):
 
         major_code.refreshed = timezone.now()
         major_code.save()
+        major_codes_finished.append(major_code.code)
+        progress_recorder.set_progress(len(major_codes_finished), len(major_codes))

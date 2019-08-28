@@ -31,6 +31,7 @@ urlpatterns = [
     path('rest-api/', include('api.rest_api.urls', namespace='course_api')),
     path('schedules-rest-api/', include('scheduler.rest_api.urls', namespace='rest_api_scheduler')),
     path('info/', include('blog.urls', namespace='info')),
+    path('celery-progress/', include('celery_progress.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

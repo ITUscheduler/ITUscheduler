@@ -7,24 +7,30 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1 center">
                 <h2>Select Major Codes to Refresh</h2><br>
+                <button id="selectAll" class="btn btn-primary">Select All</button>
+                <hr>
                 <form action="{% url "db_refresh_courses" %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                    <select multiple id="courses"  name="major_codes[]" class="form-control">
+                    {% csrf_token %}
+                    <select multiple id="courses" name="major_codes[]" class="form-control">
                         {% for major_code in object_list %}
                             <option value="{{ major_code }}">{{ major_code }}</option>
                         {% endfor %}
                     </select><br>
-                    Or upload a file
+                    <p>Or upload a file</p>
                     <input type="file" name="exported" multiple>
                     <input type="submit" class="btn btn-primary">
                 </form><br>
             </div>
         </div>
     </div>
-	<script>
-		$(document).ready(function() {
-			var select = document.getElementById('courses');
+    <script>
+        $(document).ready(function() {
+            var select = document.getElementById('courses');
             select.size = select.length / 5;
-		});
-	</script>
+        });
+
+        $("#selectAll").click(function() {
+            $("#courses option").prop('selected', true);
+        });
+    </script>
 {% endblock %}

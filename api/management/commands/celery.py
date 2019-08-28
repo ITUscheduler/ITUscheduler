@@ -8,4 +8,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ITUscheduler.settings.local')
-        subprocess.call(["celery", "-A", "ITUscheduler", "beat", "-l", "info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"])
+        subprocess.call(["celery", "-A", "ITUscheduler", "worker", "-B", "-l", "info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"])

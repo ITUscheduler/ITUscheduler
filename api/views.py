@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
-from requests_html import HTMLSession
+from requests_html import HTMLSession, HTML
 from api.models import MajorCode, Course, Prerequisite, MajorRestriction
 from scheduler.models import Schedule
 from celery.result import AsyncResult
@@ -28,7 +28,7 @@ class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
 @user_passes_test(lambda u: u.is_superuser)
 def db_refresh_major_codes(request):
     session = HTMLSession()
-    html = session.get(BASE_URL).html
+    html: HTML = session.get(BASE_URL).html
 
     html_response = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
     codes = [major_code.code for major_code in MajorCode.objects.all()]
