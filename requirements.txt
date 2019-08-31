@@ -6,13 +6,13 @@ django-gravatar2
 social-auth-app-django
 django-meta
 django-font-awesome
-django-celery-results
+celery[sqs]
 django-celery-beat
+django-celery-results
+celery-progress
 requests-html
 requests
 beautifulsoup4
 html5lib
 psycopg2-binary
 regex
-celery[sqs]
-celery-progress

@@ -1,5 +1,5 @@
 import os
-from .secrets import SECRET_KEY, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from .secrets import SECRET_KEY, BROKER_URL
 import requests
 
 SECRET_KEY = SECRET_KEY
@@ -133,9 +133,8 @@ META_SITE_PROTOCOL = 'https'
 META_USE_SITES = True
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-# CELERY_BROKER_URL = f'sqs://{AWS_ACCESS_KEY_ID}:{AWS_SECRET_ACCESS_KEY}'
-# CELERY_BROKER_TRANSPORT_OPTIONS = {'region': 'eu-central-1'}
+CELERY_BROKER_URL = BROKER_URL
+CELERY_BROKER_TRANSPORT_OPTIONS = {'region': 'eu-central-1'}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
