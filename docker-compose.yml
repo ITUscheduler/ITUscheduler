@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 x-env-variables:
   - &POSTGRES_USER ituscheduler
@@ -25,12 +25,12 @@ volumes:
 services:
   postgres:
     image: postgres
-  volumes:
-    - postgres:/var/lib/postgresql/data
-  environment:
-    POSTGRES_USER: *POSTGRES_USER
-    POSTGRES_PASSWORD: *POSTGRES_PASSWORD
-    POSTGRES_DB: *POSTGRES_DATABASE
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: *POSTGRES_USER
+      POSTGRES_PASSWORD: *POSTGRES_PASSWORD
+      POSTGRES_DB: *POSTGRES_DATABASE
 
   web:
     <<: *backend-common
