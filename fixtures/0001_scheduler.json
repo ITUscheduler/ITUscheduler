@@ -1,0 +1,24 @@
+[
+  {
+    "model": "scheduler.extendeduser",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$g5dbXdNqXZt0$v/mHMSySJ00oktBor8dPD+IK7PWaFteRFe8DSzGi8Vs=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "dorukgezici",
+      "first_name": "",
+      "last_name": "",
+      "email": "doruk@gezici.me",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2019-11-16T14:45:33.607Z",
+      "my_major_code": null,
+      "my_semester": "F19",
+      "my_schedule": null,
+      "groups": [],
+      "user_permissions": [],
+      "courses": []
+    }
+  }
+]

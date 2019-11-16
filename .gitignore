@@ -1,7 +1,8 @@
-# MacOS
+# OS & IDE
 .DS_Store
-.idea/
 *.icloud
+/.idea/
+/.env
 
 # Python
 __pycache__/
@@ -10,11 +11,10 @@ venv/
 *.log
 
 # Django
-static/
-!scheduler/static/
-media/
+/static/
+/media/
 migrations/
-db.sqlite3*
+*.sqlite3
 secrets.py
 
 # Elastic Beanstalk Files

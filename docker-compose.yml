@@ -1,0 +1,49 @@
+version: '3'
+
+x-env-variables:
+  - &POSTGRES_USER ituscheduler
+  - &POSTGRES_PASSWORD ituscheduler
+  - &POSTGRES_DATABASE ituscheduler
+
+x-backend-common: &backend-common
+  image: 048826950968.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler
+  volumes:
+    - ./ituscheduler:/ituscheduler/ituscheduler
+  env_file:
+    - ./.env
+  environment: &backend-common-environment
+    ITUSCHEDULER_POSTGRES_HOST: postgres
+    ITUSCHEDULER_POSTGRES_PORT: 5432
+    ITUSCHEDULER_POSTGRES_USER: *POSTGRES_USER
+    ITUSCHEDULER_POSTGRES_PASSWORD: *POSTGRES_PASSWORD
+    ITUSCHEDULER_POSTGRES_DATABASE: *POSTGRES_DATABASE
+  tty: true
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    image: postgres
+  volumes:
+    - postgres:/var/lib/postgresql/data
+  ports:
+    - 127.0.0.1:5432:5432
+
+  web:
+    <<: *backend-common
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+      <<: *backend-common-environment
+      CONTAINER_KIND: web
+    restart: unless-stopped
+
+  celery:
+    <<: *backend-common
+    environment:
+      <<: *backend-common-environment
+      CONTAINER_KIND: celery
+      restart: unless-stopped
