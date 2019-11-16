@@ -17,3 +17,4 @@ html5lib
 psycopg2-binary
 regex
 gunicorn
+whitenoise

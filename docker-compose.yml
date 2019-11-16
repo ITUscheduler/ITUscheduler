@@ -48,4 +48,3 @@ services:
     environment:
       <<: *backend-common-environment
       CONTAINER_KIND: celery
-    restart: unless-stopped
