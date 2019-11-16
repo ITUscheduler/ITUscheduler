@@ -126,6 +126,9 @@ LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
 SITE_ID = 1
+MIGRATION_MODULES = {
+    'sites': 'ituscheduler.migrations',
+}
 
 META_SITE_PROTOCOL = 'https'
 META_USE_SITES = True

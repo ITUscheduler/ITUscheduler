@@ -15,7 +15,11 @@ case "$CONTAINER_KIND" in
         fi
     ;;
     celery)
-        exec python manage.py celery
+        if [[ "$ITUSCHEDULER_STAGE" == "dev" ]]; then
+            exec python manage.py celery
+        else
+            exec python manage.py celery-prod
+        fi
     ;;
     *)
         echo >&2 "Invalid CONTAINER_KIND: $CONTAINER_KIND."

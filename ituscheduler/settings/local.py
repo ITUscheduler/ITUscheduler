@@ -11,12 +11,5 @@ DATABASES = {
         'USER': os.environ.get('ITUSCHEDULER_POSTGRES_USER', 'ituscheduler'),
         'PASSWORD': os.environ.get('ITUSCHEDULER_POSTGRES_PASSWORD', 'ituscheduler'),
         'NAME': os.environ.get('ITUSCHEDULER_POSTGRES_DATABASE', 'ituscheduler'),
-    }, 'rds': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': POSTGRES_NAME,
-        'USER': POSTGRES_USER,
-        'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': POSTGRES_HOST,
-        'PORT': '5432',
     }
 }

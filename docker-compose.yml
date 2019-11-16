@@ -27,8 +27,10 @@ services:
     image: postgres
   volumes:
     - postgres:/var/lib/postgresql/data
-  ports:
-    - 127.0.0.1:5432:5432
+  environment:
+    POSTGRES_USER: *POSTGRES_USER
+    POSTGRES_PASSWORD: *POSTGRES_PASSWORD
+    POSTGRES_DB: *POSTGRES_DATABASE
 
   web:
     <<: *backend-common
@@ -46,4 +48,4 @@ services:
     environment:
       <<: *backend-common-environment
       CONTAINER_KIND: celery
-      restart: unless-stopped
+    restart: unless-stopped
