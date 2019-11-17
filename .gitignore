@@ -3,6 +3,7 @@
 *.icloud
 /.idea/
 /.env
+/.envrc
 
 # Python
 __pycache__/

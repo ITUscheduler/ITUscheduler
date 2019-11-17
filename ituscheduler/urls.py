@@ -32,6 +32,10 @@ urlpatterns = [
     path('schedules-rest-api/', include('ituscheduler.apps.scheduler.rest_api.urls', namespace='rest_api_scheduler')),
     path('info/', include('ituscheduler.apps.blog.urls', namespace='info')),
     path('celery-progress/', include('celery_progress.urls'))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

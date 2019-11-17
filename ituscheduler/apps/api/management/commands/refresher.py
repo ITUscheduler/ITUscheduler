@@ -1,7 +1,6 @@
 import threading
 import requests
 from django.core.management.base import BaseCommand
-from ituscheduler.settings.secrets import SUPERADMIN_USERNAME, SUPERADMIN_PASSWORD
 
 
 LOGIN_URL = "https://ituscheduler.com/accounts/login/"
@@ -9,15 +8,15 @@ API_URL = "https://ituscheduler.com/api/db/refresh/courses"
 
 
 class ITUschedulerSession:
-    def __init__(self):
+    def __init__(self, username, password):
         self.session = requests.session()
         self.session.get(LOGIN_URL)
         token = self.session.cookies["csrftoken"]
         self.session.post(
             LOGIN_URL,
             data={
-                "username": SUPERADMIN_USERNAME,
-                "password": SUPERADMIN_PASSWORD,
+                "username": username,
+                "password": password,
                 "csrfmiddlewaretoken": token
             },
             headers={"Referer": LOGIN_URL}
@@ -44,7 +43,9 @@ class Command(BaseCommand):
     help = "Refresh ITUscheduler's database from SIS for all major codes."
 
     def handle(self, *args, **options):
-        session = ITUschedulerSession().session
+        username = input("Superuser username: ")
+        password = input("{}'s password: ".format(username))
+        session = ITUschedulerSession(username, password).session
         major_codes = ['AKM', 'ALM', 'ATA', 'BEB', 'BED', 'BEN', 'BIL', 'BIO', 'BLG', 'BLS', 'BUS', 'CAB', 'CEV', 'CHE', 'CHZ', 'CIE', 'CIN', 'CMP', 'COM', 'DAN', 'DEN', 'DFH', 'DGH', 'DNK', 'DUI', 'EAS', 'ECN', 'ECO', 'EHA', 'EHB', 'EHN', 'EKO', 'ELE', 'ELH', 'ELK', 'ELT', 'END', 'ENE', 'ENG', 'ENR', 'ESL', 'ESM', 'ETK', 'EUT', 'FIZ', 'FRA', 'FZK', 'GED', 'GEM', 'GEO', 'GID', 'GLY', 'GMI', 'GMK', 'GSB', 'GSN', 'GUV', 'GVT', 'HSS', 'HUK', 'ICM', 'ILT', 'IML', 'ING', 'INS', 'ISE', 'ISH', 'ISL', 'ISP', 'ITA', 'ITB', 'JDF', 'JEF', 'JEO', 'JPN', 'KIM', 'KMM', 'KMP', 'KON', 'LAT', 'MAD', 'MAK', 'MAL', 'MAT', 'MCH', 'MEK', 'MEN', 'MET', 'MIM', 'MKN', 'MOD', 'MRE', 'MRT', 'MST', 'MTH', 'MTK', 'MTM', 'MTO', 'MTR', 'MUH', 'MUK', 'MUT', 'MUZ', 'NAE', 'NTH', 'PAZ', 'PEM', 'PET', 'PHE', 'PHY', 'RES', 'RUS', 'SBP', 'SEN', 'SES', 'SNT', 'SPA', 'STA', 'STI', 'TDW', 'TEB', 'TEK', 'TEL', 'TER', 'TES', 'THO', 'TRZ', 'TUR', 'UCK', 'ULP', 'UZB', 'YTO']
 
         for major_code in major_codes:

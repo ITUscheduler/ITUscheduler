@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com', '.elasticbeanstalk.com']
+INTERNAL_IPS = ['127.0.0.1']
 
 EC2_PRIVATE_IP = None
 try:
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'celery_progress',
+    'debug_toolbar',
 
     'ituscheduler.apps.api',
     'ituscheduler.apps.scheduler',
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

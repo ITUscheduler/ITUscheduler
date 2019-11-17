@@ -35,7 +35,10 @@ def refresh_courses(self, major_codes):
             title = elements[2].text
             instructor = elements[3].text
 
-            buildings_raw = re.search("\">(.*)<br/>", elements[4].html).group(1)
+            try:
+                buildings_raw = re.search("\">(.*)<br/>", elements[4].html).group(1)
+            except AttributeError:
+                buildings_raw = ""
             buildings = buildings_raw.split("<br/>")
             lecture_count = len(buildings)
 

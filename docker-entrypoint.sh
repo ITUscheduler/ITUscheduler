@@ -3,9 +3,15 @@ set -eo pipefail
 
 PROJECT=ituscheduler
 
+if [[ "$ITUSCHEDULER_STAGE" == "local" ]]; then
+    export DJANGO_SETTINGS_MODULE="$PROJECT".settings.local
+else
+    export DJANGO_SETTINGS_MODULE="$PROJECT".settings.production
+fi
+
 case "$CONTAINER_KIND" in
     web)
-        if [[ "$ITUSCHEDULER_STAGE" == "dev" ]]; then
+        if [[ "$ITUSCHEDULER_STAGE" == "local" ]]; then
             exec python manage.py runserver 0.0.0.0:8000
         else
             exec gunicorn "$PROJECT".wsgi:application \
@@ -15,11 +21,7 @@ case "$CONTAINER_KIND" in
         fi
     ;;
     celery)
-        if [[ "$ITUSCHEDULER_STAGE" == "dev" ]]; then
-            exec python manage.py celery
-        else
-            exec python manage.py celery-prod
-        fi
+        exec python manage.py celery
     ;;
     *)
         echo >&2 "Invalid CONTAINER_KIND: $CONTAINER_KIND."

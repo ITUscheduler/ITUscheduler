@@ -18,3 +18,4 @@ psycopg2-binary
 regex
 gunicorn
 whitenoise
+django-debug-toolbar
