@@ -1,5 +1,10 @@
-from .views import CourseListAPIView, CourseDetailAPIView, MajorCodeListAPIView
 from django.urls import path
+
+from .views import (
+    CourseListAPIView,
+    CourseDetailAPIView,
+    MajorCodeListAPIView,
+)
 
 app_name = 'course_api'
 

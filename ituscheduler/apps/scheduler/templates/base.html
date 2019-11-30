@@ -6,24 +6,29 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63317374-5"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
         gtag('config', 'UA-63317374-5');
     </script>
-	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-  		(adsbygoogle = window.adsbygoogle || []).push({
-    		google_ad_client: "ca-pub-9144734939845709",
-    		enable_page_level_ads: true
-  		});
-	</script>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-9144734939845709",
+            enable_page_level_ads: true
+        });
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>{% block title %}ITU Scheduler{% endblock %}</title>
     <meta property="og:title" content="ITU Scheduler">
-    <meta property="og:description" content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
+    <meta property="og:description"
+          content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ituscheduler.com/">
     <meta property="og:image" content="https://ituscheduler.com/static/icons/android-chrome-512x512.png">
@@ -48,94 +53,109 @@
     <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
 </head>
 <body>
-    <div class="content">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="/">
-                        <img src="{% static "icons/bee-transparent-white.png" %}" height="44px" style="display: inline-block; position: absolute; top: 8px">
-                        <span style="padding-left: 50px"><strong>ITUscheduler</strong></span>
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        {% url "index" as index_url %}
-                        <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a></li>
-                        {% url "courses" as courses_url %}
-                        <li {% if "courses" in request.path %}class="active"{% endif %}><a href="{{ courses_url }}">Courses </a></li>
-                        {% url "contact" as contact_url %}
-                        <li {% if "contact" in request.path %}class="active"{% endif %}><a href="{{ contact_url }}">Contact </a></li>
-                        {% url "info:index" as info_url %}
-                        <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
-{#                        <li class="dropdown">#}
-{#                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>#}
-{#                            <ul class="dropdown-menu" role="menu">#}
-{#                                <li><a href="{% url "course_api:major_code_list_api"%}">Major Codes</a></li>#}
-{#                                <li><a href="{% url "course_api:list_api" major_code="BLG"%}">Courses</a></li>#}
-{#                            </ul>#}
-{#                        </li>#}
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Rehberler <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="http://web.itu.edu.tr/durgunor/ders.htm" target="_blank">Ders Seçim Rehberi</a></li>
-                                <li><a href="http://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">ITUscheduler Nasıl Kullanılır?</a></li>
-                                <li><a href="http://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="https://gamerarena.com" target="_blank">Gamer Arena</a></li>
-                        <li><a href="http://notkutusu.com" target="_blank">Not Kutusu</a></li>
-                        {% if request.user.is_authenticated %}
-                            {% if request.user.is_superuser %}
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database <span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{% url "db_refresh_major_codes" %}">Refresh Major Codes</a></li>
-                                        <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
-                                        <li><a href="{% url "flush" %}">Flush</a></li>
-                                    </ul>
-                                </li>
-                            {% endif %}
-                            <li><a href="/{% if request.user.is_superuser %}admin{% endif %}">{{request.user.username}}<span style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
-                            {% url "logout" as logout_url %}
-                            <li {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a></li>
-                        {% else %}
-                            {% url "signup" as signup_url %}
-                            <li {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign Up </a></li>
-                            {% url "login" as login_url %}
-                            <li {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a></li>
+<div class="content">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img src="{% static "icons/bee-transparent-white.png" %}" height="44px"
+                         style="display: inline-block; position: absolute; top: 8px">
+                    <span style="padding-left: 50px"><strong>ITUscheduler</strong></span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    {% url "index" as index_url %}
+                    <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a>
+                    </li>
+                    {% url "courses" as courses_url %}
+                    <li {% if "courses" in request.path %}class="active"{% endif %}><a
+                            href="{{ courses_url }}">Courses </a></li>
+                    {% url "contact" as contact_url %}
+                    <li {% if "contact" in request.path %}class="active"{% endif %}><a
+                            href="{{ contact_url }}">Contact </a></li>
+                    {% url "info:index" as info_url %}
+                    <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
+                    {#                        <li class="dropdown">#}
+                    {#                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>#}
+                    {#                            <ul class="dropdown-menu" role="menu">#}
+                    {#                                <li><a href="{% url "course_api:major_code_list_api"%}">Major Codes</a></li>#}
+                    {#                                <li><a href="{% url "course_api:list_api" major_code="BLG"%}">Courses</a></li>#}
+                    {#                            </ul>#}
+                    {#                        </li>#}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Rehberler <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://web.itu.edu.tr/durgunor/ders.htm" target="_blank">Ders Seçim Rehberi</a>
+                            </li>
+                            <li><a href="http://web.itu.edu.tr/durgunor/itusch.htm" target="_blank">ITUscheduler Nasıl
+                                Kullanılır?</a></li>
+                            <li><a href="http://web.itu.edu.tr/durgunor/crn.html" target="_blank">Fill CRN Test</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="https://gamerarena.com" target="_blank">Gamer Arena</a></li>
+                    <li><a href="http://notkutusu.com" target="_blank">Not Kutusu</a></li>
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_superuser %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Database
+                                    <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url "db_refresh_major_codes" %}">Refresh Major Codes</a></li>
+                                    <li><a href="{% url "refresh_courses" %}">Refresh Courses</a></li>
+                                    <li><a href="{% url "flush" %}">Flush</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
-        </nav>
-        <script src="{% static "js/tether.min.js" %}"></script>
-        <script src="{% static "js/bootstrap.min.js" %}"></script>
-        <script src="{% static "js/main.js" %}"></script>
-        {% block body %}{% endblock %}
+                        <li>
+                            <a href="/{% if request.user.is_superuser %}admin{% endif %}">{{ request.user.username }}<span
+                                    style="margin-left: 15px;">{% gravatar request.user.email 18 %}</span></a></li>
+                        {% url "logout" as logout_url %}
+                        <li {% if request.path == logout_url %}class="active"{% endif %}><a href="{% url "logout" %}">Logout </a>
+                        </li>
+                    {% else %}
+                        {% url "signup" as signup_url %}
+                        <li {% if request.path == signup_url %}class="active"{% endif %}><a href="{% url "signup" %}">Sign
+                            Up </a></li>
+                        {% url "login" as login_url %}
+                        <li {% if request.path == login_url %}class="active"{% endif %}><a href="{% url "login" %}">Login </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <script src="{% static "js/tether.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/main.js" %}"></script>
+    {% block body %}{% endblock %}
+</div>
+<footer class="navbar navbar-default footer">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="//github.com/ITUscheduler/ITUscheduler" target="_blank"><span class="copyleft">&copy;</span>
+                Copyleft 2018 | ITUscheduler</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a></li>
+            <!--
+        Kendinize iyi bakın..
+        <li><a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
+    -->
+        </ul>
     </div>
-    <footer class="navbar navbar-default footer">
-        <div class="container">
-            <ul class="nav navbar-nav">
-                <li><a href="//github.com/ITUscheduler/ITUscheduler" target="_blank"><span class="copyleft">&copy;</span> Copyleft 2018 | ITUscheduler</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a></li>
-                <!--	
-			Kendinize iyi bakın..
-			<li><a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
-		-->
-            </ul>
-        </div>
-    </footer>
-    <script src="//mautic.gamerarena.com/focus/3.js" type="text/javascript" charset="utf-8" async="async"></script>
-    {% block script %}{% endblock %}
+</footer>
+<script src="//mautic.gamerarena.com/focus/3.js" type="text/javascript" charset="utf-8" async="async"></script>
+{% block script %}{% endblock %}
 </body>
 </html>

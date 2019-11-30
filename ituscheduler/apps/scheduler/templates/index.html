@@ -25,7 +25,9 @@
                                         <button class="btn btn-primary" id="addToSchedule">Add To Schedule</button>
                                     </div>
                                     <div class="col-md-8 col-sm-12 col-xs-12">
-                                        <small>1) Add all relevant courses from the <a href="{% url "courses" %}">Courses page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT (or drag with the mouse) to select courses.</small>
+                                        <small>1) Add all relevant courses from the <a href="{% url "courses" %}">Courses
+                                            page</a> and come back here.</small><br><small>2) Hold CTRL, CMD or SHIFT
+                                        (or drag with the mouse) to select courses.</small>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -40,7 +42,8 @@
                                     {% if notifications %}
                                         {% for notification in notifications %}
                                             <div class="alert alert-danger" id="not-{{ notification.id }}">
-                                                {{ notification.msg }} | <a href="javascript:readNotification('{{ notification.id }}');">Okay</a>
+                                                {{ notification.msg }} | <a
+                                                    href="javascript:readNotification('{{ notification.id }}');">Okay</a>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
@@ -49,10 +52,12 @@
                             {% if user.my_schedule %}
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 20px;">
-                                        <label class="control-label" for="selected-courses">Courses of the selected schedule [Schedule: {{ selected_schedule }}]</label>
+                                        <label class="control-label" for="selected-courses">Courses of the selected
+                                            schedule [Schedule: {{ selected_schedule }}]</label>
                                         <ul class="list-group" id="selected-courses">
                                             {% for course in my_courses %}
-                                                <li class="list-group-item">{{ course }} <a href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                                <li class="list-group-item">{{ course }} <a
+                                                        href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
                                             {% endfor %}
                                         </ul>
                                     </div>
@@ -61,21 +66,35 @@
                         {% else %}
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-1 center">
-                                    <h2>Welcome to ITU Scheduler!</h2><hr>
-                                    <h4 style="line-height: 1.3em;">ITUscheduler is an <a href="//github.com/dorukgezici/ITUscheduler" target="_blank">open-source</a> web application that allows Istanbul Technical University students to browse up-to-date & detailed information about courses and create schedules with ease. It has features like course queries according to days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have some features planned like automatic schedule generation, displaying data from previous years, prerequisite checking, etc..</h4><hr>
+                                    <h2>Welcome to ITU Scheduler!</h2>
+                                    <hr>
+                                    <h4 style="line-height: 1.3em;">ITUscheduler is an <a
+                                            href="//github.com/dorukgezici/ITUscheduler" target="_blank">open-source</a>
+                                        web application that allows Istanbul Technical University students to browse
+                                        up-to-date & detailed information about courses and create schedules with ease.
+                                        It has features like course queries according to days, notifying the user if a
+                                        course is removed from SIS, exporting the schedule and so on. We also have some
+                                        features planned like automatic schedule generation, displaying data from
+                                        previous years, prerequisite checking, etc..</h4>
+                                    <hr>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-3 center">
-                                    <h4>Please <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a> to start creating your schedules.</h4><br>
+                                    <h4>Please <a href="{% url "signup" %}">Signup</a> or <a href="{% url "login" %}">Login</a>
+                                        to start creating your schedules.</h4><br>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5 col-md-offset-1 col-xs-6">
-                                    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-block btn-social btn-facebook"><span class="fa fa-facebook"></span> Sign in with Facebook</a>
+                                    <a href="{% url 'social:begin' 'facebook' %}"
+                                       class="btn btn-block btn-social btn-facebook"><span
+                                            class="fa fa-facebook"></span> Sign in with Facebook</a>
                                 </div>
                                 <div class="col-md-5 col-xs-6">
-                                    <a href="{% url 'social:begin' 'twitter' %}" class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span> Sign in with Twitter</a><br>
+                                    <a href="{% url 'social:begin' 'twitter' %}"
+                                       class="btn btn-block btn-social btn-twitter"><span class="fa fa-twitter"></span>
+                                        Sign in with Twitter</a><br>
                                 </div>
                             </div>
                         {% endif %}
@@ -84,8 +103,12 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-md-12 center">
-                                    <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a> & <a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
-                                    <em>We do not gurantee or can be responsible for the accuracy of information found here. If in doubt, please check <a href="http://www.sis.itu.edu.tr" target="_blank">SIS</a>.</em>
+                                    <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com"
+                                                                                target="_blank">Doruk Gezici</a> & <a
+                                            href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                                    <em>We do not gurantee or can be responsible for the accuracy of information found
+                                        here. If in doubt, please check <a href="http://www.sis.itu.edu.tr"
+                                                                           target="_blank">SIS</a>.</em>
                                 </div>
                             </div>
                         </div>
@@ -104,23 +127,33 @@
                             <div class="row">
                                 <div style="margin-bottom: 10px;" class="col-md-3 col-sm-12 col-xs-12">
                                     <form>
-                                        <select id="schedule" class="form-control" name="schedule" onchange="redirect(this.form.schedule)" title="schedule">
+                                        <select id="schedule" class="form-control" name="schedule"
+                                                onchange="redirect(this.form.schedule)" title="schedule">
                                             {% for schedule in schedules %}
-                                                <option {% if schedule == selected_schedule %}selected{% endif %} value="{{ schedule.id }}">Schedule: {{ schedule }}</option>
+                                                <option {% if schedule == selected_schedule %}selected{% endif %}
+                                                        value="{{ schedule.id }}">Schedule: {{ schedule }}</option>
                                             {% endfor %}
                                         </select>
                                     </form>
                                 </div>
                                 <div class="col-md-9 col-sm-12 col-xs-12">
                                     <div style="margin-bottom: 5px;" class="col-md-3 col-xs-12">
-                                        <button class="btn btn-block btn-primary" onclick="deleteSchedule($('#schedule').find('option:selected').val())">Delete Schedule</button>
+                                        <button class="btn btn-block btn-primary"
+                                                onclick="deleteSchedule($('#schedule').find('option:selected').val())">
+                                            Delete Schedule
+                                        </button>
                                     </div>
                                     {% if request.user.is_superuser %}
                                         <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
-                                            <a href="javascript:(function(){var crn='{% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();" class="btn btn-block btn-primary">Fill CRNs</a>
+                                            <a href="javascript:(function(){var crn='
+
+                                                    {% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();"
+                                               class="btn btn-block btn-primary">Fill CRNs</a>
                                         </div>
                                         <div class="col-md-3 col-xs-3">
-                                            <a class="btn btn-block btn-primary" href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[ ? ]</a>
+                                            <a class="btn btn-block btn-primary"
+                                               href="javascript:alert('Drag and Drop [Fill CRNs] button to bookmarks/favourites bar! Then on the course registration page (ITU SIS) click the bookmark to fill your CRNs.')">[
+                                                ? ]</a>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -158,7 +191,8 @@
                             <div class="row">
                                 {% if request.user.is_authenticated %}
                                     <div class="col-xs-4 col-xs-offset-8">
-                                        <a href="{% url "share" request.user.username %}" class="btn btn-block btn-primary">Share!</a>
+                                        <a href="{% url "share" request.user.username %}"
+                                           class="btn btn-block btn-primary">Share!</a>
                                     </div>
                                 {% endif %}
                             </div>
@@ -169,7 +203,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             if ("{{ selected_schedule }}") {
                 writeLectures();
             }
@@ -177,10 +211,10 @@
             select.size = select.length;
 
             {% if request.user.is_authenticated %}
-                $("#addToSchedule").click(function(e) {
+                $("#addToSchedule").click(function (e) {
                     e.preventDefault();
                     var _data = $("#courses_form").serializeArray();
-                    var _url= "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
+                    var _url = "{% url 'rest_api_scheduler:add_to_schedule' id=selected_schedule.id %}";
                     var empty = false;
 
                     if (_data[2]) {
@@ -192,10 +226,10 @@
                             url: _url,
                             type: "POST",
                             data: _data,
-                            success: function(data) {
+                            success: function (data) {
                                 location.reload();
                             },
-                            error: function(data) {
+                            error: function (data) {
                                 alert("First you must create a new schedule.");
 
                             }
@@ -229,7 +263,7 @@
                     url: "{% url 'rest_api_scheduler:api_schedule_detail' pk=selected_schedule.id %}",
                 {% endif %}
 
-                success: function(result) {
+                success: function (result) {
                     console.log("Lectures writing.");
                     for (var course in result.courses) {
                         for (var lecture in result.courses[course].lectures) {
@@ -285,7 +319,7 @@
                 {
                     "csrfmiddlewaretoken": getCookie('csrftoken')
                 },
-                function(response) {
+                function (response) {
                     var isSuccessful = response["successful"];
                     if (!isSuccessful) {
                         alert("Error: " + response["error"]);
@@ -301,16 +335,16 @@
             $.ajax({
                 url: "{% url 'rest_api_scheduler:course_remove' %}",
                 type: "POST",
-                dataType:'json',
+                dataType: 'json',
                 data: {
                     "crn": Crn,
                     "csrfmiddlewaretoken": getCookie('csrftoken'),
                     "schedule_id": "{{ selected_schedule.id }}"
                 },
-                success: function(result) {
+                success: function (result) {
                     location.reload();
                 },
-                error: function(result) {
+                error: function (result) {
                     console.log(result);
                 }
             });
@@ -325,7 +359,7 @@
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
                     },
-                    function(response) {
+                    function (response) {
                         var isSuccessful = response["successful"];
                         if (!isSuccessful) {
                             alert("Error: " + response["error"]);
@@ -348,7 +382,7 @@
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
                     },
-                    function(response) {
+                    function (response) {
                         var isSuccessful = response["successful"];
                         if (!isSuccessful) {
                             alert("Error: " + response["error"]);
@@ -372,7 +406,7 @@
                         "schedule_id": parseInt(scheduleId),
                         "csrfmiddlewaretoken": getCookie('csrftoken')
                     },
-                    function(response) {
+                    function (response) {
                         var isSuccessful = response["successful"];
                         if (!isSuccessful) {
                             alert("Error: " + response["error"]);
@@ -385,7 +419,7 @@
             }
         }
 
-        function readNotification(id){
+        function readNotification(id) {
             $.ajax({
                 url: '{% url "rest_api_scheduler:read_notification" %}',
                 type: 'POST',
@@ -393,10 +427,10 @@
                     "id": id,
                     "csrfmiddlewaretoken": getCookie('csrftoken')
                 },
-                success: function(result){
-                    $('#not-'+id).fadeOut();
+                success: function (result) {
+                    $('#not-' + id).fadeOut();
                 },
-                error: function(result){
+                error: function (result) {
                     console.log(result);
                 }
             })
@@ -405,7 +439,7 @@
         var latest_ids = [];
         var count = 0;
 
-        function deleteHtml(id){
+        function deleteHtml(id) {
             console.log("stop displaying ", id);
             $(id).css({"background-color": "white", "color": "black"});
             $(id).empty();
@@ -414,7 +448,7 @@
 
         var selected_courses = [];
 
-        function getCourseDetail(crn, remove){
+        function getCourseDetail(crn, remove) {
             $.ajax({
                 url: '{% url "course_api:list_detail" %}',
                 type: 'POST',
@@ -422,11 +456,11 @@
                     'crn': crn,
                     "csrfmiddlewaretoken": getCookie('csrftoken')
                 },
-                success: function(result){
+                success: function (result) {
                     console.log(result['id']);
                     var general_ids = [];
 
-                    $.each(result['lectures'], function(index, value){
+                    $.each(result['lectures'], function (index, value) {
 
                         displayCourses(result, value, remove);
 
@@ -435,14 +469,14 @@
                     latest_ids = general_ids;
 
                 },
-                error: function(result){
+                error: function (result) {
                     console.log(result);
                 }
 
             });
         }
 
-        function displayCourses(result, value, remove){
+        function displayCourses(result, value, remove) {
             var ids = [];
             var time_start = value['time_start'];
             var time_finish = value['time_finish'];
@@ -478,20 +512,20 @@
                         id += "-" + "5"
                     }
 
-                    if(remove){
+                    if (remove) {
                         deleteHtml(id);
                         writeLectures();
-                    }else{
+                    } else {
                         $(id).css({'background-color': '#fcf8e3', 'color': '#8a6d3b'});
 
                         if (result['overlaps'] || ($(id).html().length > 0 & $(id).html() !== result['title'])) {
                             $(id).css({'background-color': '#d9534f', 'color': 'white'});
-                            $(id).hover( function(){
-                                if($(this).html() !== "<a></a>"){
+                            $(id).hover(function () {
+                                if ($(this).html() !== "<a></a>") {
                                     $(this).html(result['title'] + "<br>This course overlaps with another course<br>Or its full.");
                                 }
-                            }, function(){
-                                if($(this).html() !== "<a></a>"){
+                            }, function () {
+                                if ($(this).html() !== "<a></a>") {
                                     $(this).html(result['title']);
                                 }
                             });
@@ -501,25 +535,24 @@
                     }
 
 
-
                 }
 
             }
         }
 
-        $("#id_courses").change(function() {
+        $("#id_courses").change(function () {
 
-            $( "#schedule select option" ).each(function() {
-                if($(this).is(':selected')){
+            $("#schedule select option").each(function () {
+                if ($(this).is(':selected')) {
                     var crn = $(this).val();
                     selected_courses.push(crn);
-                    if(crn.length === 5){
+                    if (crn.length === 5) {
                         console.log(crn, "asd");
                         getCourseDetail(crn, false);
                     }
-                }else{
+                } else {
                     console.log(selected_courses, $(this).val(), $(this).val() in selected_courses);
-                    if(selected_courses.includes($(this).val())){
+                    if (selected_courses.includes($(this).val())) {
                         selected_courses.splice(selected_courses.indexOf($(this).val()), 1);
                         console.log("naber zeka ", $(this).val());
                         getCourseDetail($(this).val(), true) // stop displaying the course!
@@ -529,7 +562,7 @@
             });
             return "";
         })
-            .trigger( "change" );
+            .trigger("change");
 
 
     </script>

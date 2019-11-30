@@ -1,14 +1,34 @@
-from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth import (
+    authenticate,
+    login,
+)
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import (
+    JsonResponse,
+    HttpResponse,
+    HttpResponseRedirect,
+)
 from django.shortcuts import render
 from django.views import generic
-from django.contrib import messages
-from ..api.models import MajorCode, Course, Semester
-from ..scheduler.models import Schedule, Notification, ExtendedUser
-from .forms import ScheduleForm, CustomUserCreationForm, ContactForm
 from meta.views import MetadataMixin
+
+from .forms import (
+    ScheduleForm,
+    CustomUserCreationForm,
+    ContactForm,
+)
+from ..api.models import (
+    MajorCode,
+    Course,
+    Semester,
+)
+from ..scheduler.models import (
+    Schedule,
+    Notification,
+    ExtendedUser,
+)
 
 
 def is_available(courses, course):
@@ -63,9 +83,12 @@ class ScheduleView(generic.DetailView):
                 self.time_finish = time_finish
                 try:
                     day = str(course.day).lower()
-                    self.day = {day: "#{} {}".format(course.crn, course.code)}
+                    self.day = {
+                        day: "#{} {}".format(course.crn, course.code)
+                    }
                 except AttributeError:
                     self.day = {}
+
         hours = [
             Hour("8:30-9:29", 830, 929),
             Hour("9:30-10:29", 930, 1029),
@@ -88,7 +111,8 @@ class IndexView(MetadataMixin, generic.CreateView):
 
     title = 'ITU Scheduler'
     description = 'With ITU Scheduler you can browse up-to-date & detailed information about ITU courses and create possible course schedules with ease.'
-    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi', 'dersler']
+    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi',
+                'dersler']
     url = '/'
 
     def get_form_kwargs(self):
@@ -114,8 +138,11 @@ class IndexView(MetadataMixin, generic.CreateView):
         for _course in courses.all():
             if not _course.is_full():
                 available, course = is_available(courses.all(), _course)
-                if not available and (course, _course) not in overlapping_courses and (_course, course) not in overlapping_courses:
-                    messages.warning(self.request, "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(course.crn, _course.crn, course.crn))
+                if not available and (course, _course) not in overlapping_courses and (
+                        _course, course) not in overlapping_courses:
+                    messages.warning(self.request,
+                                     "Course #{} overlaps #{}. Your schedule is created anyway but please mind this.".format(
+                                         course.crn, _course.crn, course.crn))
                     overlapping_courses.append((course, _course))
             else:
                 msg = "Course {} is full, your schedule is created anyway but please mind this.".format(
@@ -138,9 +165,12 @@ class IndexView(MetadataMixin, generic.CreateView):
                 self.time_finish = time_finish
                 try:
                     day = str(course.day).lower()
-                    self.day = {day: "#{} {}".format(course.crn, course.code)}
+                    self.day = {
+                        day: "#{} {}".format(course.crn, course.code)
+                    }
                 except AttributeError:
                     self.day = {}
+
         hours = [
             Hour("8:30-9:29", 830, 929),
             Hour("9:30-10:29", 930, 1029),
@@ -223,7 +253,8 @@ class CoursesView(generic.ListView):
             courses = courses.filter(code=code)
             context["code"] = code
 
-        days = [("Pazartesi", "Monday"), ("Salı", "Tuesday"), ("Çarşamba", "Wednesday"), ("Perşembe", "Thursday"), ("Cuma", "Friday")]
+        days = [("Pazartesi", "Monday"), ("Salı", "Tuesday"), ("Çarşamba", "Wednesday"), ("Perşembe", "Thursday"),
+                ("Cuma", "Friday")]
         context["days"] = days
         if self.request.GET.get("day"):
             day = self.request.GET["day"]
@@ -290,9 +321,14 @@ def privacy_policy(request):
 def remove_my_courses(request):
     try:
         request.user.courses.clear()
-        return JsonResponse({"successful": True})
+        return JsonResponse({
+                                "successful": True
+                            })
     except Exception as error:
-        return JsonResponse({"successful": False, "error": error})
+        return JsonResponse({
+                                "successful": False,
+                                "error": error
+                            })
 
 
 @login_required
@@ -305,9 +341,14 @@ def add_course(request):
             my_courses.remove(course.crn)
         else:
             my_courses.add(course.crn)
-        return JsonResponse({"successful": True})
+        return JsonResponse({
+                                "successful": True
+                            })
     except Exception as error:
-        return JsonResponse({"successful": False, "error": error})
+        return JsonResponse({
+                                "successful": False,
+                                "error": error
+                            })
 
 
 @login_required
@@ -321,8 +362,14 @@ def select_schedule(request):
         else:
             raise Exception("You are not authorized to select that schedule.")
     except Exception as error:
-        return JsonResponse({"successful": False, "error": str(error)})
-    return JsonResponse({"successful": True, "scheduleId": schedule_id})
+        return JsonResponse({
+                                "successful": False,
+                                "error": str(error)
+                            })
+    return JsonResponse({
+                            "successful": True,
+                            "scheduleId": schedule_id
+                        })
 
 
 @login_required
@@ -337,5 +384,11 @@ def delete_schedule(request):
         else:
             raise Exception("You are not authorized to delete that schedule.")
     except Exception as error:
-        return JsonResponse({"successful": False, "error": str(error)})
-    return JsonResponse({"successful": True, "scheduleId": schedule_id})
+        return JsonResponse({
+                                "successful": False,
+                                "error": str(error)
+                            })
+    return JsonResponse({
+                            "successful": True,
+                            "scheduleId": schedule_id
+                        })

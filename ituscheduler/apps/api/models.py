@@ -1,7 +1,8 @@
+import uuid
+
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-import uuid
 
 
 class SemesterManager(models.Manager):
@@ -136,7 +137,8 @@ class Course(models.Model):
             return True
 
     def __str__(self):
-        lectures = "{} #{} {} {} | {} | ".format(self.semester.get_name_display(), self.crn, self.code, self.title, self.instructor)
+        lectures = "{} #{} {} {} | {} | ".format(self.semester.get_name_display(), self.crn, self.code, self.title,
+                                                 self.instructor)
         for lecture in self.lecture_set.all():
             lectures += "{} {} {} {} | ".format(lecture.building, lecture.day, *lecture.time_str_tuple())
         lectures += str(self.enrolled) + "/" + str(self.capacity) + " Capacity"

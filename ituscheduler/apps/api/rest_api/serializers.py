@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from ..models import Course, MajorCode, Lecture, Prerequisite
+
+from ..models import (
+    Course,
+    MajorCode,
+    Lecture,
+    Prerequisite,
+)
 
 
 class MajorCodeSerializer(serializers.ModelSerializer):
@@ -11,13 +17,13 @@ class MajorCodeSerializer(serializers.ModelSerializer):
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        exclude = ('id', )
+        exclude = ('id',)
 
 
 class PrerequisiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prerequisite
-        exclude = ('id', )
+        exclude = ('id',)
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -26,8 +32,3 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ('__all__')
-
-
-
-
-

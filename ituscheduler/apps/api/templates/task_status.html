@@ -4,10 +4,13 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h1>Task: #{{ task.id }}</h1><hr>
+            <h1>Task: #{{ task.id }}</h1>
+            <hr>
         </div>
         <div class="row">
-            <p>Status: {{ task.status }}<a href="{% url "refresh_courses" %}" style="margin-left: 2em;">Refresh Courses</a></p><hr>
+            <p>Status: {{ task.status }}<a href="{% url "refresh_courses" %}" style="margin-left: 2em;">Refresh
+                Courses</a></p>
+            <hr>
         </div>
         <div class="row">
             <div class='progress-wrapper'>

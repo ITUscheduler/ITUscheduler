@@ -1,12 +1,28 @@
-from __future__ import absolute_import, unicode_literals
-from django.utils import timezone
+from __future__ import (
+    absolute_import,
+    unicode_literals,
+)
+
+import re
+
 from bs4 import BeautifulSoup
 from celery import shared_task
-from django.shortcuts import get_object_or_404
-from .models import Semester, MajorCode, Course, Prerequisite, MajorRestriction, Lecture
-from requests_html import HTMLSession, HTML
 from celery_progress.backend import ProgressRecorder
-import re
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from requests_html import (
+    HTMLSession,
+    HTML,
+)
+
+from .models import (
+    Semester,
+    MajorCode,
+    Course,
+    Prerequisite,
+    MajorRestriction,
+    Lecture,
+)
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
 

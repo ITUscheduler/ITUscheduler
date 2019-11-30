@@ -5,7 +5,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63317374-5"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
         gtag('config', 'UA-63317374-5');
     </script>
@@ -22,7 +26,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>{% block title %}ITU Scheduler{% endblock %}</title>
     <meta property="og:title" content="ITU Scheduler">
-    <meta property="og:description" content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
+    <meta property="og:description"
+          content="With ITU Scheduler you can browse up-to-date ITU courses and create possible course schedules easily without the need of another resource.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ituscheduler.com/">
     <meta property="og:image" content="https://ituscheduler.com/static/icons/android-chrome-512x512.png">

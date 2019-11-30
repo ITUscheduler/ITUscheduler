@@ -1,6 +1,11 @@
 import os
-from .secrets import SECRET_KEY, BROKER_URL
+
 import requests
+
+from .secrets import (
+    SECRET_KEY,
+    BROKER_URL,
+)
 
 SECRET_KEY = SECRET_KEY
 
@@ -82,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ituscheduler.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -107,7 +111,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
@@ -115,7 +118,6 @@ TIME_ZONE = 'Europe/Istanbul'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 
@@ -139,7 +141,9 @@ META_USE_SITES = True
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = BROKER_URL
-CELERY_BROKER_TRANSPORT_OPTIONS = {'region': 'eu-west-1'}
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'eu-west-1'
+}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'

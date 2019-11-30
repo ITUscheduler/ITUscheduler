@@ -1,9 +1,19 @@
+import regex as re
 from bs4 import BeautifulSoup
 from django.shortcuts import get_object_or_404
 from django.test import TestCase
-from requests_html import HTMLSession, HTML
-from .models import Course, Lecture, MajorCode, MajorRestriction, Prerequisite
-import regex as re
+from requests_html import (
+    HTMLSession,
+    HTML,
+)
+
+from .models import (
+    Course,
+    Lecture,
+    MajorCode,
+    MajorRestriction,
+    Prerequisite,
+)
 
 
 class ParserTestCase(TestCase):

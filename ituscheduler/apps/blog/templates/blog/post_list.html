@@ -27,13 +27,15 @@
                     <div class="panel-body">
                         {% for major_code in refreshes %}
                             <p>{{ major_code.code }}: {{ major_code.refreshed }}</p>
-                            {% if not forloop.last %}<hr>{% endif %}
+                            {% if not forloop.last %}
+                                <hr>{% endif %}
                         {% endfor %}
                         <nav aria-label="Latest Refresh Pagination">
                             <ul id="paginator" class="pagination pagination-sm">
                                 {% for object in refreshes.paginator.page_range %}
                                     <li class="page-item{% if object == refreshes.number %} active{% endif %}">
-                                        <a class="page-link" href="{% url 'blog:index' %}?refresh_page={{ object }}#paginator">{{ object }}</a>
+                                        <a class="page-link"
+                                           href="{% url 'blog:index' %}?refresh_page={{ object }}#paginator">{{ object }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -45,20 +47,32 @@
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1">
                         <div class="row">
-                            <h2>Welcome to ITU Scheduler!</h2><hr>
-                            <h4 style="line-height: 1.3em;">ITUscheduler is an <a href="//github.com/dorukgezici/ITUscheduler" target="_blank">open-source</a> web application that allows Istanbul Technical University students to browse up-to-date & detailed information about courses and create schedules with ease. It has features like course queries according to days, notifying the user if a course is removed from SIS, exporting the schedule and so on. We also have some features planned like automatic schedule generation, displaying data from previous years, prerequisite checking, etc..</h4>
+                            <h2>Welcome to ITU Scheduler!</h2>
+                            <hr>
+                            <h4 style="line-height: 1.3em;">ITUscheduler is an <a
+                                    href="//github.com/dorukgezici/ITUscheduler" target="_blank">open-source</a> web
+                                application that allows Istanbul Technical University students to browse up-to-date &
+                                detailed information about courses and create schedules with ease. It has features like
+                                course queries according to days, notifying the user if a course is removed from SIS,
+                                exporting the schedule and so on. We also have some features planned like automatic
+                                schedule generation, displaying data from previous years, prerequisite checking, etc..
+                            </h4>
                         </div>
                         <div class="row">
-                            <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a> & <a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
-                            <em>We do not gurantee or can be responsible for the accuracy of information found here. If in doubt, please check <a href="http://www.sis.itu.edu.tr" target="_blank">SIS</a>.</em>
-                        </div><hr>
+                            <p style="margin-top: 5px;">Developed by <a href="http://dorukgezici.com" target="_blank">Doruk
+                                Gezici</a> & <a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></p>
+                            <em>We do not gurantee or can be responsible for the accuracy of information found here. If
+                                in doubt, please check <a href="http://www.sis.itu.edu.tr" target="_blank">SIS</a>.</em>
+                        </div>
+                        <hr>
                     </div>
                 </div>
                 <div class="row">
                     {% for post in posts %}
                         <div class="media">
                             <div class="media-body">
-                                <h5 class="media-heading">by <strong>{{ post.author }}</strong>, {{ post.date_created|timesince }} ago</h5>
+                                <h5 class="media-heading">by
+                                    <strong>{{ post.author }}</strong>, {{ post.date_created|timesince }} ago</h5>
                                 <p>{{ post.content|safe }}</p>
                                 {% if post.media %}
                                     <img src="{{ post.media.url }}" class="img img-responsive img-rounded">
@@ -72,7 +86,9 @@
                 </div>
             </div>
             <div class="col-md-4 col-xs-12">
-                <a class="twitter-timeline" data-height="2400" href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a class="twitter-timeline" data-height="2400"
+                   href="https://twitter.com/ITUscheduler?ref_src=twsrc%5Etfw">Tweets by ITUscheduler</a>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
         <div class="row">

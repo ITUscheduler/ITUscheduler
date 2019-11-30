@@ -1,17 +1,27 @@
-from .serializers import CourseSerializer, MajorCodeSerializer, LectureSerializer, PrerequisiteSerializer
-from rest_framework.generics import ListAPIView
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from ..models import Course, MajorCode
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from ituscheduler.apps.scheduler.views import is_available
+from .serializers import (
+    CourseSerializer,
+    MajorCodeSerializer,
+    LectureSerializer,
+    PrerequisiteSerializer,
+)
+from ..models import (
+    Course,
+    MajorCode,
+)
 
 
 class CourseListAPIView(ListAPIView):
     serializer_class = CourseSerializer
-    #queryset = Course.objects.all()
+
+    # queryset = Course.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -41,17 +51,18 @@ class CourseListAPIView(ListAPIView):
 
 class CourseSearchAPIView(ListAPIView):
     serializer_class = CourseSerializer
-    #queryset = Course.objects.all()
+
+    # queryset = Course.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
 
 
 class CourseDetailAPIView(APIView):
-    #queryset = Course.objects.all()
+    # queryset = Course.objects.all()
     http_method_names = ["post", ]
-    authentication_classes = (SessionAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, format=None):
         crn = request.data['crn']
@@ -70,5 +81,5 @@ class CourseDetailAPIView(APIView):
 
 
 class MajorCodeListAPIView(ListAPIView):
-    #queryset = MajorCode.objects.all()
+    # queryset = MajorCode.objects.all()
     serializer_class = MajorCodeSerializer

@@ -1,4 +1,7 @@
-from ..api.models import MajorCode, Semester
+from ..api.models import (
+    MajorCode,
+    Semester,
+)
 
 
 def global_processor(request):

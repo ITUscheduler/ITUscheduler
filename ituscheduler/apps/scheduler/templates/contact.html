@@ -7,7 +7,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Contact <small style="margin-left: 20px;"><a href="mailto:info@ituscheduler.com">info@ituscheduler.com</a></small></h1>
+                <h1>Contact <small style="margin-left: 20px;"><a href="mailto:info@ituscheduler.com">info@ituscheduler.com</a></small>
+                </h1>
                 <h4>You can contact us regarding bugs, feature requests, etc...</h4><br>
                 <form role="form" action="" method="post">
                     {% csrf_token %}
@@ -19,7 +20,7 @@
         <br>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             {% if successful %}
                 alert("Your message is sent!");
             {% endif %}

@@ -19,17 +19,18 @@
                     <p>Or upload a file</p>
                     <input type="file" name="exported" multiple>
                     <input type="submit" class="btn btn-primary">
-                </form><br>
+                </form>
+                <br>
             </div>
         </div>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var select = document.getElementById('courses');
             select.size = select.length / 5;
         });
 
-        $("#selectAll").click(function() {
+        $("#selectAll").click(function () {
             $("#courses option").prop('selected', true);
         });
     </script>

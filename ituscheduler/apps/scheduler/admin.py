@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Schedule, ExtendedUser, Notification
+
+from .models import (
+    Schedule,
+    ExtendedUser,
+    Notification,
+)
 
 
 @admin.register(Schedule)

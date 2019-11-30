@@ -1,6 +1,6 @@
 from django.urls import path
+
 from . import views
-from django.views.decorators.cache import cache_page
 
 urlpatterns = [
     # path('', views.shutdown, name="shutdown"),
@@ -18,6 +18,6 @@ urlpatterns = [
     path('sis/', views.sis, name="sis"),
     path('ads.txt/', views.ads, name="ads"),
     path('robots.txt/', views.robots, name="robots")
-    #path('schedule/removeCourse/<int:pk>/<int:pk>', views.remove_course, name='remove_course'),
-    #path('schedule/replaceCourse', views.replace_course, name='replace_course'),
+    # path('schedule/removeCourse/<int:pk>/<int:pk>', views.remove_course, name='remove_course'),
+    # path('schedule/replaceCourse', views.replace_course, name='replace_course'),
 ]

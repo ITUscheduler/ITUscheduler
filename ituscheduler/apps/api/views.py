@@ -1,15 +1,23 @@
+from celery.result import AsyncResult
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
-from requests_html import HTMLSession, HTML
-from .models import MajorCode, Course, Prerequisite, MajorRestriction
-from ..scheduler.models import Schedule
-from celery.result import AsyncResult
-from .tasks import refresh_courses
+from requests_html import (
+    HTMLSession,
+    HTML,
+)
 
+from .models import (
+    MajorCode,
+    Course,
+    Prerequisite,
+    MajorRestriction,
+)
+from .tasks import refresh_courses
+from ..scheduler.models import Schedule
 
 BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
 

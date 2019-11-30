@@ -14,7 +14,9 @@
                                 <div class="col-md-6">
                                     {% if has_schedule %}
                                         {{ object.my_schedule }}
-                                        <button style="margin-left: 40px;" class="btn btn-default btn-xs" onclick="copyStringToClipboard(window.location.href);">Copy share link!</button>
+                                        <button style="margin-left: 40px;" class="btn btn-default btn-xs"
+                                                onclick="copyStringToClipboard(window.location.href);">Copy share link!
+                                        </button>
                                     {% else %}
                                         {{ object }} has no schedules!
                                     {% endif %}
@@ -69,7 +71,7 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             {% if has_schedule %}
                 writeLectures();
             {% endif %}
@@ -109,7 +111,7 @@
                 {% else %}
                     url: "#",
                 {% endif %}
-                success: function(result) {
+                success: function (result) {
                     console.log("Lectures writing.");
                     for (var course in result.courses) {
                         for (var lecture in result.courses[course].lectures) {

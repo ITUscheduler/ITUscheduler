@@ -1,8 +1,16 @@
-from django.views.generic import ListView
 from django.core.paginator import Paginator
+from django.views.generic import ListView
+
 from .models import Post
-from ..api.models import Course, MajorCode, Semester
-from ..scheduler.models import Schedule, ExtendedUser
+from ..api.models import (
+    Course,
+    MajorCode,
+    Semester,
+)
+from ..scheduler.models import (
+    Schedule,
+    ExtendedUser,
+)
 
 
 class PostListView(ListView):
@@ -25,4 +33,3 @@ class PostListView(ListView):
         context["refreshes"] = self.refresh_paginator.get_page(refresh_page)
 
         return context
-

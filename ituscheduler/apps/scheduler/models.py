@@ -1,7 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
-from ..api.models import Course, MajorCode, Semester
+
+from ..api.models import (
+    Course,
+    MajorCode,
+    Semester,
+)
 
 
 def get_semester():
@@ -38,7 +43,9 @@ class Schedule(models.Model):
             return str(self.user) + " #" + str(self.id)
 
     def get_absolute_url(self):
-        return reverse("schedule", kwargs={"pk": self.id})
+        return reverse("schedule", kwargs={
+            "pk": self.id
+        })
 
 
 class Notification(models.Model):
