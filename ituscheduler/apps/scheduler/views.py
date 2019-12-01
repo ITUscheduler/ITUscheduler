@@ -322,13 +322,13 @@ def remove_my_courses(request):
     try:
         request.user.courses.clear()
         return JsonResponse({
-                                "successful": True
-                            })
+            "successful": True
+        })
     except Exception as error:
         return JsonResponse({
-                                "successful": False,
-                                "error": error
-                            })
+            "successful": False,
+            "error": error
+        })
 
 
 @login_required
@@ -342,13 +342,13 @@ def add_course(request):
         else:
             my_courses.add(course.crn)
         return JsonResponse({
-                                "successful": True
-                            })
+            "successful": True
+        })
     except Exception as error:
         return JsonResponse({
-                                "successful": False,
-                                "error": error
-                            })
+            "successful": False,
+            "error": error
+        })
 
 
 @login_required
@@ -363,13 +363,13 @@ def select_schedule(request):
             raise Exception("You are not authorized to select that schedule.")
     except Exception as error:
         return JsonResponse({
-                                "successful": False,
-                                "error": str(error)
-                            })
+            "successful": False,
+            "error": str(error)
+        })
     return JsonResponse({
-                            "successful": True,
-                            "scheduleId": schedule_id
-                        })
+        "successful": True,
+        "scheduleId": schedule_id
+    })
 
 
 @login_required
@@ -385,10 +385,10 @@ def delete_schedule(request):
             raise Exception("You are not authorized to delete that schedule.")
     except Exception as error:
         return JsonResponse({
-                                "successful": False,
-                                "error": str(error)
-                            })
+            "successful": False,
+            "error": str(error)
+        })
     return JsonResponse({
-                            "successful": True,
-                            "scheduleId": schedule_id
-                        })
+        "successful": True,
+        "scheduleId": schedule_id
+    })

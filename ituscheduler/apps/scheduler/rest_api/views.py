@@ -93,8 +93,8 @@ def course_remove(request):
     course = get_object_or_404(Course, crn=crn)
     if schedule.user != user and course not in schedule:
         return Response({
-                            'error': 'unauthorized attempt.'
-                        }, status=HTTP_401_UNAUTHORIZED)
+            'error': 'unauthorized attempt.'
+        }, status=HTTP_401_UNAUTHORIZED)
 
     schedule.courses.remove(course)
 
@@ -102,8 +102,8 @@ def course_remove(request):
         schedule.delete()
 
     return Response({
-                        'success': 'Successfuly removed course {}'.format(course.crn)
-                    })
+        'success': 'Successfuly removed course {}'.format(course.crn)
+    })
 
 
 @api_view(['POST'])
@@ -121,15 +121,15 @@ def course_replace(request):
 
     if schedule.user != user and old_course not in schedule and new_course in schedule:
         return Response({
-                            'error': 'Unauthorized attempt.'
-                        }, status=HTTP_401_UNAUTHORIZED)
+            'error': 'Unauthorized attempt.'
+        }, status=HTTP_401_UNAUTHORIZED)
 
     schedule.courses.remove(old_course)
     schedule.courses.add(new_course)
 
     return Response({
-                        'success': 'Replaced {} with {}'.format(old_crn, new_crn)
-                    })
+        'success': 'Replaced {} with {}'.format(old_crn, new_crn)
+    })
 
 
 @api_view(['POST'])
@@ -162,14 +162,14 @@ def add_to_schedule(request, id):
                         notification.save()
 
             return Response({
-                                'success': 'attempt is accomplished'
-                            })
+                'success': 'attempt is accomplished'
+            })
         else:
             raise Exception("Unauthorized attempt")
     except Exception as error:
         return Response({
-                            'error': error
-                        })
+            'error': error
+        })
 
 
 @api_view(["POST"])
@@ -185,10 +185,10 @@ def read_notification(request):
         notification.save()
 
         return Response({
-                            'success': 'attempt is accomplished'
-                        })
+            'success': 'attempt is accomplished'
+        })
 
     except Exception as error:
         return Response({
-                            'error': error
-                        })
+            'error': error
+        })

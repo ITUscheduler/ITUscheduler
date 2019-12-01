@@ -147,7 +147,9 @@
                                         <div style="margin-bottom: 5px;" class="col-md-6 col-xs-9">
                                             <a href="javascript:(function(){var crn='
 
-                                                    {% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById('crn_id'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();"
+
+
+                                                    {% for course in my_courses %}{{ course.crn }}, {% endfor %}';crn=crn.split(', ');  for(var i=0;i<crn.length-1;i++){var object_will_be_placed=document.getElementById(';crn_id;'+(i+1));object_will_be_placed.value=parseInt(crn[i])}void(0);})();"
                                                class="btn btn-block btn-primary">Fill CRNs</a>
                                         </div>
                                         <div class="col-md-3 col-xs-3">

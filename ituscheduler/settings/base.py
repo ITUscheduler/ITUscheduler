@@ -12,7 +12,7 @@ SECRET_KEY = SECRET_KEY
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com', '.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com']
 INTERNAL_IPS = ['127.0.0.1']
 
 EC2_PRIVATE_IP = None
