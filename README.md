@@ -25,7 +25,7 @@ Everyone is welcome to contribute. [Contact](http://ituscheduler.com/contact) us
 - [x] Check hours for collision
 - [x] Create & save schedules
 - [x] Upload old semesters by HTML file
-- [ ] Cronjobs to refresh the database automatically
+- [x] Task queue to refresh the database automatically
 - [ ] Check major restrictions & prerequisites
 - [ ] Generate & recommend possible schedules automatically
 
