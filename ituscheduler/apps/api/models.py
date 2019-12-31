@@ -27,7 +27,7 @@ class Semester(models.Model):
     SPRING_18 = "S18"
     FALL_17 = "F17"
     SPRING_17 = "S17"
-    CURRENT_SEMESTER = FALL_19
+    CURRENT_SEMESTER = SPRING_20
     SEMESTER_CHOICES = (
         (SUMMER_20, "2019-2020 Summer"),
         (SPRING_20, "2019-2020 Spring"),
