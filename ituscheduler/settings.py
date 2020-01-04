@@ -1,13 +1,14 @@
 import os
 
-from .secrets import (
-    SECRET_KEY,
-    BROKER_URL,
-)
+SECRET_KEY = os.environ.get('SECRET_KEY', 'on+@th%h49ncw2+v%i*8cgz8)6_@koy1j1rd7cq@s@=8y6(6%8')
 
-SECRET_KEY = SECRET_KEY
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if not os.environ.get('ITUSCHEDULER_STAGE') == 'development':
+    SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+else:
+    DEBUG = True
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
 ALLOWED_HOSTS = ['*']
@@ -22,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django.contrib.sitemaps',
     'rest_framework',
     'bootstrapform',
@@ -75,6 +77,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ituscheduler.wsgi.application'
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('ITUSCHEDULER_POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('ITUSCHEDULER_POSTGRES_PORT', '5432'),
+        'USER': os.environ.get('ITUSCHEDULER_POSTGRES_USER', 'ituscheduler'),
+        'PASSWORD': os.environ.get('ITUSCHEDULER_POSTGRES_PASSWORD', 'ituscheduler'),
+        'NAME': os.environ.get('ITUSCHEDULER_POSTGRES_NAME', 'ituscheduler'),
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -119,8 +132,16 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
+SITE_ID = 1
+MIGRATION_MODULES = {
+    'sites': 'ituscheduler.migrations',
+}
+
+META_SITE_PROTOCOL = 'https'
+META_USE_SITES = True
+
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = BROKER_URL
+CELERY_BROKER_URL = os.environ.get('BROKER_URL')
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'region': 'eu-west-1'
 }
@@ -128,3 +149,19 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SOCIAL_AUTH_TWITTER_KEY = os.environ.get('SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
+
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')

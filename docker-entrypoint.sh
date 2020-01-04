@@ -3,15 +3,9 @@ set -eo pipefail
 
 PROJECT=ituscheduler
 
-if [[ "$ITUSCHEDULER_STAGE" == "local" ]]; then
-    export DJANGO_SETTINGS_MODULE="$PROJECT".settings.local
-else
-    export DJANGO_SETTINGS_MODULE="$PROJECT".settings.production
-fi
-
 case "$CONTAINER_KIND" in
     web)
-        if [[ "$ITUSCHEDULER_STAGE" == "local" ]]; then
+        if [[ "$ITUSCHEDULER_STAGE" == "development" ]]; then
             exec python manage.py runserver 0.0.0.0:8000
         else
             exec gunicorn "$PROJECT".wsgi:application \
