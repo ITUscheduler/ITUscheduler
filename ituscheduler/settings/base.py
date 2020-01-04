@@ -1,7 +1,5 @@
 import os
 
-import requests
-
 from .secrets import (
     SECRET_KEY,
     BROKER_URL,
@@ -12,17 +10,8 @@ SECRET_KEY = SECRET_KEY
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ADMINS = [('Doruk', 'doruk@gezici.me')]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ituscheduler.com']
+ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
-
-EC2_PRIVATE_IP = None
-try:
-    EC2_PRIVATE_IP = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=0.01).text
-except Exception:
-    pass
-
-if EC2_PRIVATE_IP:
-    ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
 
 # Application definition
 
@@ -33,7 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'django.contrib.sitemaps',
     'rest_framework',
     'bootstrapform',
@@ -130,14 +118,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
-
-SITE_ID = 1
-MIGRATION_MODULES = {
-    'sites': 'ituscheduler.migrations',
-}
-
-META_SITE_PROTOCOL = 'https'
-META_USE_SITES = True
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = BROKER_URL
