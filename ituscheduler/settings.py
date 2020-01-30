@@ -1,4 +1,6 @@
 import os
+from kombu.utils.url import safequote
+
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'on+@th%h49ncw2+v%i*8cgz8)6_@koy1j1rd7cq@s@=8y6(6%8')
 
@@ -140,16 +142,6 @@ MIGRATION_MODULES = {
 META_SITE_PROTOCOL = 'https'
 META_USE_SITES = True
 
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = os.environ.get('BROKER_URL')
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'region': 'eu-west-1'
-}
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
@@ -163,5 +155,17 @@ SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_ACCESS_KEY_ID = safequote(os.environ.get('AWS_ACCESS_KEY_ID'))
+AWS_SECRET_ACCESS_KEY = safequote(os.environ.get('AWS_SECRET_ACCESS_KEY'))
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@".format(
+    aws_access_key=AWS_ACCESS_KEY_ID, aws_secret_key=AWS_SECRET_ACCESS_KEY,
+)
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'eu-west-1'
+}
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
