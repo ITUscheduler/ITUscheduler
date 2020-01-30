@@ -3,6 +3,7 @@
 *.icloud
 /.idea/
 /.env
+/.env.production
 /.envrc
 
 # Python
