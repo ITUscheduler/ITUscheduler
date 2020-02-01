@@ -17,6 +17,7 @@ x-backend-common: &backend-common
     ITUSCHEDULER_POSTGRES_USER: *POSTGRES_USER
     ITUSCHEDULER_POSTGRES_PASSWORD: *POSTGRES_PASSWORD
     ITUSCHEDULER_POSTGRES_DATABASE: *POSTGRES_DATABASE
+    COLUMNS: 80
   tty: true
 
 volumes:
@@ -43,8 +44,18 @@ services:
       CONTAINER_KIND: web
     restart: unless-stopped
 
-  celery:
+  worker:
     <<: *backend-common
+    depends_on:
+      - beat
     environment:
       <<: *backend-common-environment
-      CONTAINER_KIND: celery
+      CONTAINER_KIND: worker
+
+  beat:
+    <<: *backend-common
+    depends_on:
+      - postgres
+    environment:
+      <<: *backend-common-environment
+      CONTAINER_KIND: beat
