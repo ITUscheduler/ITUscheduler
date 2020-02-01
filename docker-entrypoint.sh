@@ -14,8 +14,11 @@ case "$CONTAINER_KIND" in
                 --log-file=-
         fi
     ;;
-    celery)
-        exec python manage.py celery
+    worker)
+        exec celery -A ituscheduler worker --concurrency 20 -l info
+    ;;
+    beat)
+        exec celery -A ituscheduler beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     ;;
     *)
         echo >&2 "Invalid CONTAINER_KIND: $CONTAINER_KIND."

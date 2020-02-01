@@ -155,8 +155,8 @@ SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 
-AWS_ACCESS_KEY_ID = safequote(os.environ.get('AWS_ACCESS_KEY_ID'))
-AWS_SECRET_ACCESS_KEY = safequote(os.environ.get('AWS_SECRET_ACCESS_KEY'))
+AWS_ACCESS_KEY_ID = safequote(str(os.environ.get('AWS_ACCESS_KEY_ID')))
+AWS_SECRET_ACCESS_KEY = safequote(str(os.environ.get('AWS_SECRET_ACCESS_KEY')))
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@".format(
