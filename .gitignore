@@ -19,7 +19,5 @@ migrations/
 *.sqlite3
 secrets.py
 
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+# AWS
+/aws/ssm/secrets.json
