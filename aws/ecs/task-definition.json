@@ -6,7 +6,7 @@
     {
       "name": "web",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 128,
+      "cpu": 256,
       "memoryReservation": 512,
       "portMappings": [
         {
@@ -98,7 +98,7 @@
     {
       "name": "worker",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 96,
+      "cpu": 192,
       "memoryReservation": 384,
       "portMappings": [],
       "essential": true,
@@ -184,7 +184,7 @@
     {
       "name": "beat",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 32,
+      "cpu": 64,
       "memoryReservation": 128,
       "portMappings": [],
       "essential": true,
@@ -273,6 +273,6 @@
   "requiresCompatibilities": [
     "FARGATE"
   ],
-  "cpu": "256",
+  "cpu": "512",
   "memory": "1024"
 }
