@@ -6,6 +6,8 @@ from django.utils import timezone
 
 
 class SemesterManager(models.Manager):
+    use_in_migrations = True
+
     def get_queryset(self):
         qs = super().get_queryset()
         current = qs.get_or_create(name=self.model.CURRENT_SEMESTER)[0]
@@ -17,6 +19,9 @@ class SemesterManager(models.Manager):
 
 
 class Semester(models.Model):
+    SUMMER_21 = "SU21"
+    SPRING_21 = "S21"
+    FALL_20 = "F20"
     SUMMER_20 = "SU20"
     SPRING_20 = "S20"
     FALL_19 = "F19"
@@ -27,8 +32,11 @@ class Semester(models.Model):
     SPRING_18 = "S18"
     FALL_17 = "F17"
     SPRING_17 = "S17"
-    CURRENT_SEMESTER = SUMMER_20
+    CURRENT_SEMESTER = FALL_20
     SEMESTER_CHOICES = (
+        (SUMMER_21, "2020-2021 Summer"),
+        (SPRING_21, "2020-2021 Spring"),
+        (FALL_20, "2020-2021 Fall"),
         (SUMMER_20, "2019-2020 Summer"),
         (SPRING_20, "2019-2020 Spring"),
         (FALL_19, "2019-2020 Fall"),
@@ -41,6 +49,9 @@ class Semester(models.Model):
         (SPRING_17, "2016-2017 Spring")
     )
     SEMESTER_CHOICES_TURKISH = (
+        (SUMMER_21, "2020-2021 Yaz"),
+        (SPRING_21, "2020-2021 Bahar"),
+        (FALL_20, "2020-2021 Güz"),
         (SUMMER_20, "2019-2020 Yaz"),
         (SPRING_20, "2019-2020 Bahar"),
         (FALL_19, "2019-2020 Güz"),
