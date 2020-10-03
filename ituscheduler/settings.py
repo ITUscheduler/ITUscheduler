@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'social_django',
     'meta',
     'font_awesome',
-    'django_celery_results',
+    # 'django_celery_results',
     'django_celery_beat',
     'celery_progress',
     'debug_toolbar',
