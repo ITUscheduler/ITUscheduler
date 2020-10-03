@@ -1,6 +1,6 @@
 beautifulsoup4==4.9.3
 celery-progress==0.0.12
-celery[sqs]==5.0.0
+celery[sqs]==4.3.1
 django-bootstrap-form==3.4
 django-celery-beat==2.0.0
 django-celery-results==1.2.1

@@ -15,10 +15,10 @@ case "$CONTAINER_KIND" in
         fi
     ;;
     worker)
-        exec celery --app ituscheduler worker --concurrency 20 -l INFO
+        exec celery worker --app ituscheduler --concurrency 20 -l INFO
     ;;
     beat)
-        exec celery --app ituscheduler beat -l INFO
+        exec celery beat --app ituscheduler --scheduler django_celery_beat.schedulers:DatabaseScheduler -l INFO
     ;;
     *)
         echo >&2 "Invalid CONTAINER_KIND: $CONTAINER_KIND."
