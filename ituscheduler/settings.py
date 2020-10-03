@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'meta',
     'font_awesome',
     # 'django_celery_results',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'celery_progress',
     'debug_toolbar',
 
@@ -158,7 +158,7 @@ SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
 AWS_ACCESS_KEY_ID = safequote(str(os.environ.get('AWS_ACCESS_KEY_ID')))
 AWS_SECRET_ACCESS_KEY = safequote(str(os.environ.get('AWS_SECRET_ACCESS_KEY')))
 
-CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@".format(
     aws_access_key=AWS_ACCESS_KEY_ID, aws_secret_key=AWS_SECRET_ACCESS_KEY,
 )

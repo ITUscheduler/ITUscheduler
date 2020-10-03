@@ -69,4 +69,4 @@ jobs:
           task-definition: ${{ steps.task-def-beat.outputs.task-definition }}
           service: ituscheduler
           cluster: ituscheduler
-          wait-for-service-stability: true
+          wait-for-service-stability: false
