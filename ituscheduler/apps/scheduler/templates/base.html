@@ -2,25 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63317374-5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', 'UA-63317374-5');
-    </script>
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-9144734939845709",
-            enable_page_level_ads: true
-        });
-    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KRHNSWR');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -53,6 +41,10 @@
     <script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRHNSWR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="content">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -83,13 +75,6 @@
                             href="{{ contact_url }}">Contact </a></li>
                     {% url "info:index" as info_url %}
                     <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
-                    {#                        <li class="dropdown">#}
-                    {#                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">API <span class="caret"></span></a>#}
-                    {#                            <ul class="dropdown-menu" role="menu">#}
-                    {#                                <li><a href="{% url "course_api:major_code_list_api"%}">Major Codes</a></li>#}
-                    {#                                <li><a href="{% url "course_api:list_api" major_code="BLG"%}">Courses</a></li>#}
-                    {#                            </ul>#}
-                    {#                        </li>#}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
@@ -143,19 +128,18 @@
 <footer class="navbar navbar-default footer">
     <div class="container">
         <ul class="nav navbar-nav">
-            <li><a href="//github.com/ITUscheduler/ITUscheduler" target="_blank"><span class="copyleft">&copy;</span>
+            <li><a href="https://github.com/ITUscheduler/ITUscheduler" target="_blank"><span class="copyleft">&copy;</span>
                 Copyleft 2018 | ITUscheduler</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="http://dorukgezici.com" target="_blank">Doruk Gezici</a></li>
+            <li><a href="https://dorukgezici.com" target="_blank">Doruk Gezici</a></li>
             <!--
-        Kendinize iyi bakın..
-        <li><a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
-    -->
+            Kendinize iyi bakın..
+            <li><a href="//github.com/mehmetaltuner" target="_blank">Mehmet Altuner</a></li>
+            -->
         </ul>
     </div>
 </footer>
-<script src="//mautic.gamerarena.com/focus/3.js" type="text/javascript" charset="utf-8" async="async"></script>
 {% block script %}{% endblock %}
 </body>
 </html>
