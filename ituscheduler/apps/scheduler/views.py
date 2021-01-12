@@ -289,30 +289,6 @@ class RegistrationView(generic.FormView):
         return super().form_valid(form)
 
 
-def contact(request):
-    form_class = ContactForm
-    if request.method == "POST":
-        form = form_class(data=request.POST)
-        if form.is_valid():
-            subject = "[ITUscheduler] | " + form.cleaned_data['name']
-            message = form.cleaned_data['message']
-            reply_to = [form.cleaned_data['email']]
-            sender = "info@ituscheduler.com"
-            recipients = ['info@ituscheduler.com']
-            cc_myself = True  # form.cleaned_data['cc_myself']
-            if cc_myself:
-                recipients.extend(reply_to)
-            msg = EmailMessage(subject, message, sender, recipients, reply_to=reply_to)
-            msg.send()
-        return render(request, 'contact.html', {
-            'form': form,
-            'successful': True
-        })
-    return render(request, 'contact.html', {
-        'form': form_class
-    })
-
-
 def privacy_policy(request):
     return render(request, 'privacypolicy.htm')
 

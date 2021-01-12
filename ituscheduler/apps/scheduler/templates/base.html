@@ -65,14 +65,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     {% url "index" as index_url %}
-                    <li {% if request.path == index_url %}class="active"{% endif %}><a href="{{ index_url }}">Home </a>
+                    <li {% if request.path == index_url %}class="active"{% endif %}>
+                        <a href="{{ index_url }}">Home </a>
                     </li>
                     {% url "courses" as courses_url %}
-                    <li {% if "courses" in request.path %}class="active"{% endif %}><a
-                            href="{{ courses_url }}">Courses </a></li>
-                    {% url "contact" as contact_url %}
-                    <li {% if "contact" in request.path %}class="active"{% endif %}><a
-                            href="{{ contact_url }}">Contact </a></li>
+                    <li {% if "courses" in request.path %}class="active"{% endif %}>
+                        <a href="{{ courses_url }}">Courses </a>
+                    </li>
                     {% url "info:index" as info_url %}
                     <li {% if "info" in request.path %}class="active"{% endif %}><a href="{{ info_url }}">Info </a></li>
                 </ul>

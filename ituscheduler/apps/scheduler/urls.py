@@ -9,7 +9,6 @@ urlpatterns = [
     path('share/<str:username>/', views.ScheduleView.as_view(), name="share"),
     path('signup', views.RegistrationView.as_view(), name="signup"),
     path('courses', views.CoursesView.as_view(), name="courses"),
-    path('contact/', views.contact, name="contact"),
     path('my-courses/remove', views.remove_my_courses, name="remove_my_courses"),
     path('schedule/addCourse', views.add_course, name="add_course"),
     path('schedule/select', views.select_schedule, name="select_schedule"),
