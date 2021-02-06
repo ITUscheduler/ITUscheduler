@@ -19,7 +19,7 @@ from .models import (
     Lecture,
 )
 
-BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
+BASE_URL = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
 
 
 @shared_task(bind=True)
@@ -28,12 +28,15 @@ def refresh_courses(self, major_codes):
     major_codes_finished = []
     for code in major_codes:
         major_code = get_object_or_404(MajorCode, code=code)
-        r = HTMLSession().get(BASE_URL + code)
+        r = HTMLSession().post(
+            url=BASE_URL,
+            data={'seviye': 'LS', 'derskodu': code}
+        )
         soup = BeautifulSoup(r.content, "html5lib")
         html = HTML(html=str(soup))
         semester = Semester.objects.current()
 
-        table = html.find("table.dersprg", first=True)
+        table = html.find("table.table.table-bordered.table-striped.table-hover.table-responsive", first=True)
         courses = table.find("tr")[2::]  # First two rows are table headers
         qs = Course.objects.filter(semester=semester, major_code=major_code)
         qs.update(active=False)

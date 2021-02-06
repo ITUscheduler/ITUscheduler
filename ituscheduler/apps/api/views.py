@@ -19,7 +19,7 @@ from .models import (
 from .tasks import refresh_courses
 from ..scheduler.models import Schedule
 
-BASE_URL = "http://www.sis.itu.edu.tr/tr/ders_programlari/LSprogramlar/prg.php?fb="
+BASE_URL = "https://www.sis.itu.edu.tr/TR/ogrenci/ders-programi/ders-programi.php?seviye=LS"
 
 
 class RefreshCoursesView(UserPassesTestMixin, generic.ListView):
@@ -40,7 +40,7 @@ def db_refresh_major_codes(request):
 
     html_response = "<a href='/'><h1>Major Codes refreshed!</h1></a>"
     codes = [major_code.code for major_code in MajorCode.objects.all()]
-    options = html.find("select > option")[1:]
+    options = html.find("select[name=derskodu] > option")[1:]
 
     for option in options:
         opt = option.text
