@@ -32,7 +32,7 @@ class Semester(models.Model):
     SPRING_18 = "S18"
     FALL_17 = "F17"
     SPRING_17 = "S17"
-    CURRENT_SEMESTER = FALL_20
+    CURRENT_SEMESTER = SPRING_21
     SEMESTER_CHOICES = (
         (SUMMER_21, "2020-2021 Summer"),
         (SPRING_21, "2020-2021 Spring"),

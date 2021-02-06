@@ -8,6 +8,7 @@ case "$CONTAINER_KIND" in
         if [[ "$ITUSCHEDULER_STAGE" == "development" ]]; then
             exec python manage.py runserver 0.0.0.0:8000
         else
+            python manage.py migrate
             exec gunicorn "$PROJECT".wsgi:application \
                 --bind=0.0.0.0:80 \
                 --log-level=info \
