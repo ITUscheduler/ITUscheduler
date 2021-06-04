@@ -8,7 +8,7 @@ django-debug-toolbar==3.2
 django-font-awesome==4.6.1
 django-gravatar2==1.4.4
 django-meta==2.0.0
-Django==3.1.6
+Django==3.1.9
 djangorestframework==3.12.2
 gunicorn==20.0.4
 html5lib==1.1
