@@ -19,6 +19,9 @@ class SemesterManager(models.Manager):
 
 
 class Semester(models.Model):
+    SUMMER_22 = "SU22"
+    SPRING_22 = "S22"
+    FALL_21 = "F21"
     SUMMER_21 = "SU21"
     SPRING_21 = "S21"
     FALL_20 = "F20"
@@ -32,8 +35,11 @@ class Semester(models.Model):
     SPRING_18 = "S18"
     FALL_17 = "F17"
     SPRING_17 = "S17"
-    CURRENT_SEMESTER = SUMMER_21
+    CURRENT_SEMESTER = FALL_21
     SEMESTER_CHOICES = (
+        (SUMMER_22, "2021-2022 Summer"),
+        (SPRING_22, "2021-2022 Spring"),
+        (FALL_21, "2021-2022 Fall"),
         (SUMMER_21, "2020-2021 Summer"),
         (SPRING_21, "2020-2021 Spring"),
         (FALL_20, "2020-2021 Fall"),
@@ -49,6 +55,9 @@ class Semester(models.Model):
         (SPRING_17, "2016-2017 Spring")
     )
     SEMESTER_CHOICES_TURKISH = (
+        (SUMMER_22, "2021-2022 Yaz"),
+        (SPRING_22, "2021-2022 Bahar"),
+        (FALL_21, "2021-2022 Güz"),
         (SUMMER_21, "2020-2021 Yaz"),
         (SPRING_21, "2020-2021 Bahar"),
         (FALL_20, "2020-2021 Güz"),
