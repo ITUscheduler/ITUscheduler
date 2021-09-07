@@ -135,6 +135,7 @@ class Course(models.Model):
     catalogue = models.URLField(null=True, blank=True)
     code = models.CharField(max_length=40)
     title = models.CharField(max_length=250)
+    teaching_method = models.CharField(max_length=250)
     instructor = models.CharField(max_length=500)
     capacity = models.PositiveSmallIntegerField()
     enrolled = models.PositiveSmallIntegerField(default=0)

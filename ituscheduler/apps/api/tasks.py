@@ -36,21 +36,40 @@ def refresh_courses(self, major_codes):
         html = HTML(html=str(soup))
         semester = Semester.objects.current()
 
+        # find table
         table = html.find("table.table.table-bordered.table-striped.table-hover.table-responsive", first=True)
         courses = table.find("tr")[2::]  # First two rows are table headers
         qs = Course.objects.filter(semester=semester, major_code=major_code)
         qs.update(active=False)
 
+        # <tr class="table-baslik">
+        #   <td>CRN</td> 0
+        #   <td width="80">Course Code</td> 1
+        #   <td>Course Title</td> 2
+        #   <td>Teaching Method</td> 3
+        #   <td>Instructor</td> 4
+        #   <td>Building</td> 5
+        #   <td>Day</td> 6
+        #   <td>Time</td> 7
+        #   <td>Room</td> 8
+        #   <td>Capacity</td> 9
+        #   <td><i>Enrolled</i></td> 10
+        #   <td>Reservation<br>Maj./Cap./Enrl.</a></td> 11
+        #   <td>Major Restriction</td> 12
+        #   <td width="180">Prerequisites</td> 13
+        #   <td>Class Rest.</td> 14
+        # </tr>
         for course in courses:
             elements = course.find("td")
             catalogue = elements[1].absolute_links.pop()
             crn = elements[0].text
             course_code = elements[1].text
             title = elements[2].text
-            instructor = elements[3].text
+            teaching_method = elements[3].text
+            instructor = elements[4].text
 
             try:
-                buildings_raw = re.search("\">(.*)<br/>", elements[4].html).group(1)
+                buildings_raw = re.search("\">(.*)<br/>", elements[5].html).group(1)
             except AttributeError:
                 buildings_raw = ""
             buildings = buildings_raw.split("<br/>")
@@ -59,7 +78,7 @@ def refresh_courses(self, major_codes):
             times_start = ""
             times_finish = ""
             for index in range(lecture_count):
-                time = elements[6].full_text.split()[index].split("/")
+                time = elements[7].full_text.split()[index].split("/")
                 if "" in time or "----" in time:
                     time = ["2500", "2500"]
                 for i in range(2):
@@ -71,10 +90,10 @@ def refresh_courses(self, major_codes):
             times_start = times_start[:-1:]
             times_finish = times_finish[:-1:]
 
-            days = elements[5].text.split()
-            restricted_majors = elements[11].text.split(", ")
+            days = elements[6].text.split()
+            restricted_majors = elements[12].text.split(", ")
 
-            prerequisites = re.sub("veya", " or", elements[12].text)
+            prerequisites = re.sub("veya", " or", elements[13].text)
             prerequisites.replace("(", "")
             prerequisites.replace(")", "")
             prerequisites_objects = []
@@ -89,10 +108,10 @@ def refresh_courses(self, major_codes):
                     prerequisites_objects.append(
                         Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
 
-            capacity = int(elements[8].text)
-            enrolled = int(elements[9].text)
-            reservation = elements[10].text[:100]
-            class_restriction = elements[13].text[:110]
+            capacity = int(elements[9].text)
+            enrolled = int(elements[10].text)
+            reservation = elements[11].text[:100]
+            class_restriction = elements[14].text[:110]
 
             if Course.objects.filter(crn=crn).exists():
                 course_obj = Course.objects.get(crn=crn)
@@ -102,6 +121,7 @@ def refresh_courses(self, major_codes):
                 course_obj.catalogue = catalogue
                 course_obj.code = course_code
                 course_obj.title = title
+                course_obj.teaching_method = teaching_method
                 course_obj.instructor = instructor
                 course_obj.capacity = capacity
                 course_obj.enrolled = enrolled
@@ -122,6 +142,7 @@ def refresh_courses(self, major_codes):
                     catalogue=catalogue,
                     code=course_code,
                     title=title,
+                    teaching_method=teaching_method,
                     instructor=instructor,
                     capacity=capacity,
                     enrolled=enrolled,
@@ -133,7 +154,7 @@ def refresh_courses(self, major_codes):
             for i in range(lecture_count):
                 time_start = times_start.split(",")[i]
                 time_finish = times_finish.split(",")[i]
-                room = elements[7].full_text.split()[i]
+                room = elements[8].full_text.split()[i]
 
                 Lecture.objects.create(
                     building=buildings[i],
