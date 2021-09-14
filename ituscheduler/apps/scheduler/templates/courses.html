@@ -79,6 +79,7 @@
                                         <th>CRN</th>
                                         <th>Major Code</th>
                                         <th>Title</th>
+                                        <th>Teaching Method</th>
                                         <th>Instructor</th>
                                         <th>Building</th>
                                         <th>Day</th>
@@ -106,6 +107,7 @@
                                             <td><a target="_blank" href="{{ course.catalogue }}">{{ course.code }}</a>
                                             </td>
                                             <td>{{ course.title }}</td>
+                                            <td>{{ course.teaching_method }}</td>
                                             <td>{{ course.instructor }}</td>
                                             <td><a href="javascript:listBuildings();">
                                                 {% for lecture in course.lecture_set.all %}{{ lecture.building }}
