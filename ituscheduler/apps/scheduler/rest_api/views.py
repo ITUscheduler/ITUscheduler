@@ -62,11 +62,11 @@ class ScheduleDetailAPIView(RetrieveAPIView):
         # if request.user == self.get_object().user:
         instance = self.get_object()
         serializer = self.get_serializer(instance).data
-        serializer['courses'] = CourseSerializer(instance.courses.all(), many=True).data
+        serializer['courses'] = CourseSerializer(instance.courses.filter(active=True), many=True).data
         for data in serializer['courses']:
             query = Course.objects.get(crn=data['crn'])
 
-            available, _ = is_available(instance.courses.all(), query)
+            available, _ = is_available(instance.courses.filter(active=True), query)
 
             if not available:
                 data['overlaps'] = True

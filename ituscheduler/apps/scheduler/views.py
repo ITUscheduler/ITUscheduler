@@ -4,7 +4,6 @@ from django.contrib.auth import (
     login,
 )
 from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMessage
 from django.http import (
     JsonResponse,
     HttpResponse,
@@ -17,7 +16,6 @@ from meta.views import MetadataMixin
 from .forms import (
     ScheduleForm,
     CustomUserCreationForm,
-    ContactForm,
 )
 from ..api.models import (
     MajorCode,
@@ -119,7 +117,7 @@ class IndexView(MetadataMixin, generic.CreateView):
         kwargs = super().get_form_kwargs()
         user = self.request.user
         if user.is_authenticated:
-            kwargs["courses"] = user.courses
+            kwargs["courses"] = user.courses.filter(active=True)
             if self.request.method == "POST":
                 post_data = kwargs["data"].copy()
                 post_data["user"] = user.id
@@ -186,7 +184,6 @@ class IndexView(MetadataMixin, generic.CreateView):
         context["hours"] = hours
 
         if user.is_authenticated:
-            context["courses"] = user.courses.all()
             schedules = Schedule.objects.filter(user=user).all()
             context["schedules"] = schedules
 

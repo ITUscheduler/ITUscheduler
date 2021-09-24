@@ -56,8 +56,14 @@
                                             schedule [Schedule: {{ selected_schedule }}]</label>
                                         <ul class="list-group" id="selected-courses">
                                             {% for course in my_courses %}
-                                                <li class="list-group-item">{{ course }} <a
-                                                        href="javascript:removeCourse({{ course.crn }})">Remove</a></li>
+                                                <li class="list-group-item">
+                                                    {{ course }}
+                                                    <a href="javascript:removeCourse({{ course.crn }})">Remove</a>
+                                                    {% if course.active == False %}
+                                                        <br>
+                                                        <b style="color: red;">COURSE IS REMOVED FROM SIS</b>
+                                                    {% endif %}
+                                                </li>
                                             {% endfor %}
                                         </ul>
                                     </div>
