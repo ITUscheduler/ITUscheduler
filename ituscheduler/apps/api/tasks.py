@@ -108,8 +108,13 @@ def refresh_courses(self, major_codes):
                     prerequisites_objects.append(
                         Prerequisite.objects.get_or_create(code=course, min_grade=grade)[0])
 
-            capacity = int(elements[9].text)
-            enrolled = int(elements[10].text)
+            try:
+                capacity = int(elements[9].text)
+                enrolled = int(elements[10].text)
+            except ValueError:
+                capacity = 0
+                enrolled = 0
+
             reservation = elements[11].text[:100]
             class_restriction = elements[14].text[:110]
 
