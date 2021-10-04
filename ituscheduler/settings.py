@@ -1,6 +1,9 @@
 import os
-from kombu.utils.url import safequote
 
+import sentry_sdk
+from kombu.utils.url import safequote
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'on+@th%h49ncw2+v%i*8cgz8)6_@koy1j1rd7cq@s@=8y6(6%8')
 
@@ -37,7 +40,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'celery_progress',
     'debug_toolbar',
-
+    # apps
     'ituscheduler.apps.api',
     'ituscheduler.apps.scheduler',
     'ituscheduler.apps.blog',
@@ -169,3 +172,19 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+# Sentry
+sentry_sdk.init(
+    dsn=os.environ.get('LIVAD_SENTRY_DSN'),
+    environment=os.environ.get('ITUSCHEDULER_STAGE', 'development'),
+    integrations=[DjangoIntegration(), CeleryIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+)

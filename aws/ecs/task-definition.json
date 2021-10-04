@@ -64,6 +64,10 @@
           "valueFrom": "/ITUscheduler/POSTGRES_USER"
         },
         {
+          "name": "ITUSCHEDULER_SENTRY_DSN",
+          "valueFrom": "/ITUscheduler/SENTRY_DSN"
+        },
+        {
           "name": "SECRET_KEY",
           "valueFrom": "/ITUscheduler/SECRET_KEY"
         },
@@ -150,6 +154,10 @@
           "valueFrom": "/ITUscheduler/POSTGRES_USER"
         },
         {
+          "name": "ITUSCHEDULER_SENTRY_DSN",
+          "valueFrom": "/ITUscheduler/SENTRY_DSN"
+        },
+        {
           "name": "SECRET_KEY",
           "valueFrom": "/ITUscheduler/SECRET_KEY"
         },
@@ -234,6 +242,10 @@
         {
           "name": "ITUSCHEDULER_POSTGRES_USER",
           "valueFrom": "/ITUscheduler/POSTGRES_USER"
+        },
+        {
+          "name": "ITUSCHEDULER_SENTRY_DSN",
+          "valueFrom": "/ITUscheduler/SENTRY_DSN"
         },
         {
           "name": "SECRET_KEY",

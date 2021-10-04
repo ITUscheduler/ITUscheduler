@@ -19,3 +19,4 @@ requests-html==0.10.0
 requests==2.26.0
 social-auth-app-django==5.0.0
 whitenoise==5.3.0
+sentry_sdk==1.4.3
