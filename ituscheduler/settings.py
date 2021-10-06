@@ -175,7 +175,7 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # Sentry
 sentry_sdk.init(
-    dsn=os.environ.get('LIVAD_SENTRY_DSN'),
+    dsn=os.environ.get('ITUSCHEDULER_SENTRY_DSN'),
     environment=os.environ.get('ITUSCHEDULER_STAGE', 'development'),
     integrations=[DjangoIntegration(), CeleryIntegration()],
 
