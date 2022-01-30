@@ -11,7 +11,6 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.views import generic
-from meta.views import MetadataMixin
 
 from .forms import (
     ScheduleForm,
@@ -103,15 +102,9 @@ class ScheduleView(generic.DetailView):
         return context
 
 
-class IndexView(MetadataMixin, generic.CreateView):
+class IndexView(generic.CreateView):
     form_class = ScheduleForm
     template_name = "index.html"
-
-    title = 'ITU Scheduler'
-    description = 'With ITU Scheduler you can browse up-to-date & detailed information about ITU courses and create possible course schedules with ease.'
-    keywords = ['ITU', 'Scheduler', 'İTÜ', 'ITUscheduler', 'İTÜ Ders Programı', 'İTÜ Programcı', 'İTÜ Şenlikçi',
-                'dersler']
-    url = '/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

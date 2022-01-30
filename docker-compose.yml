@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.9"
 
 x-env-variables:
   - &POSTGRES_USER ituscheduler
@@ -6,11 +6,13 @@ x-env-variables:
   - &POSTGRES_DATABASE ituscheduler
 
 x-backend-common: &backend-common
-  image: 048826950968.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler
+  image: ituscheduler
+  platform: linux/x86_64
+  build: .
   volumes:
     - ./ituscheduler:/ituscheduler/ituscheduler
-  env_file:
-    - ./.env
+    - ./fixtures:/ituscheduler/fixtures
+  env_file: .env
   environment: &backend-common-environment
     ITUSCHEDULER_POSTGRES_HOST: postgres
     ITUSCHEDULER_POSTGRES_PORT: 5432

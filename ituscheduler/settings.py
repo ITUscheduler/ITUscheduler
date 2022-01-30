@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'bootstrapform',
     'django_gravatar',
     'social_django',
-    'meta',
     'font_awesome',
     'django_celery_results',
     'django_celery_beat',
@@ -141,9 +140,6 @@ SITE_ID = 1
 MIGRATION_MODULES = {
     'sites': 'ituscheduler.migrations',
 }
-
-META_SITE_PROTOCOL = 'https'
-META_USE_SITES = True
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')

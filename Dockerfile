@@ -1,15 +1,14 @@
-FROM python:3
+FROM python:3.10
 
 ENV PYTHONUNBUFFERED 1
-
 WORKDIR /ituscheduler
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY manage.py manage.py
-COPY fixtures fixtures
 COPY ituscheduler ituscheduler
+COPY fixtures fixtures
+COPY manage.py manage.py
 
 RUN python manage.py collectstatic --no-input
 
