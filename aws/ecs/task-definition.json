@@ -103,7 +103,7 @@
       "name": "worker",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
       "cpu": 192,
-      "memoryReservation": 384,
+      "memoryReservation": 1408,
       "portMappings": [],
       "essential": true,
       "environment": [
@@ -286,5 +286,5 @@
     "FARGATE"
   ],
   "cpu": "512",
-  "memory": "1024"
+  "memory": "2048"
 }
