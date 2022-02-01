@@ -12,6 +12,8 @@ x-backend-common: &backend-common
   volumes:
     - ./ituscheduler:/ituscheduler/ituscheduler
     - ./fixtures:/ituscheduler/fixtures
+    - ./scripts:/ituscheduler/scripts
+
   env_file: .env
   environment: &backend-common-environment
     ITUSCHEDULER_POSTGRES_HOST: postgres
@@ -19,7 +21,6 @@ x-backend-common: &backend-common
     ITUSCHEDULER_POSTGRES_USER: *POSTGRES_USER
     ITUSCHEDULER_POSTGRES_PASSWORD: *POSTGRES_PASSWORD
     ITUSCHEDULER_POSTGRES_DATABASE: *POSTGRES_DATABASE
-    COLUMNS: 80
   tty: true
 
 volumes:
@@ -45,7 +46,7 @@ services:
       - "8000:8000"
     environment:
       <<: *backend-common-environment
-      CONTAINER_KIND: web
+      ITUSCHEDULER_CONTAINER_KIND: web
     restart: unless-stopped
 
   worker:
@@ -54,7 +55,7 @@ services:
       - beat
     environment:
       <<: *backend-common-environment
-      CONTAINER_KIND: worker
+      ITUSCHEDULER_CONTAINER_KIND: worker
 
   beat:
     <<: *backend-common
@@ -62,4 +63,4 @@ services:
       - postgres
     environment:
       <<: *backend-common-environment
-      CONTAINER_KIND: beat
+      ITUSCHEDULER_CONTAINER_KIND: beat

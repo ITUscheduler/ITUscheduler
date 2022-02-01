@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import ituscheduler.apps.api.models
+import ituscheduler.api.models
 import uuid
 
 
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(choices=[('SU21', '2020-2021 Summer'), ('S21', '2020-2021 Spring'), ('F20', '2020-2021 Fall'), ('SU20', '2019-2020 Summer'), ('S20', '2019-2020 Spring'), ('F19', '2019-2020 Fall'), ('SU19', '2018-2019 Summer'), ('S19', '2018-2019 Spring'), ('F18', '2018-2019 Fall'), ('SU18', '2017-2018 Summer'), ('S18', '2017-2018 Spring'), ('F17', '2017-2018 Fall'), ('S17', '2016-2017 Spring')], default='F20', max_length=4, primary_key=True, serialize=False, unique=True)),
             ],
             managers=[
-                ('objects', ituscheduler.apps.api.models.SemesterManager()),
+                ('objects', ituscheduler.api.models.SemesterManager()),
             ],
         ),
         migrations.CreateModel(

@@ -8,6 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY ituscheduler ituscheduler
 COPY fixtures fixtures
+COPY scripts scripts
 COPY manage.py manage.py
 
 RUN python manage.py collectstatic --no-input

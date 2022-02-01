@@ -14,8 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
-from ituscheduler.apps.api.models import Course
-from ituscheduler.apps.api.rest_api.serializers import (
+from ituscheduler.api.models import Course
+from ituscheduler.api.rest_api.serializers import (
     CourseSerializer,
     LectureSerializer,
     PrerequisiteSerializer,

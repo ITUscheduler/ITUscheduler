@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ituscheduler.apps.scheduler.views import is_available
+from ituscheduler.scheduler.views import is_available
 from .serializers import (
     CourseSerializer,
     MajorCodeSerializer,

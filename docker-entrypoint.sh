@@ -3,25 +3,25 @@ set -eo pipefail
 
 PROJECT=ituscheduler
 
-case "$CONTAINER_KIND" in
+# run validation script
+python3 scripts/startup_check.py
+
+case "$ITUSCHEDULER_CONTAINER_KIND" in
     web)
         if [[ "$ITUSCHEDULER_STAGE" == "development" ]]; then
             exec python manage.py runserver 0.0.0.0:8000
         else
             python manage.py migrate
-            exec gunicorn "$PROJECT".wsgi:application \
-                --bind=0.0.0.0:80 \
-                --log-level=info \
-                --log-file=-
+            exec gunicorn "$PROJECT".wsgi:application --workers 2 --bind=0.0.0.0:80
         fi
     ;;
     worker)
-        exec celery --app ituscheduler worker --concurrency 20 -l INFO
+        exec celery --app "$PROJECT" worker --concurrency 20 -l INFO
     ;;
     beat)
-        exec celery --app ituscheduler beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l INFO
+        exec celery --app "$PROJECT" beat -l INFO
     ;;
     *)
-        echo >&2 "Invalid CONTAINER_KIND: $CONTAINER_KIND."
+        echo >&2 "Invalid ITUSCHEDULER_CONTAINER_KIND: $ITUSCHEDULER_CONTAINER_KIND."
         exit 1
 esac

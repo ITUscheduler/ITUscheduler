@@ -8,11 +8,11 @@ ITU Scheduler is a Python Django Web Application that parses ITU's SIS website a
 - `pip3 install -r requirements.txt`
 
 # Usage on localhost
-- `python3 manage.py makemigrations api scheduler blog`
+- `python3 manage.py makemigrations`
 - `python3 manage.py migrate`
 - `python3 manage.py createsuperuser` to create a super-admin user
 - `python3 manage.py runserver`
-- Check 127.0.0.1:8000 on your browser & login
+- Check `127.0.0.1:8000` on your browser & login
 - Refresh database from Menu -> Database -> Refresh Course Codes & Refresh Courses
 
 # Contribution

@@ -5,19 +5,14 @@ from kombu.utils.url import safequote
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'on+@th%h49ncw2+v%i*8cgz8)6_@koy1j1rd7cq@s@=8y6(6%8')
-
+SECRET_KEY = os.environ.get('ITUSCHEDULER_SECRET_KEY', 'notsosecretkey')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-if not os.environ.get('ITUSCHEDULER_STAGE') == 'development':
-    SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
-else:
-    DEBUG = True
-
+DEBUG = os.environ.get('ITUSCHEDULER_STAGE', 'development') == 'development'
 ADMINS = [('Doruk', 'doruk@gezici.me')]
-ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
+
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://ituscheduler.com']
 
 # Application definition
@@ -41,9 +36,9 @@ INSTALLED_APPS = [
     'celery_progress',
     'debug_toolbar',
     # apps
-    'ituscheduler.apps.api',
-    'ituscheduler.apps.scheduler',
-    'ituscheduler.apps.blog',
+    'ituscheduler.api',
+    'ituscheduler.scheduler',
+    'ituscheduler.blog',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'ituscheduler.apps.scheduler.context_processors.global_processor',
+                'ituscheduler.scheduler.context_processors.global_processor',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
             ],
@@ -108,8 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "scheduler.ExtendedUser"
-SOCIAL_AUTH_USER_MODEL = "scheduler.ExtendedUser"
+AUTH_USER_MODEL = 'scheduler.ExtendedUser'
+SOCIAL_AUTH_USER_MODEL = 'scheduler.ExtendedUser'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',
@@ -133,7 +128,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
@@ -142,33 +137,22 @@ MIGRATION_MODULES = {
     'sites': 'ituscheduler.migrations',
 }
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = os.environ.get('ITUSCHEDULER_EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('ITUSCHEDULER_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('ITUSCHEDULER_EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-SOCIAL_AUTH_TWITTER_KEY = os.environ.get('SOCIAL_AUTH_TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
+SOCIAL_AUTH_TWITTER_KEY = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_TWITTER_SECRET')
 
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_SECRET')
 
-AWS_ACCESS_KEY_ID = safequote(str(os.environ.get('AWS_ACCESS_KEY_ID')))
-AWS_SECRET_ACCESS_KEY = safequote(str(os.environ.get('AWS_SECRET_ACCESS_KEY')))
-
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@".format(
-    aws_access_key=AWS_ACCESS_KEY_ID, aws_secret_key=AWS_SECRET_ACCESS_KEY,
-)
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'region': 'eu-west-1'
-}
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
+AWS_ACCESS_KEY_ID = safequote(str(os.environ.get('ITUSCHEDULER_AWS_ACCESS_KEY_ID')))
+AWS_SECRET_ACCESS_KEY = safequote(str(os.environ.get('ITUSCHEDULER_AWS_SECRET_ACCESS_KEY')))
+AWS_DEFAULT_REGION = os.environ.get('ITUSCHEDULER_AWS_DEFAULT_REGION')
 
 # Sentry
 sentry_sdk.init(

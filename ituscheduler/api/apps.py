@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ApiConfig(AppConfig):
-    name = 'ituscheduler.apps.api'
+    name = 'ituscheduler.api'
