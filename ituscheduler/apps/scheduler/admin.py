@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from .models import (
     Schedule,
@@ -15,8 +16,9 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 
 @admin.register(ExtendedUser)
-class ExtendedUserAdmin(admin.ModelAdmin):
+class ExtendedUserAdmin(UserAdmin):
     list_display = ("username", "email", "first_name", "last_name", "my_schedule", "date_joined")
+    list_filter = ('is_staff', 'is_superuser', 'is_active')
     search_fields = ("username", "email", "first_name", "last_name", "my_schedule__id")
     raw_id_fields = ("courses",)
 

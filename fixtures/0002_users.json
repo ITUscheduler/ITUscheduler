@@ -1,0 +1,24 @@
+[
+  {
+    "model": "scheduler.extendeduser",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$U8eCEakDkET5XxvMK007Jk$6u4FEhoI1/iAwwKDyYPYrkW5Jg9bOEt5syNt2ZSBHno=",
+      "last_login": "2022-02-01T12:04:50.631Z",
+      "is_superuser": true,
+      "username": "dorukgezici",
+      "first_name": "Doruk",
+      "last_name": "Gezici",
+      "email": "doruk@gezici.me",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-01-31T13:40:03Z",
+      "my_major_code": null,
+      "my_semester": "F21",
+      "my_schedule": null,
+      "groups": [],
+      "user_permissions": [],
+      "courses": []
+    }
+  }
+]
