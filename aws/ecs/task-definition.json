@@ -36,6 +36,10 @@
           "valueFrom": "/ITUscheduler/AWS_SECRET_ACCESS_KEY"
         },
         {
+          "name": "ITUSCHEDULER_AWS_DEFAULT_REGION",
+          "valueFrom": "/ITUscheduler/AWS_DEFAULT_REGION"
+        },
+        {
           "name": "ITUSCHEDULER_EMAIL_HOST",
           "valueFrom": "/ITUscheduler/EMAIL_HOST"
         },
@@ -126,6 +130,10 @@
           "valueFrom": "/ITUscheduler/AWS_SECRET_ACCESS_KEY"
         },
         {
+          "name": "ITUSCHEDULER_AWS_DEFAULT_REGION",
+          "valueFrom": "/ITUscheduler/AWS_DEFAULT_REGION"
+        },
+        {
           "name": "ITUSCHEDULER_EMAIL_HOST",
           "valueFrom": "/ITUscheduler/EMAIL_HOST"
         },
@@ -214,6 +222,10 @@
         {
           "name": "ITUSCHEDULER_AWS_SECRET_ACCESS_KEY",
           "valueFrom": "/ITUscheduler/AWS_SECRET_ACCESS_KEY"
+        },
+        {
+          "name": "ITUSCHEDULER_AWS_DEFAULT_REGION",
+          "valueFrom": "/ITUscheduler/AWS_DEFAULT_REGION"
         },
         {
           "name": "ITUSCHEDULER_EMAIL_HOST",
