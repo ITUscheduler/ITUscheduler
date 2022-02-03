@@ -280,7 +280,7 @@ class RegistrationView(generic.FormView):
 
 
 def privacy_policy(request):
-    return render(request, 'privacypolicy.htm')
+    return render(request, 'privacy-policy.html')
 
 
 @login_required
