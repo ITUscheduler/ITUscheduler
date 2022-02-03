@@ -15,8 +15,6 @@ INTERNAL_IPS = ['127.0.0.1']
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://ituscheduler.com']
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'scheduler.ExtendedUser'
-SOCIAL_AUTH_USER_MODEL = 'scheduler.ExtendedUser'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.twitter.TwitterOAuth',
@@ -137,6 +134,7 @@ MIGRATION_MODULES = {
     'sites': 'ituscheduler.migrations',
 }
 
+# Email
 EMAIL_HOST = os.environ.get('ITUSCHEDULER_EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('ITUSCHEDULER_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('ITUSCHEDULER_EMAIL_HOST_PASSWORD')
@@ -144,12 +142,17 @@ EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Social Auth
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_TWITTER_SECRET')
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_SECRET')
 
+# AWS
 AWS_ACCESS_KEY_ID = safequote(str(os.environ.get('ITUSCHEDULER_AWS_ACCESS_KEY_ID')))
 AWS_SECRET_ACCESS_KEY = safequote(str(os.environ.get('ITUSCHEDULER_AWS_SECRET_ACCESS_KEY')))
 AWS_DEFAULT_REGION = os.environ.get('ITUSCHEDULER_AWS_DEFAULT_REGION')
