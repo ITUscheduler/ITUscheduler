@@ -136,8 +136,9 @@ def course_replace(request):
 @permission_classes((IsAuthenticated,))
 @authentication_classes((SessionAuthentication,))
 def add_to_schedule(request, id):
+    schedule = get_object_or_404(Schedule, id=id)
+
     try:
-        schedule = Schedule.objects.get(id=id)
         if schedule.user == request.user:
             data = [int(crn) for crn in dict(request.data)['courses']]
             courses = [Course.objects.get(crn=crn) for crn in data]
