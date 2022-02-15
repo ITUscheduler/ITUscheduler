@@ -5,7 +5,7 @@
   "containerDefinitions": [
     {
       "name": "worker",
-      "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
+      "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler:c3abb5f39b0feb0ee1e531e213e838cd21562514",
       "cpu": 384,
       "memoryReservation": 1536,
       "portMappings": [],
@@ -91,7 +91,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/ituscheduler",
+          "awslogs-group": "/ecs/ituscheduler-celery",
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "ecs"
         }
@@ -99,7 +99,7 @@
     },
     {
       "name": "beat",
-      "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
+      "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler:c3abb5f39b0feb0ee1e531e213e838cd21562514",
       "cpu": 128,
       "memoryReservation": 512,
       "portMappings": [],
@@ -185,7 +185,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/ituscheduler",
+          "awslogs-group": "/ecs/ituscheduler-celery",
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "ecs"
         }

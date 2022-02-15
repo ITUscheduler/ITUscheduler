@@ -59,7 +59,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def-beat.outputs.task-definition }}
-          service: ituscheduler
+          service: ituscheduler-celery
           cluster: ituscheduler
           wait-for-service-stability: false
 
