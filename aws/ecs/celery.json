@@ -1,113 +1,13 @@
 {
-  "family": "ituscheduler",
+  "family": "ituscheduler-celery",
   "executionRoleArn": "arn:aws:iam::919766826262:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "web",
-      "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 256,
-      "memoryReservation": 512,
-      "portMappings": [
-        {
-          "containerPort": 80,
-          "hostPort": 80,
-          "protocol": "tcp"
-        }
-      ],
-      "essential": true,
-      "environment": [
-        {
-          "name": "ITUSCHEDULER_CONTAINER_KIND",
-          "value": "web"
-        },
-        {
-          "name": "ITUSCHEDULER_STAGE",
-          "value": "production"
-        }
-      ],
-      "secrets": [
-        {
-          "name": "ITUSCHEDULER_AWS_ACCESS_KEY_ID",
-          "valueFrom": "/ITUscheduler/AWS_ACCESS_KEY_ID"
-        },
-        {
-          "name": "ITUSCHEDULER_AWS_SECRET_ACCESS_KEY",
-          "valueFrom": "/ITUscheduler/AWS_SECRET_ACCESS_KEY"
-        },
-        {
-          "name": "ITUSCHEDULER_AWS_DEFAULT_REGION",
-          "valueFrom": "/ITUscheduler/AWS_DEFAULT_REGION"
-        },
-        {
-          "name": "ITUSCHEDULER_EMAIL_HOST",
-          "valueFrom": "/ITUscheduler/EMAIL_HOST"
-        },
-        {
-          "name": "ITUSCHEDULER_EMAIL_HOST_PASSWORD",
-          "valueFrom": "/ITUscheduler/EMAIL_HOST_PASSWORD"
-        },
-        {
-          "name": "ITUSCHEDULER_EMAIL_HOST_USER",
-          "valueFrom": "/ITUscheduler/EMAIL_HOST_USER"
-        },
-        {
-          "name": "ITUSCHEDULER_POSTGRES_HOST",
-          "valueFrom": "/ITUscheduler/POSTGRES_HOST"
-        },
-        {
-          "name": "ITUSCHEDULER_POSTGRES_NAME",
-          "valueFrom": "/ITUscheduler/POSTGRES_NAME"
-        },
-        {
-          "name": "ITUSCHEDULER_POSTGRES_PASSWORD",
-          "valueFrom": "/ITUscheduler/POSTGRES_PASSWORD"
-        },
-        {
-          "name": "ITUSCHEDULER_POSTGRES_USER",
-          "valueFrom": "/ITUscheduler/POSTGRES_USER"
-        },
-        {
-          "name": "ITUSCHEDULER_SENTRY_DSN",
-          "valueFrom": "/ITUscheduler/SENTRY_DSN"
-        },
-        {
-          "name": "ITUSCHEDULER_SECRET_KEY",
-          "valueFrom": "/ITUscheduler/SECRET_KEY"
-        },
-        {
-          "name": "ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_KEY",
-          "valueFrom": "/ITUscheduler/SOCIAL_AUTH_FACEBOOK_KEY"
-        },
-        {
-          "name": "ITUSCHEDULER_SOCIAL_AUTH_FACEBOOK_SECRET",
-          "valueFrom": "/ITUscheduler/SOCIAL_AUTH_FACEBOOK_SECRET"
-        },
-        {
-          "name": "ITUSCHEDULER_SOCIAL_AUTH_TWITTER_KEY",
-          "valueFrom": "/ITUscheduler/SOCIAL_AUTH_TWITTER_KEY"
-        },
-        {
-          "name": "ITUSCHEDULER_SOCIAL_AUTH_TWITTER_SECRET",
-          "valueFrom": "/ITUscheduler/SOCIAL_AUTH_TWITTER_SECRET"
-        }
-      ],
-      "mountPoints": [],
-      "volumesFrom": [],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/ituscheduler",
-          "awslogs-region": "eu-west-1",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    },
-    {
       "name": "worker",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 192,
-      "memoryReservation": 1408,
+      "cpu": 384,
+      "memoryReservation": 1536,
       "portMappings": [],
       "essential": true,
       "environment": [
@@ -200,8 +100,8 @@
     {
       "name": "beat",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler",
-      "cpu": 64,
-      "memoryReservation": 128,
+      "cpu": 128,
+      "memoryReservation": 512,
       "portMappings": [],
       "essential": true,
       "environment": [

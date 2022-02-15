@@ -40,18 +40,10 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def-web
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: aws/ecs/task-definition.json
-          container-name: web
-          image: ${{ steps.build-image.outputs.image }}
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def-worker
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def-web.outputs.task-definition }}
+          task-definition: aws/ecs/celery.json
           container-name: worker
           image: ${{ steps.build-image.outputs.image }}
 
@@ -68,5 +60,23 @@ jobs:
         with:
           task-definition: ${{ steps.task-def-beat.outputs.task-definition }}
           service: ituscheduler
+          cluster: ituscheduler
+          wait-for-service-stability: false
+
+      # Auto-scaling group
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def-web
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: aws/ecs/web.json
+          container-name: web
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-web.outputs.task-definition }}
+          service: ituscheduler-web
           cluster: ituscheduler
           wait-for-service-stability: false
