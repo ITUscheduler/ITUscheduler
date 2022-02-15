@@ -6,8 +6,8 @@
     {
       "name": "web",
       "image": "919766826262.dkr.ecr.eu-west-1.amazonaws.com/ituscheduler:c3abb5f39b0feb0ee1e531e213e838cd21562514",
-      "cpu": 512,
-      "memoryReservation": 1024,
+      "cpu": 1024,
+      "memoryReservation": 2048,
       "portMappings": [
         {
           "containerPort": 80,
@@ -109,6 +109,6 @@
   "requiresCompatibilities": [
     "FARGATE"
   ],
-  "cpu": "512",
-  "memory": "1024"
+  "cpu": "1024",
+  "memory": "2048"
 }
