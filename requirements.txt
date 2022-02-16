@@ -6,6 +6,7 @@ git+https://github.com/celery/django-celery-beat@master
 django-celery-results==2.2.0
 django-font-awesome==4.6.1
 django-gravatar2==1.4.4
+django-cors-headers==3.11.0
 Django==4.0.2
 djangorestframework==3.13.1
 gunicorn==20.1.0
