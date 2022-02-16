@@ -23,6 +23,7 @@ if os.getenv('ECS_CONTAINER_METADATA_FILE'):
 
     private_ip = metadata["HostPrivateIPv4Address"]
     ALLOWED_HOSTS.append(private_ip)
+    CSRF_TRUSTED_ORIGINS.append(f'http://{private_ip}')
 
 # Reverse Proxy
 if not DEBUG:

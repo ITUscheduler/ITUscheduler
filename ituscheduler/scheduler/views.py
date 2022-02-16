@@ -1,31 +1,13 @@
 from django.contrib import messages
-from django.contrib.auth import (
-    authenticate,
-    login,
-)
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import (
-    JsonResponse,
-    HttpResponse,
-    HttpResponseRedirect,
-)
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
 
-from .forms import (
-    ScheduleForm,
-    CustomUserCreationForm,
-)
-from ..api.models import (
-    MajorCode,
-    Course,
-    Semester,
-)
-from ..scheduler.models import (
-    Schedule,
-    Notification,
-    ExtendedUser,
-)
+from .forms import ScheduleForm, CustomUserCreationForm
+from ..api.models import MajorCode, Course, Semester
+from ..scheduler.models import Schedule, Notification, ExtendedUser
 
 
 def is_available(courses, course):
