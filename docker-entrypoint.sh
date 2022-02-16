@@ -12,11 +12,11 @@ web)
     exec python manage.py runserver 0.0.0.0:8000
   else
     python manage.py migrate
-    exec gunicorn "$PROJECT".wsgi:application --workers 2 --bind=0.0.0.0:80
+    exec gunicorn "$PROJECT".wsgi:application --workers 3 --bind=0.0.0.0:80
   fi
   ;;
 worker)
-  exec celery --app "$PROJECT" worker --concurrency 20 -l INFO
+  exec celery --app "$PROJECT" worker --concurrency 10 -l INFO
   ;;
 beat)
   exec celery --app "$PROJECT" beat -l INFO

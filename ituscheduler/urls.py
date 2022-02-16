@@ -13,10 +13,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # auth
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('accounts/logout', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-    path('accounts/reset-password', auth_views.PasswordResetView.as_view(), name='password-reset'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('accounts/reset-password/', auth_views.PasswordResetView.as_view(), name='password-reset'),
     path(
-        route='accounts/reset-password-done',
+        route='accounts/reset-password-done/',
         view=auth_views.PasswordResetDoneView.as_view(),
         name='password_reset_done',
     ),
@@ -26,12 +26,12 @@ urlpatterns = [
         name='password_reset_confirm',
     ),
     path(
-        route='accounts/reset-password-complete',
+        route='accounts/reset-password-complete/',
         view=auth_views.PasswordResetCompleteView.as_view(),
         name='password_reset_complete',
     ),
     path(
-        route='sitemap.xml',
+        route='sitemap.xml/',
         view=sitemap,
         kwargs={
             'sitemaps': {

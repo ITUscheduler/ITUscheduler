@@ -1,3 +1,4 @@
+import json
 import os
 
 import sentry_sdk
@@ -10,10 +11,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = os.environ.get('ITUSCHEDULER_STAGE', 'development') == 'development'
 ADMINS = [('Doruk', 'doruk@gezici.me')]
-INTERNAL_IPS = ['127.0.0.1']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.ituscheduler.com', '.localhost', '127.0.0.1', '::1']
 CSRF_TRUSTED_ORIGINS = ['https://ituscheduler.com']
+
+if os.getenv('ECS_CONTAINER_METADATA_FILE'):
+    metadata_file_path = os.environ['ECS_CONTAINER_METADATA_FILE']
+
+    with open(metadata_file_path) as f:
+        metadata = json.load(f)
+
+    private_ip = metadata["HostPrivateIPv4Address"]
+    ALLOWED_HOSTS.append(private_ip)
 
 # Reverse Proxy
 if not DEBUG:
